@@ -5,12 +5,13 @@
 }
 
 body {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
   font-family: Arial, sans-serif;
   background: url('assets/images/background.png') no-repeat center center/cover;
   color: white;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .container {
@@ -36,7 +37,6 @@ h1 {
   padding: 40px;
   border-radius: 10px;
   display: grid;
-  backdrop-filter: blur(10px);
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   margin-bottom: 30px;
