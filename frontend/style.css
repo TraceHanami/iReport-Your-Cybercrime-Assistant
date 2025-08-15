@@ -33,14 +33,18 @@ h1 {
 }
 
 .menu {
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.15); 
   padding: 40px;
   border-radius: 10px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   margin-bottom: 30px;
+  backdrop-filter: blur(10px); 
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); 
 }
+
 
 .menu-item {
   text-align: center;
@@ -64,11 +68,11 @@ h1 {
 footer {
   display: flex;
   justify-content: center;
-  gap: 15px;
+  gap: 20px;
 }
 
 footer img {
-  width: 25px;
+  width: 30px;
   transition: transform 0.3s;
 }
 
