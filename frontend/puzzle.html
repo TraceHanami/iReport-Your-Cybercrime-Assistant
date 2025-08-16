@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>iReport-Your-Cybercrime-Assistant</title>
-<link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>iReport-Your-Cybercrime-Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/chatbot.css">
 </head>
 <body>
-
+    <div id="chat-container"></div>
+    <script src="assets/chatbot.js"></script>
+    <script>
+    fetch("assets/chatbot.html")
+        .then(response => response.text())
+        .then(data => {
+        document.getElementById("chat-container").innerHTML = data;
+        if (typeof initChat === "function") {
+            initChat();
+        }
+        });
+    </script>
 </body>
 </html>

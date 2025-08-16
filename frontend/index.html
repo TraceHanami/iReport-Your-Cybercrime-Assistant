@@ -1,96 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>iReport-Your-Cybercrime-Assistant</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iReport - Your Cybercrime Assistant</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/chatbot.css">
 </head>
 <body>
 
-<div class="container">
-  <h1>iReport-Your-Cybercrime-Assistant</h1>
-  <p class="subtitle"></p>
+<main class="container">
+  <header>
+    <h1>iReport - Your Cybercrime Assistant</h1>
+    <p class="subtitle">Stay safe, stay informed.</p>
+  </header>
 
-  <div class="menu">
-    <div class="menu-item" onclick="openPage('complaint')">
-      <img src="assets/icons/complaint.png" alt="report">
+  <section class="menu" aria-label="Main Menu">
+    <div class="menu-item" data-page="complaint">
+      <img src="assets/icons/complaint.png" alt="File Complaint">
       <p>File Complaint</p>
     </div>
-    <div class="menu-item" onclick="openPage('learning')">
-      <img src="assets/icons/educator.png" alt="education">
+    <div class="menu-item" data-page="learning">
+      <img src="assets/icons/educator.png" alt="Learning Space">
       <p>Learning Space</p>
     </div>
-    <div class="menu-item" onclick="openPage('suspect')">
-      <img src="assets/icons/suspect.png" alt="check Suspect">
+    <div class="menu-item" data-page="suspect">
+      <img src="assets/icons/suspect.png" alt="Check Suspect">
       <p>Check Suspect</p>
     </div>
-    <div class="menu-item" onclick="openPage('volunteer')">
-      <img src="assets/icons/volunteer.png" alt="volunteer">
+    <div class="menu-item" data-page="volunteer">
+      <img src="assets/icons/volunteer.png" alt="Volunteer">
       <p>Volunteer</p>
     </div>
-    <div class="menu-item" onclick="openPage('puzzle')">
-      <img src="assets/icons/puzzle.png" alt="game">
+    <div class="menu-item" data-page="puzzle">
+      <img src="assets/icons/puzzle.png" alt="Puzzle Game">
       <p>Puzzle</p>
     </div>
-    <div class="menu-item" onclick="openPage('sos')">
+    <div class="menu-item" data-page="sos">
       <img src="assets/icons/sos.png" alt="SOS">
       <p>SOS</p>
     </div>
-    <div class="menu-item" onclick="openPage('phishing')">
-      <img src="assets/icons/phishing.png" alt="Phishing">
+    <div class="menu-item" data-page="phishing">
+      <img src="assets/icons/phishing.png" alt="Check Phishing">
       <p>Check Phishing</p>
     </div>
-    <div class="menu-item" onclick="openPage('malware')">
-      <img src="assets/icons/malware.png" alt="Malware">
+    <div class="menu-item" data-page="malware">
+      <img src="assets/icons/malware.png" alt="Check Malware">
       <p>Check Malware</p>
     </div>
-    <div class="menu-item" onclick="openPage('talktous')">
-      <img src="assets/icons/talk to us.png" alt="talktous">
-      <p>Talk to us</p>
+    <div class="menu-item" data-page="talktous">
+      <img src="assets/icons/talk to us.png" alt="Talk to Us">
+      <p>Talk to Us</p>
     </div>
-  </div>
+  </section>
 
   <footer>
-    <a href="#"><img src="assets/icons/instagram.png" alt="instagram"></a>
-    <a href="#"><img src="assets/icons/twitter.png" alt="twitter"></a>
-    <a href="#"><img src="assets/icons/facebook.png" alt="facebook"></a>
+    <a href="#" aria-label="Instagram"><img src="assets/icons/instagram.png" alt="Instagram"></a>
+    <a href="#" aria-label="Twitter"><img src="assets/icons/twitter.png" alt="Twitter"></a>
+    <a href="#" aria-label="Facebook"><img src="assets/icons/facebook.png" alt="Facebook"></a>
   </footer>
-</div>
+</main>
 
+<div id="chat-container"></div>
+<script src="assets/chatbot.js"></script>
 <script>
-  function openPage(page) {
-    switch(page) {
-      case 'complaint':
-        window.location.href = 'complaint.html';
-        break;
-      case 'learning':
-        window.location.href = 'learning.html';
-        break;
-      case 'suspect':
-        window.location.href = 'suspect.html';
-        break;
-      case 'volunteer':
-        window.location.href = 'volunteer.html';
-        break;
-      case 'puzzle':
-        window.location.href = 'puzzle.html';
-        break;
-      case 'sos':
-        window.location.href = 'sos.html';
-        break;
-      case 'phishing':
-        window.location.href = 'phishing.html';
-        break;
-      case 'malware':
-        window.location.href = 'malware.html';
-        break;
-      case 'talktous':
-        window.location.href = 'talktous.html';
-        break;
-      default:
+  fetch("assets/chatbot.html")
+    .then(response => response.text())
+    .then(data => {
+      document.getElementById("chat-container").innerHTML = data;
+
+      if (typeof initChat === "function") {
+        initChat();
+      }
+    });
+
+  document.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const page = item.dataset.page;
+      const pages = {
+        complaint: 'complaint.html',
+        learning: 'learning.html',
+        suspect: 'suspect.html',
+        volunteer: 'volunteer.html',
+        puzzle: 'puzzle.html',
+        sos: 'sos.html',
+        phishing: 'phishing.html',
+        malware: 'malware.html',
+        talktous: 'talktous.html'
+      };
+      if (pages[page]) {
+        window.location.href = pages[page];
+      } else {
         alert('Page not found!');
-    }
-  }
+      }
+    });
+  });
 </script>
 
 </body>
