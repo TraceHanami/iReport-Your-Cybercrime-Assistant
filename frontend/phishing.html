@@ -1,23 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>iReport-Your-Cybercrime-Assistant</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="assets/chatbot.css">
+  <meta charset="UTF-8">
+  <title>Phishing Detector - iReport</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/chatbot.css">
+  <style>
+    /* Extra styles for phishing detector */
+    .phishing-card {
+      margin: 20px auto;
+      padding: 20px;
+      max-width: 750px;
+      background:  rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      color: #fff;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+    .phishing-card h2 {
+      margin-bottom: 10px;
+    }
+    .phishing-input {
+      display: flex;
+      gap: 10px;
+      margin: 15px 0;
+    }
+    .phishing-input input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+    }
+    .phishing-input button {
+      padding: 12px 16px;
+      border-radius: 8px;
+      border: none;
+      background: #0ea5a3;
+      color: #022;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .result-box {
+      margin-top: 15px;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: left;
+      min-width: 150px;
+      max-height: 300px;
+      overflow-y: auto;
+      font-size: 16px;
+      line-height: 1.5;
+     background-color: rgba(255, 255, 255, 0.1);
+    }
+    .phishing { background:#ff4d4f; color:#fff; }
+    .suspicious { background:#ffb020; color:#000; }
+    .legit { background:#10b981; color:#fff; }
+
+    .btn-group {
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-action {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .btn-report { background:#dc3545; color:#fff; }
+    .btn-download { background:#28a745; color:#fff; }
+  </style>
 </head>
 <body>
+  <main class="container">
+    <header>
+      <h1>iReport - Your Cybercrime Assistant</h1>
+      <p class="subtitle">Protect Yourself, Stay Informed..</p>
+    </header>
+
+
+    <section class="phishing-card">
+      <h2>Phishing Detector</h2>
+      <p>Enter a website URL to check if it’s safe:</p>
+
+      <div class="phishing-input">
+        <input id="urlInput" type="text" placeholder="https://example.com" />
+        <button onclick="checkPhishing()">Check</button>
+      </div>
+
+      <div id="result" class="result-box"></div>
+
+      <div class="btn-group">
+        <button class="btn-action btn-report" onclick="reportPhishing()">Report</button>
+        <button class="btn-action btn-download" onclick="downloadReport()">Download</button>
+      </div>
+    </section>
+
+    
     <div id="chat-container"></div>
-    <script src="assets/chatbot.js"></script>
-    <script>
-        fetch("assets/chatbot.html")
-        .then(response => response.text())
-        .then(data => {
+  </main>
+
+  
+  <script src="assets/chatbot.js"></script>
+  <script>
+    fetch("assets/chatbot.html")
+      .then(response => response.text())
+      .then(data => {
         document.getElementById("chat-container").innerHTML = data;
         if (typeof initChat === "function") {
-            initChat();
+          initChat();
         }
+      });
+
+    async function checkPhishing() {
+      const url = document.getElementById("urlInput").value.trim();
+      const resultBox = document.getElementById("result");
+      resultBox.innerHTML = "Checking...";
+
+      try {
+        const res = await fetch("/api/check", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url })
         });
-    </script>
+        const data = await res.json();
+
+        if (data.error) {
+          resultBox.innerHTML = `<div class="phishing">⚠️ ${data.error}</div>`;
+          return;
+        }
+
+        let verdictClass = data.verdict === "phishing" ? "phishing" :
+                           data.verdict === "suspicious" ? "suspicious" : "legit";
+
+        resultBox.innerHTML = `
+          <div class="${verdictClass}">
+            <strong>${data.verdict.toUpperCase()}</strong><br>
+            Score: ${data.score}/100
+          </div>
+          <ul>
+            ${data.reasons.map(r => `<li>${r}</li>`).join("")}
+          </ul>
+        `;
+      } catch (e) {
+        resultBox.innerHTML = `<div class="phishing">❌ Error: ${e.message}</div>`;
+      }
+    }
+
+
+    function reportPhishing() {
+      const url = document.getElementById("urlInput").value.trim();
+      if (!url) return alert("Enter a URL to report.");
+      alert("✅ Report submitted for: " + url);
+    }
+
+    function downloadReport() {
+      const url = document.getElementById("urlInput").value.trim();
+      const result = document.getElementById("result").innerText;
+      if (!url) return alert("Enter a URL first.");
+
+      const content = `Phishing Check Report\n\nURL: ${url}\nResult:\n${result}`;
+      const blob = new Blob([content], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "phishing_report.txt";
+      link.click();
+    }
+  </script>
 </body>
 </html>

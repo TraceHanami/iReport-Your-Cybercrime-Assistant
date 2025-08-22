@@ -1,7 +1,26 @@
 <button id="chat-toggle" onclick="toggleChat()">💬</button>
 
-<div id="chat-widget">
-  <div id="chat-header" onclick="toggleChat()">iReport Assistant 🤖</div>
+<div id="chat-widget" style="display: none;">
+  <div id="chat-header">
+    <span>iReport Assistant 🤖</span>
+    <select id="languageSelect" onchange="changeLanguage(this.value)">
+      <option value="en">English</option>
+      <option value="hi">Hindi</option>
+      <option value="ta">Tamil</option>
+      <option value="te">Telugu</option>
+      <option value="ml">Malayalam</option>
+      <option value="kn">Kannada</option>
+      <option value="bn">Bengali</option>
+      <option value="pa">Punjabi</option>
+      <option value="gu">Gujarati</option>
+      <option value="mr">Marathi</option>
+      <option value="or">Odia</option>
+      <option value="as">Assamese</option>
+      <option value="ur">Urdu</option>
+    </select>
+    <button onclick="toggleChat()" class="close-btn">✖</button>
+  </div>
+
   <div id="chat-body">
     <div id="messages">
       <div class="bot-msg">Hi there 👋<br>How can I help you today?</div>

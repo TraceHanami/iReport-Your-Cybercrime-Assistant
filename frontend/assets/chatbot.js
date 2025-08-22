@@ -1,40 +1,67 @@
-function toggleChat() {
-  let chat = document.getElementById("chat-widget");
-  chat.style.display = (chat.style.display === "none" || chat.style.display === "") 
-    ? "block" 
-    : "none";
-}
+document.addEventListener("DOMContentLoaded", () => {
+  const chatToggle = document.getElementById("chat-toggle");
+  const chatWidget = document.getElementById("chat-widget");
+  const closeBtn = document.querySelector(".close-btn");
+  const sendBtn = document.getElementById("send-btn");
+  const chatInput = document.getElementById("user-input");
+  const messages = document.getElementById("messages");
+  const languageSelector = document.getElementById("language");
 
-function sendMessage() {
-  let input = document.getElementById("userInput");
-  let msg = input.value.trim();
-  if (msg === "") return;
+  const greetings = {
+    en: "👋 Hello! I am your Cybercrime Assistant. How can I help you today?",
+    hi: "👋 नमस्ते! मैं आपका साइबरक्राइम सहायक हूँ। मैं आपकी कैसे मदद कर सकता हूँ?",
+    te: "👋 హలో! నేను మీ సైబర్ క్రైమ్ సహాయకుని. నేను మీకు ఎలా సహాయం చేయగలను?",
+    ta: "👋 வணக்கம்! நான் உங்கள் சைபர் குற்ற உதவியாளர். நான் உங்களுக்கு எப்படி உதவலாம்?",
+    kn: "👋 ನಮಸ್ಕಾರ! ನಾನು ನಿಮ್ಮ ಸೈಬರ್ ಅಪರಾಧ ಸಹಾಯಕ. ನಾನು ನಿಮಗೆ ಹೇಗೆ ಸಹಾಯ ಮಾಡಬಹುದು?",
+    ml: "👋 ഹലോ! ഞാൻ നിങ്ങളുടെ സൈബർ കുറ്റാന്വേഷണ സഹായി. എനിക്ക് നിങ്ങളെ എങ്ങനെ സഹായിക്കാം?",
+    mr: "👋 नमस्कार! मी तुमचा सायबरक्राइम सहाय्यक आहे. मी तुम्हाला कशी मदत करू शकतो?",
+    gu: "👋 નમસ્તે! હું તમારો સાયબરક્રાઇમ સહાયક છું. હું તમને કેવી રીતે મદદ કરી શકું?"
+  };
 
-  let messages = document.getElementById("messages");
-
-  let userDiv = document.createElement("div");
-  userDiv.className = "user-msg";
-  userDiv.textContent = msg;
-  messages.appendChild(userDiv);
-
-  let botDiv = document.createElement("div");
-  botDiv.className = "bot-msg";
-
-  if(msg.toLowerCase().includes("offerings")){
-    botDiv.textContent = "We help with cybercrime reporting, awareness, and resources.";
-  } 
-  else if(msg.toLowerCase().includes("issue")){
-    botDiv.textContent = "Please describe your issue and we'll guide you.";
-  } 
-  else if(msg.toLowerCase().includes("report")){
-    botDiv.textContent = "You can file a cybercrime report directly through the iReport portal.";
-  } 
-  else {
-    botDiv.textContent = "I'm here to assist! Try asking about offerings, issues, or how to report.";
+  function addMessage(message, sender = "bot") {
+    const msgDiv = document.createElement("div");
+    msgDiv.className = sender === "bot" ? "bot-msg" : "user-msg";
+    msgDiv.textContent = message;
+    messages.appendChild(msgDiv);
+    messages.scrollTop = messages.scrollHeight;
   }
 
-  messages.appendChild(botDiv);
+  function showGreeting() {
+    const lang = languageSelector.value;
+    addMessage(greetings[lang], "bot");
+  }
 
-  messages.scrollTop = messages.scrollHeight;
-  input.value = "";
-}
+  chatToggle.addEventListener("click", () => {
+    chatWidget.style.display = "block";
+    chatToggle.style.display = "none";
+    messages.innerHTML = "";
+    showGreeting();
+  });
+
+  closeBtn.addEventListener("click", () => {
+    chatWidget.style.display = "none";
+    chatToggle.style.display = "block";
+  });
+
+  sendBtn.addEventListener("click", () => {
+    const text = chatInput.value.trim();
+    if (text) {
+      addMessage(text, "user");
+      chatInput.value = "";
+      setTimeout(() => {
+        addMessage("✅ Got it! I will process your request.", "bot");
+      }, 1000);
+    }
+  });
+
+  chatInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      sendBtn.click();
+    }
+  });
+
+  languageSelector.addEventListener("change", () => {
+    messages.innerHTML = "";
+    showGreeting();
+  });
+});
