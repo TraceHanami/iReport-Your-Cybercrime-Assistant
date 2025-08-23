@@ -5,28 +5,99 @@
     <title>iReport-Your-Cybercrime-Assistant</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="assets/chatbot.css">
+    <style>
+      /* Talk to Us Popup Styling */
+      #talk-section {
+        display: none;
+        text-align: center;
+        padding: 20px;
+        background: rgba(0,0,0,0.85);
+        color: white;
+        border-radius: 10px;
+        position: fixed;
+        top: 15%;
+        left: 50%;
+        transform: translate(-50%, -15%);
+        z-index: 1000;
+        width: 80%;
+        max-width: 450px;
+      }
+      #talk-section input, #talk-section textarea {
+        width: 90%;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 5px;
+        border: none;
+      }
+      #talk-section button {
+        background: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        margin-top: 10px;
+        cursor: pointer;
+      }
+    </style>
 </head>
 <body>
     <main class="container">
-    <header>
-    <h1>iReport - Your Cybercrime Assistant</h1>
-    <p class="subtitle">Get Learned , stay Safe.</p>
-    </header>
+        <header>
+            <h1>iReport - Your Cybercrime Assistant</h1>
+            <p class="subtitle">Get Learned , stay Safe.</p>
+        </header>
 
-    <section class="menu" aria-label="Main Menu">
-    <div class="menu-item" data-page="complaint">
-    </div>
-    </section>
-    <div id="chat-container"></div>
+        <section class="menu" aria-label="Main Menu">
+            <!-- Example Talk to Us Menu Item -->
+            <div class="menu-item" onclick="openTalk()">
+                <h3>💬 Talk to Us</h3>
+                <p>Contact our team</p>
+            </div>
+        </section>
+
+        <!-- Talk to Us Popup -->
+        <div id="talk-section">
+            <h2>💬 Talk to Us</h2>
+            <form id="contactForm">
+                <input type="text" id="name" placeholder="Your Name" required><br>
+                <input type="email" id="email" placeholder="Your Email" required><br>
+                <textarea id="message" placeholder="Type your message..." required></textarea><br>
+                <button type="submit">Send Message</button>
+            </form>
+            <p id="msg-status" style="margin-top:10px;color:lightgreen;font-weight:bold;"></p>
+            <button onclick="closeTalk()" style="background:gray;">Close</button>
+        </div>
+
+        <!-- Chat container -->
+        <div id="chat-container"></div>
+    </main>
+
     <script src="assets/chatbot.js"></script>
     <script>
+        // Load chatbot HTML
         fetch("assets/chatbot.html")
         .then(response => response.text())
         .then(data => {
-        document.getElementById("chat-container").innerHTML = data;
-        if (typeof initChat === "function") {
-            initChat();
+            document.getElementById("chat-container").innerHTML = data;
+            if (typeof initChat === "function") {
+                initChat();
+            }
+        });
+
+        // Talk to Us Functions
+        function openTalk() {
+            document.getElementById('talk-section').style.display = 'block';
         }
+
+        function closeTalk() {
+            document.getElementById('talk-section').style.display = 'none';
+        }
+
+        document.getElementById("contactForm").addEventListener("submit", function(event){
+            event.preventDefault();
+            document.getElementById('msg-status').innerText = "✅ Message Sent. We'll get back to you soon!";
+            this.reset();
+            // 🔗 Here you could send the form data to backend API
         });
     </script>
 </body>

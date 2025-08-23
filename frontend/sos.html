@@ -1,33 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>iReport-Your-Cybercrime-Assistant</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="assets/chatbot.css">
+  <meta charset="UTF-8">
+  <title>iReport-Your-Cybercrime-Assistant</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="assets/chatbot.css">
+  <style>
+    /* SOS Modal */
+    #sos-section {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      background: rgba(0,0,0,0.95);
+      color: white;
+      border-radius: 16px;
+      position: fixed;
+      top: 8%;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.6);
+    }
+
+    #sos-section h2 {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    #sos-section p {
+      margin: 3px 0;
+    }
+
+    .sos-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .sos-card {
+      background: rgba(255,255,255,0.08);
+      border-radius: 14px;
+      padding: 25px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
+    .sos-card:hover {
+      background: rgba(255,0,0,0.25);
+      transform: scale(1.05);
+    }
+    .sos-card div {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+    .sos-card p {
+      font-size: 15px;
+      margin: 0;
+      font-weight: 500;
+    }
+
+    #sos-section button.close-btn {
+      background: gray;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 15px;
+      cursor: pointer;
+    }
+    #sos-status {
+      margin-top: 12px;
+      font-weight: bold;
+      color: yellow;
+    }
+  </style>
 </head>
 <body>
   <main class="container">
     <header>
-    <h1>iReport - Your Cybercrime Assistant</h1>
-    <p class="subtitle">Get Learned , stay Safe.</p>
+      <h1>iReport - Your Cybercrime Assistant</h1>
+      <p class="subtitle">Get Learned, Stay Safe.</p>
     </header>
 
     <section class="menu" aria-label="Main Menu">
-    <div class="menu-item" data-page="complaint">
-    </div>
+      <!-- SOS Menu Item -->
+      <div class="menu-item" onclick="openSOS()">
+        <h3>🚨 SOS</h3>
+        <p>Send emergency alert</p>
+      </div>
     </section>
-<div id="chat-container"></div>
-<script src="assets/chatbot.js"></script>
-<script>
-  fetch("assets/chatbot.html")
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById("chat-container").innerHTML = data;
-      if (typeof initChat === "function") {
-        initChat();
-      }
-    });
-</script>
+
+    <!-- SOS Popup -->
+    <div id="sos-section">
+      <h2 style="color:red;">🚨 SOS</h2>
+      <p>Raise SOS Alert</p>
+      <p style="font-size:14px; color:gray;">Use SOS only in case of Emergency</p>
+
+      <div class="sos-grid">
+        <div class="sos-card" onclick="triggerSOS('Medical Emergency')">
+          <div>🩺</div>
+          <p>Medical Emergency</p>
+        </div>
+        <div class="sos-card" onclick="triggerSOS('Fire / Gas Leak Emergency')">
+          <div>🔥</div>
+          <p>Fire/Gas Leak Emergency</p>
+        </div>
+        <div class="sos-card" onclick="triggerSOS('Lift Emergency')">
+          <div>🛗</div>
+          <p>Lift Emergency</p>
+        </div>
+        <div class="sos-card" onclick="triggerSOS('Theft / Others')">
+          <div>🚔</div>
+          <p>Theft / Others</p>
+        </div>
+      </div>
+
+      <button class="close-btn" onclick="closeSOS()">Close</button>
+      <p id="sos-status"></p>
+    </div>
+
+    <!-- Chat container -->
+    <div id="chat-container"></div>
+  </main>
+
+  <script src="assets/chatbot.js"></script>
+  <script>
+    // Load chatbot HTML
+    fetch("assets/chatbot.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("chat-container").innerHTML = data;
+        if (typeof initChat === "function") {
+          initChat();
+        }
+      });
+
+    // SOS Functions
+    function openSOS() {
+      document.getElementById('sos-section').style.display = 'block';
+    }
+    function closeSOS() {
+      document.getElementById('sos-section').style.display = 'none';
+    }
+    function triggerSOS(type) {
+      document.getElementById('sos-status').innerText = "🚨 " + type + " Alert Sent!";
+      alert(type + " SOS request has been triggered! Authorities will be notified.");
+      // 🔗 Connect backend API/SMS/Email here
+    }
+  </script>
 </body>
 </html>
