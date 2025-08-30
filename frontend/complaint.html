@@ -2,54 +2,444 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>iReport-Your-Cybercrime-Assistant</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="assets/chatbot.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Crime Complaint Form</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: Arial, sans-serif;
+  background: url('./assets/images/background.png') no-repeat center center fixed;
+  background-size: cover;
+}
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+h2 { text-align: center; color: white; }
+.notice { text-align:center; font-size:14px;color:white; margin-bottom:20px; }
+.tabs { display: flex; justify-content: space-around; border-bottom: 2px solid #ccc; margin-bottom: 20px; }
+.tab { padding: 10px 20px; cursor: pointer;color: white; }
+.tab.active { border-bottom: 3px solid #0073e6; font-weight: bold;color: white; }
+.form-step { display: none; }
+.form-step.active { display: block; }
+label { font-weight: bold; display: block; margin: 10px 0 5px;color:white}
+input, select, textarea, button { width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #aaa; font-size: 15px; }
+button { background: #0073e6; color: white; border: none; cursor: pointer; }
+button:hover { background: #005bb5; }
+.lang-select { position: absolute; top: 20px; right: 20px; }
+.blue-box { border:2px solid #0073e6; border-radius:8px; padding:10px; }
+#download-btn { display:none; margin-top:10px; background:#28a745; }
+#download-btn:hover { background:#1e7e34; }
+.stars { display:flex; gap:5px; font-size:24px; cursor:pointer; }
+.stars span { color:#ccc; }
+.stars span.active { color:gold; }
+#preview { border:1px solid #0073e6; padding:15px; border-radius:8px; background:#f0f8ff; max-height:500px; overflow:auto; }
+#preview table { width:100%; border-collapse: collapse; }
+#preview th, #preview td { border:1px solid #0073e6; padding:5px; text-align:left; }
+#preview th { background:#d0e4ff; }
+  </style>
 </head>
 <body>
+
+<div class="lang-select">
+  <select id="language" onchange="loadTranslations()">
+    <option value="en">English</option>
+    <option value="hi">हिन्दी (Hindi)</option>
+    <option value="ta">தமிழ் (Tamil)</option>
+    <option value="te">తెలుగు (Telugu)</option>
+    <option value="bn">বাংলা (Bengali)</option>
+    <option value="mr">मराठी (Marathi)</option>
+    <option value="gu">ગુજરાતી (Gujarati)</option>
+    <option value="ml">മലയാളം (Malayalam)</option>
+    <option value="kn">ಕನ್ನಡ (Kannada)</option>
+    <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+    <option value="or">ଓଡ଼ିଆ (Odia)</option>
+    <option value="ur">اردو (Urdu)</option>
+  </select>
+</div>
+
 <div class="container">
-  <h1>iReport-Your-Cybercrime-Assistant</h1>
-  <p class="subtitle">Register Your Complaint</p>
+  <h2>🛡 Cyber Crime Complaint Form</h2>
+  <p class="notice" data-key="notice"></p>
+  <div class="tabs">
+      <div class="tab active" id="tab1" data-key="tab1"></div>
+      <div class="tab" id="tab2" data-key="tab2"></div>
+      <div class="tab" id="tab3" data-key="tab3"></div>
+  </div>
+  
+  <!-- Step 1 -->
+  <div class="form-step active" id="step1">
+    <h3 data-key="step1"></h3>
+    <label data-key="name"></label>
+    <input type="text" id="complainant-name">
 
-  <div class="menu">
-    <div class="menu-item" onclick="openPage('womenChildren')">
-    <img src="assets/icons/sexual-harassment.png" alt="Women/Children Crime">
-    <p>Women/Children Related Crime</p>
-  </div>
-  <div class="menu-item" onclick="openPage('financialFraud')">
-    <img src="assets/icons/robbery.png" alt="Financial Fraud">
-    <p>Financial Fraud /Scam-related Crimes </p>
-  </div>
-  <div class="menu-item" onclick="openPage('otherCyberCrime')">
-    <img src="assets/icons/identity-theft.png" alt="Other Cyber Crime">
-    <p>Identity/Access Violations</p>
-  </div>
-    <div class="menu-item" onclick="openPage('womenChildren')">
-    <img src="assets/icons/sexual-harassment.png" alt="Women/Children Crime">
-    <p> Social/Psychological Harm</p>
-  </div>
-  <div class="menu-item" onclick="openPage('financialFraud')">
-    <img src="assets/icons/robbery.png" alt="Financial Fraud">
-    <p>Severe / Legal-Critical Crimes</p>
-  </div>
-  <div class="menu-item" onclick="openPage('otherCyberCrime')">
-    <img src="assets/icons/identity-theft.png" alt="Other Cyber Crime">
-    <p>Others/Miscellaneous</p>
-  </div>
+    <label data-key="id"></label>
+    <input type="text" id="complainant-id">
+
+    <label data-key="category"></label>
+    <select id="category"></select>
+
+    <label data-key="state"></label>
+    <input type="text" id="state">
+
+    <label data-key="district"></label>
+    <input type="text" id="district">
+
+    <label data-key="village"></label>
+    <input type="text" id="village">
+
+    <label data-key="landmark"></label>
+    <input type="text" id="landmark">
+
+    <label data-key="imei"></label>
+    <input type="text" id="imei">
+
+    <label data-key="sim"></label>
+    <input type="text" id="sim-number">
+
+    <label data-key="date"></label>
+    <input type="date" id="date">
+
+    <label data-key="time"></label>
+    <input type="time" id="time">
+
+    <label data-key="details"></label>
+    <textarea id="details"></textarea>
+
+    <label data-key="policeComplaint"></label>
+    <select id="police-complaint" onchange="toggleFIRFields()">
+      <option value="no">No</option><option value="yes">Yes</option>
+    </select>
+    <div id="fir-section" style="display:none;">
+      <label data-key="firFile"></label>
+      <input type="file" id="fir-file">
+    </div>
+     <button onclick="prevStep(2)">Next</button>
   </div>
 
+  <!-- Step 2 -->
+  <div class="form-step" id="step2">
+    <h3 data-key="step2"></h3>
+    <label data-key="suspectName"></label>
+    <input type="text" id="suspect-name">
+    <label data-key="suspectEmail"></label>
+    <input type="email" id="suspect-email">
+    <label data-key="suspectPhone"></label>
+    <input type="tel" id="suspect-phone">
+    <label>Upload Suspect Related File:</label>
+    <input type="file" id="suspect-file">
+    <p id="file-preview"></p>
+    <button type="button" onclick="previewFile()">Preview File</button>
+    <button onclick="prevStep(1)">Back</button>
+    <button onclick="nextStep(3)">Next</button>
+  </div>
+  <!-- Step 3 -->
+  <div class="form-step" id="step3">
+    <h3 data-key="step3"></h3>
+    <div id="preview"></div>
 
-  <div id="chat-container"></div>
-  <script src="assets/chatbot.js"></script>
-  <script>
-    fetch("assets/chatbot.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("chat-container").innerHTML = data;
-        if (typeof initChat === "function") {
-          initChat();
-        }
+    <div>
+      <label>Rate your experience:</label>
+      <div class="stars" id="stars">
+        <span onclick="rate(1)">★</span>
+        <span onclick="rate(2)">★</span>
+        <span onclick="rate(3)">★</span>
+        <span onclick="rate(4)">★</span>
+        <span onclick="rate(5)">★</span>
+      </div>
+    </div>
+
+    <button onclick="prevStep(2)">Back</button>
+    <button type="button" onclick="generatePDF()" data-key="submit"></button>
+    <button onclick="Submit">Submit</button>
+  </div>
+</div>
+<script>
+const translations = {
+  en: {
+    notice: "Please provide accurate details of the incident. False complaints are punishable under law.",
+    tab1:"Complaint", tab2:"Suspect", tab3:"Preview & Rating",
+    step1:"Complaint & Incident Details",
+    name:"Your Full Name:", id:"Aadhaar / Ration / PAN Number:",
+    category:"Category of Complaint:", categoryOptions:["Phishing","Hacking","Online Fraud","Harassment","Identity Theft","Mobile Theft"],
+    state:"State:", district:"District:", village:"Village / Town:", landmark:"Nearby Landmark:",
+    imei: "Mobile IMEI Number (if mobile lost):",
+    sim: "SIM Number (if available):",
+    date:"Date of Incident:", time:"Approximate Time of Incident:", details:"Describe the Incident:",
+    policeComplaint:"Have you complained at Police Station?", firFile:"Upload FIR Copy (if available):",
+    step2:"Suspect Details", suspectName:"Suspect Name (if known):", suspectEmail:"Suspect Email:", suspectPhone:"Suspect Phone:",
+    step3:"Preview & Rating", submit:"Generate Report"
+  },
+  hi: {
+    notice:"कृपया घटना का सही विवरण दें। झूठी शिकायतें कानून के तहत दंडनीय हैं।",
+    tab1:"शिकायत", tab2:"संदिग्ध", tab3:"पूर्वावलोकन और रेटिंग",
+    step1:"शिकायत और घटना विवरण", name:"आपका पूरा नाम:", id:"आधार / राशन / पैन नंबर:",
+    category:"शिकायत की श्रेणी:", categoryOptions:["फ़िशिंग","हैकिंग","ऑनलाइन धोखाधड़ी","उत्पीड़न","पहचान की चोरी","मोबाइल चोरी"],
+    state:"राज्य:", district:"जिला:", village:"गाँव / शहर:", landmark:"पास का प्रमुख स्थल:",
+    imei: "मोबाइल IMEI नंबर (यदि मोबाइल खो गया हो):",
+    sim: "SIM नंबर (यदि उपलब्ध हो):",
+    date:"घटना की तारीख:", time:"घटना का अनुमानित समय:", details:"घटना का विवरण दें:",
+    policeComplaint:"क्या आपने पुलिस में शिकायत दर्ज कराई है?", firFile:"FIR कॉपी अपलोड करें (यदि उपलब्ध हो):",
+    step2:"संदिग्ध विवरण", suspectName:"संदिग्ध का नाम (यदि ज्ञात हो):", suspectEmail:"संदिग्ध ईमेल:", suspectPhone:"संदिग्ध फोन:",
+    step3:"पूर्वावलोकन और रेटिंग", submit:"रिपोर्ट जनरेट करें"
+  },
+  ta: {
+    notice:"சம்பவத்தின் சரியான விவரங்களை வழங்கவும். பொய் புகார்கள் சட்டப்படி தண்டிக்கப்படுகின்றன.",
+    tab1:"புகார்", tab2:"குற்றவாளி", tab3:"முன்னோட்டம் & மதிப்பீடு",
+    step1:"புகார் & சம்பவ விவரங்கள்", name:"உங்கள் முழுப் பெயர்:", id:"ஆதார் / ரேஷன் / பான் எண்:",
+    category:"புகாரின் வகை:", categoryOptions:["ஃபிஷிங்","ஹேக்கிங்","ஆன்லைன் மோசடி","துன்புறுத்தல்","அடையாளத் திருட்டு","மொபைல் திருட்டு"],
+    state:"மாநிலம்:", district:"மாவட்டம்:", village:"ஊர் / நகரம்:", landmark:"அருகிலுள்ள குறியீடு:",
+    imei:"மொபைல் IMEI எண் (மொபைல் இழந்தால்):",
+    sim:"SIM எண் (கிடைக்குமானால்):",
+    date:"சம்பவ தேதி:", time:"சம்பவத்தின் சுமார் நேரம்:", details:"சம்பவத்தை விவரிக்கவும்:",
+    policeComplaint:"நீங்கள் காவல் நிலையத்தில் புகார் செய்தீர்களா?", firFile:"FIR நகலை பதிவேற்றவும் (உள்ளது என்றால்):",
+    step2:"குற்றவாளி விவரங்கள்", suspectName:"குற்றவாளியின் பெயர் (அறிந்திருந்தால்):", suspectEmail:"குற்றவாளி மின்னஞ்சல்:", suspectPhone:"குற்றவாளி தொலைபேசி:",
+    step3:"முன்னோட்டம் & மதிப்பீடு", submit:"அறிக்கையை உருவாக்கு"
+  },
+  te: {
+    notice:"సమావేశం యొక్క ఖచ్చితమైన వివరాలను అందించండి. అబద్ధ ఫిర్యాదులు చట్టం ప్రకారం శిక్షార్హం.",
+    tab1:"ఫిర్యాదు", tab2:"సందేహితుడు", tab3:"మునుపరి & రేటింగ్",
+    step1:"ఫిర్యాదు & ఘటన వివరాలు", name:"మీ పూర్తి పేరు:", id:"ఆధార్ / రేషన్ / పాన్ నంబర్:",
+    category:"ఫిర్యాదుల రకము:", categoryOptions:["ఫిషింగ్","హాకింగ్","ఆన్‌లైన్ ఫ్రాడ్","పీడన","ఐడెంటిటీ తప్పుడు వాడకం","మొబైల్ దొంగతనం"],
+    state:"రాష్ట్రం:", district:"జిల్లా:", village:"గ్రామం / పట్టణం:", landmark:"సమీప ప్రధాన స్థలం:",
+    imei:"మొబైల్ IMEI నంబర్ (మొబైల్ కోల్పోతే):",
+    sim:"SIM నంబర్ (లభిస్తే):",
+    date:"సంభవించిన తేదీ:", time:"సంభవ సమయం అంచనా:", details:"సంభవాన్ని వివరించండి:",
+    policeComplaint:"మీరు పోలీస్ స్టేషన్‌లో ఫిర్యాదు చేసారా?", firFile:"FIR కాపీని అప్‌లోడ్ చేయండి (అందుబాటులో ఉంటే):",
+    step2:"సందేహితుడు వివరాలు", suspectName:"సందేహితుడి పేరు (తెలిస్తే):", suspectEmail:"సందేహితుడి ఇమెయిల్:", suspectPhone:"సందేహితుడి ఫోన్:",
+    step3:"మునుపరి & రేటింగ్", submit:"రిపోర్ట్ ఉత్పత్తి చేయండి"
+  },
+  bn: {
+    notice:"ঘটনার সঠিক বিবরণ দিন। মিথ্যা অভিযোগ আইন অনুযায়ী শাস্তিযোগ্য।",
+    tab1:"অভিযোগ", tab2:"সন্দেহভাজন", tab3:"প্রাকদর্শন ও রেটিং",
+    step1:"অভিযোগ & ঘটনা বিবরণ", name:"আপনার পুরো নাম:", id:"আধার / রেশন / প্যান নম্বর:",
+    category:"অভিযোগের ধরন:", categoryOptions:["ফিশিং","হ্যাকিং","অনলাইন প্রতারণা","উত্ত্যক্তি","পরিচয় চুরি","মোবাইল চুরি"],
+    state:"রাজ্য:", district:"জেলা:", village:"গ্রাম / শহর:", landmark:"নিকটতম প্রধান স্থান:",
+    imei:"মোবাইল IMEI নম্বর (যদি মোবাইল হারানো হয়):",
+    sim:"SIM নম্বর (যদি পাওয়া যায়):",
+    date:"ঘটনার তারিখ:", time:"ঘটনার আনুমানিক সময়:", details:"ঘটনাটি বর্ণনা করুন:",
+    policeComplaint:"আপনি কি থানায় অভিযোগ করেছেন?", firFile:"FIR কপি আপলোড করুন (যদি থাকে):",
+    step2:"সন্দেহভাজনের বিবরণ", suspectName:"সন্দেহভাজনের নাম (যদি জানা থাকে):", suspectEmail:"সন্দেহভাজনের ইমেল:", suspectPhone:"সন্দেহভাজনের ফোন:",
+    step3:"প্রাকদর্শন ও রেটিং", submit:"রিপোর্ট তৈরি করুন"
+  },
+  mr: {
+    notice:"घटनेची अचूक माहिती द्या. खोटी तक्रारी कायद्याने दंडनीय आहेत.",
+    tab1:"तक्रार", tab2:"शंका व्यक्ती", tab3:"पूर्वावलोकन & रेटिंग",
+    step1:"तक्रार & घटनेचे तपशील", name:"तुमचे पूर्ण नाव:", id:"आधार / रेशन / पॅन नंबर:",
+    category:"तक्रारीची श्रेणी:", categoryOptions:["फिशिंग","हॅकिंग","ऑनलाइन फसवणूक","त्रास","ओळख चोरी","मोबाईल चोरी"],
+    state:"राज्य:", district:"जिल्हा:", village:"गाव / शहर:", landmark:"जवळील प्रमुख स्थळ:",
+    imei:"मोबाईल IMEI नंबर (जर मोबाइल हरवला असेल तर):",
+    sim:"SIM नंबर (जर उपलब्ध असेल तर):",
+    date:"घटनेची तारीख:", time:"घटनेचा अंदाजित वेळ:", details:"घटनेचे वर्णन करा:",
+    policeComplaint:"तुम्ही पोलीस ठाण्यात तक्रार नोंदवली आहे का?", firFile:"FIR प्रत अपलोड करा (उपलब्ध असल्यास):",
+    step2:"शंका व्यक्ती तपशील", suspectName:"शंका व्यक्तीचे नाव (जर ज्ञात असेल तर):", suspectEmail:"शंका व्यक्ती ईमेल:", suspectPhone:"शंका व्यक्ती फोन:",
+    step3:"पूर्वावलोकन & रेटिंग", submit:"अहवाल तयार करा"
+  },
+  gu: {
+    notice:"સંભવના સાચા વિગતવાર વિગતો આપો. ખોટી ફરિયાદો કાયદા હેઠળ દંડનીય છે.",
+    tab1:"ફરિયાદ", tab2:"શંકાસ્પદ", tab3:"પૂર્વાવલોકન અને રેટિંગ",
+    step1:"ફરિયાદ & ઘટના વિગતો", name:"તમારું પૂર્ણ નામ:", id:"આધાર / રેશન / પાન નંબર:",
+    category:"ફરિયાદની શ્રેણી:", categoryOptions:["ફિશિંગ","હેકિંગ","ઓનલાઇન ઠગાઈ","ઉત્પીડન","ઓળખ ચોરી","મોબાઈલ ચોરી"],
+    state:"રાજ્ય:", district:"જિલ્લો:", village:"ગામ / શહેર:", landmark:"નજીકનું મુખ્ય સ્થળ:",
+    imei:"મોબાઈલ IMEI નંબર (જો મોબાઈલ ગુમ થઈ જાય):",
+    sim:"SIM નંબર (જો ઉપલબ્ધ હોય):",
+    date:"ઘટના તારીખ:", time:"ઘટનાનો અંદાજિત સમય:", details:"ઘટનાનું વર્ણન કરો:",
+    policeComplaint:"શું તમે પોલીસ સ્ટેશનમાં ફરિયાદ નોંધાવી છે?", firFile:"FIR નકલ અપલોડ કરો (ઉપલબ્ધ હોય તો):",
+    step2:"શંકાસ્પદ વિગતો", suspectName:"શંકાસ્પદનું નામ (જાણતા હોય તો):", suspectEmail:"શંકાસ્પદ ઇમેઇલ:", suspectPhone:"શંકાસ્પદ ફોન:",
+    step3:"પૂર્વાવલોકન અને રેટિંગ", submit:"અહેવાલ બનાવો"
+  },
+  ml: {
+    notice:"സംഭവത്തിന്റെ കൃത്യമായ വിവരങ്ങൾ നൽകുക. വ്യാജ പരാതികൾ നിയമപ്രകാരം ശിക്ഷനിഷ്ഠമാണ്.",
+    tab1:"പരാതി", tab2:"സംശയാർത്ഥി", tab3:"പ്രിവ്യൂ & റേറ്റിംഗ്",
+    step1:"പരാതി & സംഭവം വിശദാംശങ്ങൾ", name:"നിങ്ങളുടെ പൂർണ പേര്:", id:"ആധാർ / റേഷൻ / പാൻ നമ്പർ:",
+    category:"പരാതിയുടെ വിഭാഗം:", categoryOptions:["ഫിഷിംഗ്","ഹാക്കിംഗ്","ഓൺലൈൻ തട്ടിപ്പ്","പീഡനം","ഐഡന്റിറ്റി മോഷണം","മൊബൈൽ മോഷണം"],
+    state:"സംസ്ഥാനം:", district:"ജില്ല:", village:"ഗ്രാം / പട്ടണം:", landmark:"അടുത്ത പ്രധാന സ്ഥലം:",
+    imei:"മൊബൈൽ IMEI നമ്പർ (മൊബൈൽ നഷ്ടപ്പെട്ടാൽ):",
+    sim:"SIM നമ്പർ (ലഭ്യമെങ്കിൽ):",
+    date:"സംഭവത്തിന്റെ തീയതി:", time:"സംഭവത്തിന്റെ ഏകദേശം സമയo:", details:"സംഭവം വിശദീകരിക്കുക:",
+    policeComplaint:"നിങ്ങൾ പൊലീസിൽ പരാതി നൽകിയിട്ടുണ്ടോ?", firFile:"FIR പകർപ്പ് അപ്‌ലോഡ് ചെയ്യുക (ലഭ്യമെങ്കിൽ):",
+    step2:"സംശയാർത്ഥിയുടെ വിശദാംശങ്ങൾ", suspectName:"സംശയാർത്ഥിയുടെ പേര് (അറിയാമെങ്കിൽ):", suspectEmail:"സംശയാർത്ഥിയുടെ ഇമെയിൽ:", suspectPhone:"സംശയാർത്ഥിയുടെ ഫോൺ:",
+    step3:"പ്രിവ്യൂ & റേറ്റിംഗ്", submit:"റിപ്പോർട്ട് ജനറേറ്റ് ചെയ്യുക"
+  },
+  kn: {
+    notice:"ಘಟನೆಯ ಖಚಿತ ವಿವರಗಳನ್ನು ನೀಡಿ. ಬೂದು ಮೇಳುವ ಪ್ರಕರಣಗಳು ಕಾನೂನುಬದ್ಧವಾಗಿ ಶಿಕ್ಷನೀಯವಾಗಿವೆ.",
+    tab1:"ಹೋಗು", tab2:"ಸಂದೇಹಾತ್ಮಕ", tab3:"ಪೂರ್ವಾವಲೋಕನ & ಮೌಲ್ಯಮಾಪನ",
+    step1:"ಹೋಗು & ಘಟನೆ ವಿವರಗಳು", name:"ನಿಮ್ಮ ಪೂರ್ಣ ಹೆಸರು:", id:"ಆಧಾರ್ / ರೇಷನ್ / ಪಾನ್ ಸಂಖ್ಯೆ:",
+    category:"ಹೋಗು ಶ್ರೇಣಿ:", categoryOptions:["ಫಿಷಿಂಗ್","ಹ್ಯಾಕಿಂಗ್","ಆನ್‌ಲೈನ್ ಮೋಸ","ಹೆಚ್ಚುವರಿ ಕಷ್ಟ","ಐಡಿಂಟಿಟಿ ಕಳ್ಳತನ","ಮೊಬೈಲ್ ಕಳ್ಳತನ"],
+    state:"ರಾಜ್ಯ:", district:"ಜಿಲ್ಲೆ:", village:"ಗ್ರಾಮ / ನಗರ:", landmark:"ಹೊತ್ತಿ ಪ್ರಮುಖ ಸ್ಥಳ:",
+    imei:"ಮೊಬೈಲ್ IMEI ಸಂಖ್ಯೆ (ಮೊಬೈಲ್ ಕಳೆದುಕೊಂಡರೆ):",
+    sim:"SIM ಸಂಖ್ಯೆ (ಲಭ್ಯವಿದ್ದರೆ):",
+    date:"ಘಟನೆಯ ದಿನಾಂಕ:", time:"ಘಟನೆಯ ಅಂದಾಜು ಸಮಯ:", details:"ಘಟನೆಯ ವಿವರಣೆ ನೀಡಿ:",
+    policeComplaint:"ನೀವು ಪೊಲೀಸ್ ಸ್ಟೇಶನ್‌ನಲ್ಲಿ ದೂರು ಸಲ್ಲಿಸಿದ್ದೀರಾ?", firFile:"FIR ನಕಲನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ (ಇದಾಗಿದ್ದರೆ):",
+    step2:"ಸಂದೇಹಾತ್ಮಕ ವಿವರಗಳು", suspectName:"ಸಂದೇಹಾತ್ಮಕ ಹೆಸರು (ತಿಳಿದಿದ್ದರೆ):", suspectEmail:"ಸಂದೇಹಾತ್ಮಕ ಇಮೇಲ್:", suspectPhone:"ಸಂದೇಹಾತ್ಮಕ ಫೋನ್:",
+    step3:"ಪೂರ್ವಾವಲೋಕನ & ಮೌಲ್ಯಮಾಪನ", submit:"ವರದಿ ರಚಿಸಿ"
+  },
+  pa: {
+    notice:"ਘਟਨਾ ਦੇ ਸਹੀ ਵੇਰਵੇ ਦਿਓ। ਝੂਠੀਆਂ ਸ਼ਿਕਾਇਤਾਂ ਕਾਨੂੰਨ ਅਧੀਨ ਸਜ਼ਾਯੋਗ ਹਨ।",
+    tab1:"ਸ਼ਿਕਾਇਤ", tab2:"ਸ਼ੱਕੀ", tab3:"ਪ੍ਰੀਵਿਊ & ਰੇਟਿੰਗ",
+    step1:"ਸ਼ਿਕਾਇਤ & ਘਟਨਾ ਵੇਰਵੇ", name:"ਤੁਹਾਡਾ ਪੂਰਾ ਨਾਮ:", id:"ਆਧਾਰ / ਰੇਸ਼ਨ / ਪੈਨ ਨੰਬਰ:",
+    category:"ਸ਼ਿਕਾਇਤ ਦੀ ਸ਼੍ਰੇਣੀ:", categoryOptions:["ਫਿਸ਼ਿੰਗ","ਹੈਕਿੰਗ","ਆਨਲਾਈਨ ਧੋਖਾਧੜੀ","ਹੈਰਾਸਮੈਂਟ","ਪਹਚਾਣ ਚੋਰੀ","ਮੋਬਾਈਲ ਚੋਰੀ"],
+    state:"ਰਾਜ:", district:"ਜ਼ਿਲਾ:", village:"ਪਿੰਡ / ਸ਼ਹਿਰ:", landmark:"ਨੇੜੇ ਦਾ ਮੁੱਖ ਸਥਾਨ:",
+    imei:"ਮੋਬਾਈਲ IMEI ਨੰਬਰ (ਜੇ ਮੋਬਾਈਲ ਗੁੰਮ ਹੋਇਆ ਹੋਵੇ):",
+    sim:"SIM ਨੰਬਰ (ਜੇ ਉਪਲਬਧ ਹੋਵੇ):",
+    date:"ਘਟਨਾ ਦੀ ਤਾਰੀਖ:", time:"ਘਟਨਾ ਦਾ ਅਨੁਮਾਨਿਤ ਸਮਾਂ:", details:"ਘਟਨਾ ਦਾ ਵੇਰਵਾ ਦਿਓ:",
+    policeComplaint:"ਕੀ ਤੁਸੀਂ ਪੁਲਿਸ ਸਟੇਸ਼ਨ ਵਿੱਚ ਸ਼ਿਕਾਇਤ ਕੀਤੀ ਹੈ?", firFile:"FIR ਕਾਪੀ ਅਪਲੋਡ ਕਰੋ (ਜੇ ਉਪਲਬਧ ਹੋਵੇ):",
+    step2:"ਸ਼ੱਕੀ ਵੇਰਵੇ", suspectName:"ਸ਼ੱਕੀ ਦਾ ਨਾਮ (ਜੇ ਪਤਾ ਹੋਵੇ):", suspectEmail:"ਸ਼ੱਕੀ ਈਮੇਲ:", suspectPhone:"ਸ਼ੱਕੀ ਫ਼ੋਨ:",
+    step3:"ਪ੍ਰੀਵਿਊ & ਰੇਟਿੰਗ", submit:"ਰਿਪੋਰਟ ਬਣਾਓ"
+  },
+  or: {
+    notice:"ଦୟାକରି ଘଟଣାର ସଠିକ ବିବରଣୀ ଦିଅନ୍ତୁ। ମିଥ୍ୟା ଅଭିଯୋଗ ଆଇନ ଅନୁସାରେ ଦଣ୍ଡନୀୟ।",
+    tab1:"ଅଭିଯୋଗ", tab2:"ସନ୍ଦେହାସ୍ପଦ", tab3:"ପ୍ରିଭ୍ୟୁ & ରେଟିଂ",
+    step1:"ଅଭିଯୋଗ & ଘଟଣା ବିବରଣୀ", name:"ଆପଣଙ୍କର ପୂର୍ଣ୍ଣ ନାମ:", id:"ଆଧାର / ରେସନ / ପ୍ୟାନ୍ ନମ୍ବର:",
+    category:"ଅଭିଯୋଗର ବର୍ଗ:", categoryOptions:["ଫିସିଂ","ହ୍ୟାକିଂ","ଅନଲାଇନ ଠକେଇ","ହେରାସମେଣ୍ଟ","ପରିଚୟ ଚୋରି","ମୋବାଇଲ ଚୋରି"],
+    state:"ରାଜ୍ୟ:", district:"ଜିଲ୍ଲା:", village:"ଗ୍ରାମ / ସହର:", landmark:"ନିକଟସ୍ଥ ପ୍ରମୁଖ ସ୍ଥାନ:",
+    imei:"ମୋବାଇଲ IMEI ନମ୍ବର (ଯଦି ମୋବାଇଲ ହରାଇଯାଇଛି):",
+    sim:"SIM ନମ୍ବର (ଯଦି ଉପଲବ୍ଧ):",
+    date:"ଘଟଣାର ତାରିଖ:", time:"ଘଟଣାର ଅନୁମାନିତ ସମୟ:", details:"ଘଟଣା ବିବରଣ କରନ୍ତୁ:",
+    policeComplaint:"ଆପଣ ପୋଲିସ ଷ୍ଟେସନରେ ଅଭିଯୋଗ ଦାଖଲ କରିଛନ୍ତି କି?", firFile:"FIR କପି ଅପଲୋଡ କରନ୍ତୁ (ଯଦି ଉପଲବ୍ଧ):",
+    step2:"ସନ୍ଦେହାସ୍ପଦ ବିବରଣୀ", suspectName:"ସନ୍ଦେହାସ୍ପଦଙ୍କ ନାମ (ଯଦି ଜାଣିଛନ୍ତି):", suspectEmail:"ସନ୍ଦେହାସ୍ପଦ ଇମେଲ୍:", suspectPhone:"ସନ୍ଦେହାସ୍ପଦ ଫୋନ୍:",
+    step3:"ପ୍ରିଭ୍ୟୁ & ରେଟିଂ", submit:"ରିପୋର୍ଟ ତିଆରି କରନ୍ତୁ"
+  },
+  ur: {
+    notice:"براہ کرم واقعہ کی درست تفصیلات فراہم کریں۔ جھوٹی شکایات قانون کے تحت قابل سزا ہیں۔",
+    tab1:"شکایت", tab2:"مشبہ", tab3:"پریویو اور درجہ بندی",
+    step1:"شکایت اور واقعے کی تفصیلات", name:"آپ کا پورا نام:", id:"آدھار / راشن / پین نمبر:",
+    category:"شکایت کی قسم:", categoryOptions:["فشنگ","ہیکنگ","آن لائن فراڈ","ہراساں کرنا","شناخت کی چوری","موبائل چوری"],
+    state:"ریاست:", district:"ضلع:", village:"گاؤں / شہر:", landmark:"قریب کا اہم مقام:",
+    imei:"موبائل IMEI نمبر (اگر موبائل گم ہو جائے):",
+    sim:"SIM نمبر (اگر دستیاب ہو):",
+    date:"واقعے کی تاریخ:", time:"واقعے کا اندازہ وقت:", details:"واقعے کی تفصیل بیان کریں:",
+    policeComplaint:"کیا آپ نے پولیس اسٹیشن میں شکایت درج کرائی ہے؟", firFile:"FIR کی کاپی اپ لوڈ کریں (اگر دستیاب ہو):",
+    step2:"مشبہ کی تفصیلات", suspectName:"مشبہ کا نام (اگر معلوم ہو):", suspectEmail:"مشبہ کا ای میل:", suspectPhone:"مشبہ کا فون:",
+    step3:"پریویو اور درجہ بندی", submit:"رپورٹ تیار کریں"
+  }
+};
+
+function loadTranslations() {
+  const lang = document.getElementById("language").value;
+  const t = translations[lang];
+  if (!t) return;
+  document.querySelectorAll("[data-key]").forEach(el => {
+    const key = el.getAttribute("data-key");
+    if (key === "category") {
+      const select = document.getElementById("category");
+      select.innerHTML = "";
+      t.categoryOptions.forEach(opt => {
+        const o = document.createElement("option");
+        o.textContent = opt;
+        select.appendChild(o);
       });
-  </script>
+    } else {
+      el.textContent = t[key];
+    }
+  });
+}
+
+function goStep(step){ 
+  document.querySelectorAll('.form-step').forEach(s=>s.classList.remove('active')); 
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); 
+  document.getElementById('step'+step).classList.add('active'); 
+  document.getElementById('tab'+step).classList.add('active'); 
+  if(step===3) generatePreview(); 
+}
+function nextStep(step){ goStep(step); }
+function prevStep(step){ goStep(step); }
+
+function toggleFIRFields(){ 
+  const sel=document.getElementById('police-complaint').value; 
+  document.getElementById('fir-section').style.display=(sel==='yes')?'block':'none'; 
+}
+
+function generatePreview(){
+  const data = {
+    Name: document.getElementById("complainant-name").value,
+    ID: document.getElementById("complainant-id").value,
+    Category: document.getElementById("category").value,
+    State: document.getElementById("state").value,
+    District: document.getElementById("district").value,
+    Village: document.getElementById("village").value,
+    Landmark: document.getElementById("landmark").value,
+    IMEI: document.getElementById("imei").value,
+    SIM: document.getElementById("sim-number").value,
+    Date: document.getElementById("date").value,
+    Time: document.getElementById("time").value,
+    Details: document.getElementById("details").value,
+    SuspectName: document.getElementById("suspect-name").value,
+    SuspectEmail: document.getElementById("suspect-email").value,
+    SuspectPhone: document.getElementById("suspect-phone").value,
+    PoliceComplaint: document.getElementById("police-complaint").value
+  };
+  let html = "<table>";
+  for (let key in data) { html += `<tr><th>${key}</th><td>${data[key]}</td></tr>`; }
+  html += "</table>";
+  document.getElementById("preview").innerHTML = html;
+}
+
+function rate(stars){ 
+  document.querySelectorAll('#stars span').forEach((s,i)=>{ 
+    if(i<stars) s.classList.add('active'); else s.classList.remove('active'); 
+  }); 
+}
+function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(16);
+  doc.setFont("helvetica", "bold");
+  doc.text("Government of India", 105, 15, { align: "center" });
+  doc.setFontSize(14);
+  doc.text("National Cyber Crime Reporting Portal", 105, 25, { align: "center" });
+  doc.setLineWidth(0.5);
+  doc.circle(20, 20, 8); 
+  doc.text("🔒", 16, 24); 
+  doc.setLineWidth(0.2);
+  doc.rect(10, 10, 190, 270);
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text("Cyber Crime Complaint Report", 105, 40, { align: "center" });
+
+  let y = 55;
+  doc.setFont("helvetica", "normal");
+  const add = (label, val) => {
+    doc.text(`${label}: ${val}`, 20, y);
+    y += 10;
+  };
+  add("Name", document.getElementById('complainant-name').value);
+  add("ID", document.getElementById('complainant-id').value);
+  add("Category", document.getElementById('category').value);
+  add("State", document.getElementById('state').value);
+  add("District", document.getElementById('district').value);
+  add("Village", document.getElementById('village').value);
+  add("Landmark", document.getElementById('landmark').value);
+  add("IMEI", document.getElementById('imei').value);
+  add("SIM", document.getElementById('sim-number').value);
+  add("Date", document.getElementById('date').value);
+  add("Time", document.getElementById('time').value);
+  add("Details", document.getElementById('details').value);
+  add("Suspect Name", document.getElementById('suspect-name').value);
+  add("Suspect Email", document.getElementById('suspect-email').value);
+  add("Suspect Phone", document.getElementById('suspect-phone').value);
+  add("Police Complaint", document.getElementById('police-complaint').value);
+  y += 20;
+  doc.line(20, y, 80, y);
+  doc.text("Complainant Signature", 20, y + 10);
+
+  y += 30;
+  doc.line(20, y, 80, y);
+  doc.text("Police Inspector Signature", 20, y + 10);
+
+  doc.save("complaint.pdf");
+}
+
+window.onload = loadTranslations;
+</script>
 </body>
 </html>

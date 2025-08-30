@@ -1,33 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>iReport-Your-Cybercrime-Assistant</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="assets/chatbot.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cybercrime Emergency & Volunteer Project</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: url("assets/images/background.png") no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      line-height: 1.6;
+      color: white;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 30px auto;
+      background: rgba(0, 0, 0, 0.6); /* dark transparent background for readability */
+      padding: 20px 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      color: white;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #f1faee; /* light headings for contrast */
+    }
+
+    p, label, option, textarea {
+      color: white;
+    }
+
+    .form-section, .background-section {
+      margin-top: 30px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: 1px solid rgba(0,0,0,0.5); /* light black border */
+      box-sizing: border-box;
+      color: black;
+      background-color: #f1faee;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 5px;
+      border: none;
+      background-color: #0073e6;
+      color: white;
+      cursor: pointer;
+      box-sizing: border-box;
+    }
+
+    button:hover {
+      background-color: #0073e6;
+    }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      color: #0073e6;
+    }
+  </style>
 </head>
 <body>
-    <main class="container">
-    <header>
-    <h1>iReport - Your Cybercrime Assistant</h1>
-    <p class="subtitle">Get Learned , stay Safe.</p>
-    </header>
+  <div class="container background-section">
+  </div>
 
-    <section class="menu" aria-label="Main Menu">
-    <div class="menu-item" data-page="complaint">
-    </div>
-    </section>
-    <div id="chat-container"></div>
-    <script src="assets/chatbot.js"></script>
-    <script>
-        fetch("assets/chatbot.html")
-        .then(response => response.text())
-        .then(data => {
-        document.getElementById("chat-container").innerHTML = data;
-        if (typeof initChat === "function") {
-            initChat();
+  <div class="container form-section">
+    <h2>Volunteer Signup</h2>
+    <form id="volunteerForm">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="interest">Area of Interest:</label>
+      <select id="interest" name="interest">
+        <option value="web">Web Development</option>
+        <option value="design">Design</option>
+        <option value="marketing">Marketing</option>
+        <option value="security">Cybersecurity</option>
+      </select>
+
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" rows="4" placeholder="Tell us why you want to volunteer..."></textarea>
+
+      <button type="submit">Submit</button>
+      <div class="message" id="formMessage"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById('volunteerForm');
+    const formMessage = document.getElementById('formMessage');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      fetch('https://example.com/volunteer-signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(response => {
+        if(response.ok) {
+          formMessage.textContent = "Thank you! Your signup has been received.";
+          formMessage.style.color = '#28a745';
+          form.reset();
+        } else {
+          formMessage.textContent = "Oops! Something went wrong. Try again.";
+          formMessage.style.color = 'red';
         }
+      })
+      .catch(error => {
+        formMessage.textContent = "Network error. Please try again later.";
+        formMessage.style.color = 'red';
+      });
     });
-    </script>
+  </script>
 </body>
 </html>

@@ -1,33 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>iReport-Your-Cybercrime-Assistant</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="assets/chatbot.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suspect Check with CAPTCHA</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: url('./assets/images/background.png') no-repeat center center fixed;
+    background-size: cover;
+    color: #ffffff;
+    padding-top: 50px;
+}
+.container {
+    background: rgba(0,0,0,0.8);
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    width: 400px;
+    text-align: center;
+}
+input[type="text"] {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+button {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+}
+button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+}
+table {
+    margin: 15px auto;
+    border-collapse: collapse;
+}
+td {
+    border: 1px solid #ccc;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background 0.2s;
+}
+td:hover {
+    background-color: #007bff;
+    color: white;
+}
+.selected {
+    background-color: #007bff;
+    color: white;
+}
+.result {
+    font-weight: bold;
+    margin-top: 15px;
+    text-align: left;
+}
+</style>
 </head>
 <body>
-    <main class="container">
-    <header>
-    <h1>iReport - Your Cybercrime Assistant</h1>
-    <p class="subtitle">Get Learned , stay Safe.</p>
-    </header>
+<div class="container">
+    <h2>Check Suspect Details</h2>
+    <input type="text" id="name" placeholder="Enter Name"><br>
+    <input type="text" id="phone" placeholder="Enter Phone Number"><br>
+    <input type="text" id="state" placeholder="Enter State"><br>
+    <input type="text" id="district" placeholder="Enter District"><br>
+    <input type="text" id="village" placeholder="Enter Village"><br>
 
-    <section class="menu" aria-label="Main Menu">
-    <div class="menu-item" data-page="complaint">
-    </div>
-    </section>
-    <div id="chat-container"></div>
-    <script src="assets/chatbot.js"></script>
-    <script>
-        fetch("assets/chatbot.html")
-           .then(response => response.text())
-        .then(data => {
-        document.getElementById("chat-container").innerHTML = data;
-        if (typeof initChat === "function") {
-            initChat();
-        }
-        });
-    </script>
+    <p>Letters CAPTCHA:</p>
+    <div id="captchaLetters" style="font-size: 24px; font-weight: bold; letter-spacing: 5px; margin-bottom: 10px;"></div>
+    <input type="text" id="captchaInput" placeholder="Enter letters here">
+
+    <p>Select the correct option:</p>
+    <table>
+        <tr>
+            <td onclick="selectOption(this)">I’m human</td>
+        </tr>
+    </table>
+
+    <button id="submitBtn" disabled onclick="submitForm()">Submit</button>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+// ---------- CAPTCHA ----------
+let generatedCaptcha = "";
+let selectedOption = null;
+
+function generateCaptcha() {
+    const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let captcha = "";
+    for (let i = 0; i < 6; i++) {
+        captcha += letters.charAt(Math.floor(Math.random() * letters.length));
+    }
+    generatedCaptcha = captcha;
+    document.getElementById('captchaLetters').textContent = captcha;
+}
+
+function selectOption(cell) {
+    document.querySelectorAll('td').forEach(td => td.classList.remove('selected'));
+    cell.classList.add('selected');
+    selectedOption = cell.textContent;
+    document.getElementById('submitBtn').disabled = false;
+}
+
+// ---------- SUSPECT DATABASE ----------
+const suspects = [
+    { name: "Rahul Sharma", phone: "9876543210", state: "Maharashtra", district: "Pune", village: "Hinjewadi", gender: "Male", aadhaar: "1234 5678 9012" },
+    { name: "Priya Verma", phone: "8765432109", state: "Uttar Pradesh", district: "Lucknow", village: "Aliganj", gender: "Female", aadhaar: "2345 6789 0123" },
+    { name: "Amit Singh", phone: "7654321098", state: "Bihar", district: "Patna", village: "Kankarbagh", gender: "Male", aadhaar: "3456 7890 1234" },
+    { name: "Sneha Roy", phone: "6543210987", state: "West Bengal", district: "Kolkata", village: "Behala", gender: "Female", aadhaar: "4567 8901 2345" },
+    { name: "Alex Kumar", phone: "5432109876", state: "Karnataka", district: "Bangalore", village: "Whitefield", gender: "Other", aadhaar: "5678 9012 3456" }
+];
+
+// ---------- FORM SUBMIT ----------
+function submitForm() {
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const state = document.getElementById('state').value.trim();
+    const district = document.getElementById('district').value.trim();
+    const village = document.getElementById('village').value.trim();
+    const captchaInput = document.getElementById('captchaInput').value.trim().toUpperCase();
+    const resultDiv = document.getElementById('result');
+
+    if (!name || !phone || !state || !district || !village) {
+        resultDiv.style.color = 'red';
+        resultDiv.textContent = "Please fill all fields.";
+        return;
+    }
+
+    if (captchaInput !== generatedCaptcha) {
+        resultDiv.style.color = 'red';
+        resultDiv.textContent = "CAPTCHA letters do not match. Try again.";
+        generateCaptcha();
+        document.getElementById('captchaInput').value = "";
+        return;
+    }
+
+    if (selectedOption !== "I’m human") {
+        resultDiv.style.color = 'red';
+        resultDiv.textContent = "You must select 'I’m human' to proceed.";
+        return;
+    }
+
+    const found = suspects.find(s => 
+        s.name.toLowerCase() === name.toLowerCase() &&
+        s.phone === phone &&
+        s.state.toLowerCase() === state.toLowerCase() &&
+        s.district.toLowerCase() === district.toLowerCase() &&
+        s.village.toLowerCase() === village.toLowerCase()
+    );
+
+    if (found) {
+        resultDiv.style.color = 'green';
+        resultDiv.innerHTML = `
+            <p>Suspect Found:</p>
+            <p><strong>Name:</strong> ${found.name}</p>
+            <p><strong>Phone:</strong> ${found.phone}</p>
+            <p><strong>State:</strong> ${found.state}</p>
+            <p><strong>District:</strong> ${found.district}</p>
+            <p><strong>Village:</strong> ${found.village}</p>
+            <p><strong>Gender:</strong> ${found.gender}</p>
+            <p><strong>Aadhaar:</strong> ${found.aadhaar}</p>
+        `;
+    } else {
+        resultDiv.style.color = 'orange';
+        resultDiv.textContent = "No suspect found.";
+    }
+}
+
+// Initialize CAPTCHA
+generateCaptcha();
+</script>
 </body>
 </html>

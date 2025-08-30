@@ -1,33 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>iReport-Your-Cybercrime-Assistant</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="assets/chatbot.css">
+<meta charset="UTF-8">
+<title>Cybercrime Puzzle Game</title>
+<style>
+body {
+  margin: 0; padding: 0; height: 100vh;
+  display: flex; justify-content: center; align-items: center;
+  background: url("assets/images/background.png") no-repeat center center fixed;
+  background-size: cover;
+  font-family: Arial, sans-serif; color: #fff;
+}
+#puzzleBtn { background: #00c4ff; padding: 15px 30px; border-radius: 12px; cursor: pointer; font-size: 20px; font-weight: bold; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.5); transition: transform 0.2s; }
+#puzzleBtn:hover { transform: scale(1.05); background: #0080aa; }
+#puzzleModal {
+  display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center;
+}
+#puzzleContent {
+  background: rgba(20,20,20,0.95); padding: 25px; border-radius: 16px;
+  max-width: 900px; width: 90%; text-align: center; box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+  overflow-y: auto; max-height: 90vh;
+}
+h2 { margin-top: 0; color: #00c4ff; }
+button.game-option, button.quiz-option { display: block; margin: 10px auto; padding: 12px; background: #333; border-radius: 8px; cursor: pointer; width: 80%; border: 2px solid transparent; transition: 0.3s; color: #fff; font-size: 18px; }
+button.game-option:hover, button.quiz-option:hover { background: #555; border-color: #00c4ff; }
+.close-btn { background: #ff4444; color: #fff; border: none; padding: 10px 18px; margin-top: 20px; cursor: pointer; border-radius: 6px; font-weight: bold; }
+#levelInfo { margin-bottom: 15px; font-size: 18px; color: #ffcc00; }
+#puzzleArea { margin-top: 15px; }
+#malwareMaze { display: grid; gap: 2px; justify-content: center; margin-top: 10px; }
+.cell { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; border: 1px solid #555; font-size: 18px; cursor: pointer; }
+.cell.safe { background: #222; }
+.cell.malware { background: red; color: white; }
+.cell.packet { background: #00ff00; color: black; }
+</style>
 </head>
 <body>
-    <main class="container">
-    <header>
-    <h1>iReport - Your Cybercrime Assistant</h1>
-    <p class="subtitle">Get Learned , stay Safe.</p>
-    </header>
 
-    <section class="menu" aria-label="Main Menu">
-    <div class="menu-item" data-page="complaint">
+<div id="puzzleBtn">🧩 Start Cybercrime Puzzle</div>
+
+<div id="puzzleModal">
+  <div id="puzzleContent">
+    <h2>Cybercrime Game</h2>
+    <div id="gameMenu">
+      <p>Select a game mode:</p>
+      <button class="game-option" onclick="startQuiz()">Knowledgeable Quiz</button>
+      <button class="game-option" onclick="startPasswordPuzzle()">Password Puzzle</button>
+      <button class="game-option" onclick="startPhishingPuzzle()">Phishing Detective</button>
+      <button class="game-option" onclick="startMalwareMaze()">Malware Maze</button>
     </div>
-    </section>
-    <div id="chat-container"></div>
-    <script src="assets/chatbot.js"></script>
-    <script>
-    fetch("assets/chatbot.html")
-        .then(response => response.text())
-        .then(data => {
-        document.getElementById("chat-container").innerHTML = data;
-        if (typeof initChat === "function") {
-            initChat();
-        }
-        });
-    </script>
+    <p id="levelInfo"></p>
+    <div id="puzzleArea"></div>
+    <button class="close-btn" onclick="closePuzzle()">Close</button>
+  </div>
+</div>
+
+<script>
+// --- GLOBAL VARIABLES ---
+const puzzleBtn = document.getElementById("puzzleBtn");
+const puzzleModal = document.getElementById("puzzleModal");
+const gameMenu = document.getElementById("gameMenu");
+const puzzleArea = document.getElementById("puzzleArea");
+const levelInfo = document.getElementById("levelInfo");
+
+let currentGame = "";
+let currentLevel = 1;
+let currentQuiz = 0;
+let answers = [];
+
+// --- PUZZLE BUTTON ---
+puzzleBtn.addEventListener("click", () => {
+  gameMenu.style.display = "block";
+  puzzleArea.innerHTML = "";
+  levelInfo.innerHTML = "";
+  puzzleModal.style.display = "flex";
+});
+let quizData = [
+  {q:"What is phishing?", options:["Fraudulent attempt to steal data","Secure banking process","Virus protection"], answer:"Fraudulent attempt to steal data"},
+  {q:"Which is a strong password?", options:["123456","P@ssw0rd!2024","password"], answer:"P@ssw0rd!2024"},
+  {q:"What does HTTPS mean?", options:["Hyper Text Transfer Protocol Secure","Home Transfer Protocol Service","Hackers Take Personal Stuff"], answer:"Hyper Text Transfer Protocol Secure"},
+  {q:"Ransomware does what?", options:["Encrypts files & demands payment","Protects system","Speeds up computer"], answer:"Encrypts files & demands payment"},
+  {q:"Which email attachment is most suspicious?", options:[".exe file from unknown sender",".pdf from teacher",".jpg from friend"], answer:".exe file from unknown sender"},
+  {q:"Two-factor authentication means?", options:["Two passwords","Password + extra security (like OTP)","Only username"], answer:"Password + extra security (like OTP)"},
+  {q:"Social engineering is?", options:["Manipulating people to give info","A new coding language","Computer repair"], answer:"Manipulating people to give info"},
+  {q:"Which device is safest on public Wi-Fi?", options:["With VPN","Without antivirus","Unlocked phone"], answer:"With VPN"},
+  {q:"What is identity theft?", options:["Stealing someone’s personal data","Creating new accounts","Buying online safely"], answer:"Stealing someone’s personal data"},
+  {q:"Which is an example of cyberbullying?", options:["Sending threats online","Using antivirus","Reporting crime"], answer:"Sending threats online"},
+
+  // === New 40 Questions ===
+  {q:"What is malware?", options:["Malicious software","Security software","Network hardware"], answer:"Malicious software"},
+  {q:"What does a firewall do?", options:["Blocks unauthorized access","Boosts internet speed","Cleans computer files"], answer:"Blocks unauthorized access"},
+  {q:"Which is safer?", options:["Using different passwords for each account","Using same password everywhere","No password"], answer:"Using different passwords for each account"},
+  {q:"What is spyware?", options:["Software that secretly monitors user activity","Antivirus program","VPN tool"], answer:"Software that secretly monitors user activity"},
+  {q:"Keylogging is?", options:["Recording keystrokes to steal data","Faster typing method","Password recovery tool"], answer:"Recording keystrokes to steal data"},
+  {q:"What should you check in suspicious emails?", options:["Sender address & links","Font style","Background color"], answer:"Sender address & links"},
+  {q:"Which is an example of data breach?", options:["Leaked usernames & passwords online","Installing antivirus","Strong Wi-Fi password"], answer:"Leaked usernames & passwords online"},
+  {q:"What is DDoS attack?", options:["Overloading a system with traffic","Encrypting files","Deleting all files"], answer:"Overloading a system with traffic"},
+  {q:"Which is an example of secure practice?", options:["Regularly updating software","Sharing passwords","Using public Wi-Fi without VPN"], answer:"Regularly updating software"},
+  {q:"Which file is most dangerous?", options:["Unknown .exe file","PDF from official site","JPEG photo"], answer:"Unknown .exe file"},
+
+  {q:"What is SQL Injection?", options:["Hacking a database with malicious code","Updating SQL database","Installing SQL software"], answer:"Hacking a database with malicious code"},
+  {q:"What is brute force attack?", options:["Trying many passwords until one works","Using strong encryption","Fixing server speed"], answer:"Trying many passwords until one works"},
+  {q:"What is ethical hacking?", options:["Authorized hacking to improve security","Illegal hacking","Playing hacking games"], answer:"Authorized hacking to improve security"},
+  {q:"What is a Trojan horse?", options:["Malware disguised as legitimate software","Antivirus program","Safe email attachment"], answer:"Malware disguised as legitimate software"},
+  {q:"Best way to secure social media?", options:["Enable 2FA & strong password","Share password with friends","Click all links"], answer:"Enable 2FA & strong password"},
+  {q:"VPN is used for?", options:["Encrypting internet traffic","Speeding up Wi-Fi","Blocking ads"], answer:"Encrypting internet traffic"},
+  {q:"Which is phishing example?", options:["Fake bank email asking login info","Official govt portal","Company’s official site"], answer:"Fake bank email asking login info"},
+  {q:"What is digital forensics?", options:["Investigating cybercrimes","Designing web apps","Fixing hardware"], answer:"Investigating cybercrimes"},
+  {q:"Which is ransomware example?", options:["Files locked until payment made","Installing free app","Deleting browser history"], answer:"Files locked until payment made"},
+  {q:"Which is safer cloud practice?", options:["Use encrypted storage","Share login widely","Store unprotected"], answer:"Use encrypted storage"},
+
+  {q:"Botnet is?", options:["Network of infected computers","New type of router","Antivirus tool"], answer:"Network of infected computers"},
+  {q:"What is spear phishing?", options:["Targeted phishing attack","Fishing with spear","Broad spam emails"], answer:"Targeted phishing attack"},
+  {q:"Cyber grooming means?", options:["Building trust to exploit children online","Teaching coding","Making gaming avatars"], answer:"Building trust to exploit children online"},
+  {q:"What is shoulder surfing?", options:["Watching someone type password","Playing online games","Changing wallpaper"], answer:"Watching someone type password"},
+  {q:"Dark web is?", options:["Part of internet not indexed by search engines","Facebook","Company intranet"], answer:"Part of internet not indexed by search engines"},
+  {q:"Which is safest Wi-Fi security?", options:["WPA3 encryption","No password","WEP"], answer:"WPA3 encryption"},
+  {q:"Which device is at risk of IoT hacking?", options:["Smart home devices","Analog phone","Non-digital lock"], answer:"Smart home devices"},
+  {q:"What is patching?", options:["Fixing security vulnerabilities","Decorating apps","Deleting files"], answer:"Fixing security vulnerabilities"},
+  {q:"Cyberstalking is?", options:["Harassing someone online repeatedly","Installing antivirus","Sharing memes"], answer:"Harassing someone online repeatedly"},
+  {q:"Which is a common sign of phishing site?", options:["URL with misspellings","HTTPS certificate","Official logo"], answer:"URL with misspellings"},
+
+  {q:"What is clickjacking?", options:["Tricking user into clicking hidden element","Fast clicking for gaming","Double-clicking files"], answer:"Tricking user into clicking hidden element"},
+  {q:"What is spoofing?", options:["Disguising as trusted source","Encrypting files","Updating OS"], answer:"Disguising as trusted source"},
+  {q:"What is a honeypot in cybersecurity?", options:["Decoy system to attract hackers","Bee farming software","Password manager"], answer:"Decoy system to attract hackers"},
+  {q:"What is whaling attack?", options:["Phishing targeting executives","Fishing whales","Crashing servers"], answer:"Phishing targeting executives"},
+  {q:"Which is an example of insider threat?", options:["Employee leaking company data","Unknown hacker","Antivirus update"], answer:"Employee leaking company data"},
+  {q:"Which is an example of cyber terrorism?", options:["Hacking govt systems for disruption","Posting cat videos","Fixing a website"], answer:"Hacking govt systems for disruption"},
+  {q:"What is sniffing?", options:["Intercepting network traffic","Typing fast","Smelling keyboard"], answer:"Intercepting network traffic"},
+  {q:"Which is safer email habit?", options:["Do not click unknown links","Open all attachments","Reply to spam"], answer:"Do not click unknown links"},
+  {q:"What is zero-day vulnerability?", options:["Unknown security flaw exploited by hackers","Antivirus update","Old patched bug"], answer:"Unknown security flaw exploited by hackers"},
+  {q:"What is cyber hygiene?", options:["Regular safe practices like updates, strong passwords","Cleaning keyboard","Buying antivirus once"], answer:"Regular safe practices like updates, strong passwords"}
+];
+
+
+// Split into 5 levels of 10 Q each
+const quizLevels = [];
+for (let i = 0; i < 5; i++) {
+  quizLevels.push(quizData.slice(i*10, (i+1)*10));
+}
+
+// --- QUIZ FUNCTIONS ---
+function startQuiz() {
+  currentGame = "quiz";
+  currentLevel = 0;
+  currentQuiz = 0;
+  answers = [];
+  gameMenu.style.display = "none";
+  loadQuiz();
+}
+
+function loadQuiz() {
+  levelInfo.textContent = "Level " + (currentLevel+1) + " - Question " + (currentQuiz+1) + "/10";
+  const qData = quizLevels[currentLevel][currentQuiz];
+  puzzleArea.innerHTML = "";
+  const questionEl = document.createElement("p");
+  questionEl.textContent = qData.q;
+  puzzleArea.appendChild(questionEl);
+
+  qData.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = "quiz-option";
+    btn.textContent = opt;
+    btn.onclick = () => {
+      answers.push({question:qData.q, selected:opt, correct:qData.answer});
+      nextQuestion();
+    };
+    puzzleArea.appendChild(btn);
+  });
+}
+
+function nextQuestion() {
+  currentQuiz++;
+  if(currentQuiz < 10) loadQuiz();
+  else showQuizResults();
+}
+
+function showQuizResults() {
+  let score = answers.filter(a => a.selected === a.correct).length;
+  let html = `<h3>Level ${currentLevel+1} Results</h3><p>Score: ${score}/10</p>`;
+  answers.forEach((a,i)=>{
+    const color = (a.selected === a.correct) ? "lightgreen":"tomato";
+    html += `<p style="color:${color}">Q${i+1}: ${a.question}<br>Your Answer: ${a.selected}<br>Correct: ${a.correct}</p>`;
+  });
+  puzzleArea.innerHTML = html;
+  if(score >= 7){
+    if(currentLevel < 4) puzzleArea.innerHTML += `<button class="quiz-option" onclick="nextQuizLevel()">➡️ Next Level</button>`;
+    else puzzleArea.innerHTML += `<p>🏆 All 5 Levels Completed! You are a Cyber Hero!</p>`;
+  } else {
+    puzzleArea.innerHTML += `<button class="quiz-option" onclick="retryQuizLevel()">🔄 Retry Level</button>`;
+  }
+}
+
+function nextQuizLevel(){ currentLevel++; currentQuiz=0; answers=[]; loadQuiz(); }
+function retryQuizLevel(){ currentQuiz=0; answers=[]; loadQuiz(); }
+
+// ================== PASSWORD PUZZLE ==================
+function startPasswordPuzzle() {
+  currentGame = "password";
+  currentLevel = 1;
+  gameMenu.style.display = "none";
+  loadPasswordLevel();
+}
+
+function loadPasswordLevel() {
+  levelInfo.textContent = `Password Puzzle - Level ${currentLevel}`;
+  const passwordsPerLevel = {
+    1: ["apple","cyber","matrix"],
+    2: ["P@ss123","Hack2024","Safe!42"],
+    3: ["Cyb3r$afe!","P@ssw0rd!2025","S3cur3#Data"],
+    4: ["D@t@Prot3ct!","S3cur3P@ss!","C0mpuT3r$afe"],
+    5: ["N3tw0rk!Sec#2025","M@lic1ous0v3r!","Cr!pt0Safe!42"]
+  };
+  const password = passwordsPerLevel[currentLevel][Math.floor(Math.random()*3)];
+  const scrambled = password.split('').sort(()=>0.5-Math.random()).join('');
+  puzzleArea.innerHTML = `<p>Scrambled: <b>${scrambled}</b></p>
+    <input type="text" id="pwdInput" placeholder="Enter password">
+    <button onclick="checkPasswordLevel('${password}')">Submit</button>
+    <p id="pwdResult"></p>`;
+}
+
+function checkPasswordLevel(correct){
+  const input = document.getElementById("pwdInput").value;
+  const res = document.getElementById("pwdResult");
+  if(input === correct){
+    res.textContent = "✅ Correct!";
+    res.style.color = "lightgreen";
+    if(currentLevel < 5) puzzleArea.innerHTML += `<button class="quiz-option" onclick="nextPasswordLevel()">➡️ Next Level</button>`;
+    else puzzleArea.innerHTML += `<p>🏆 All Password Puzzle Levels Completed!</p>`;
+  } else {
+    res.textContent = "❌ Incorrect. Try again.";
+    res.style.color = "tomato";
+  }
+}
+
+function nextPasswordLevel(){ currentLevel++; loadPasswordLevel(); }
+
+// ================== PHISHING DETECTIVE ==================
+function startPhishingPuzzle() {
+  currentGame = "phishing";
+  currentLevel = 1;
+  gameMenu.style.display = "none";
+  loadPhishingLevel();
+}
+
+function loadPhishingLevel() {
+  levelInfo.textContent = `Phishing Detective - Level ${currentLevel}`;
+  const emailsPerLevel = {
+    1: [{text:"Bank Alert: Click here", phishing:true},{text:"School newsletter", phishing:false}],
+    2: [{text:"Paypal: Unauthorized login attempt", phishing:true},{text:"Company HR update", phishing:false}],
+    3: [{text:"Secure your account at bank-secure.com", phishing:true},{text:"Official tax notice", phishing:false}],
+    4: [{text:"Confirm payment info at paypal-secure.com", phishing:true},{text:"Team project update", phishing:false}],
+    5: [{text:"Login to secure-email.com to update account", phishing:true},{text:"Company newsletter", phishing:false}]
+  };
+  const email = emailsPerLevel[currentLevel][Math.floor(Math.random()*2)];
+  puzzleArea.innerHTML = `<p>${email.text}</p>
+    <button onclick="checkEmailLevel(true, ${email.phishing})">Phishing</button>
+    <button onclick="checkEmailLevel(false, ${email.phishing})">Safe</button>
+    <p id="emailResult"></p>`;
+}
+
+function checkEmailLevel(selected, correct){
+  const res = document.getElementById("emailResult");
+  if(selected === correct){
+    res.textContent = "✅ Correct!";
+    res.style.color = "lightgreen";
+    if(currentLevel < 5) puzzleArea.innerHTML += `<button class="quiz-option" onclick="nextPhishingLevel()">➡️ Next Level</button>`;
+    else puzzleArea.innerHTML += `<p>🏆 All Phishing Detective Levels Completed!</p>`;
+  } else {
+    res.textContent = "❌ Wrong!";
+    res.style.color = "tomato";
+  }
+}
+
+function nextPhishingLevel(){ currentLevel++; loadPhishingLevel(); }
+
+// ================== MALWARE MAZE ==================
+function startMalwareMaze() {
+  currentGame = "maze";
+  currentLevel = 1;
+  gameMenu.style.display = "none";
+  loadMazeLevel();
+}
+
+function loadMazeLevel(){
+  levelInfo.textContent = `Malware Maze - Level ${currentLevel}`;
+  const sizeMap = {1:6,2:7,3:8,4:9,5:10};
+  const dangerMap = {1:0.2,2:0.25,3:0.3,4:0.35,5:0.4};
+  const size = sizeMap[currentLevel];
+  const malwareChance = dangerMap[currentLevel];
+
+  const maze=[]; const packet={x:0,y:0}; const exit={x:size-1,y:size-1};
+  for(let i=0;i<size;i++){ maze[i]=[]; for(let j=0;j<size;j++){ maze[i][j]=(Math.random()<malwareChance && !(i===0 && j===0) && !(i===exit.x && j===exit.y)) ? 'malware':'safe'; } }
+
+  function renderMaze(){
+    puzzleArea.innerHTML = `<div id="malwareMaze" style="display:grid;grid-template-columns:repeat(${size},40px);gap:2px;"></div>`;
+    const grid = document.getElementById("malwareMaze");
+    for(let i=0;i<size;i++){ for(let j=0;j<size;j++){
+      const cell=document.createElement("div");
+      cell.className='cell '+maze[i][j];
+      if(i===packet.x && j===packet.y) cell.classList.add('packet');
+      if(i===exit.x && j===exit.y) cell.textContent='🏁';
+      grid.appendChild(cell);
+    }}
+  }
+
+  function move(dx,dy){
+    const nx=packet.x+dx, ny=packet.y+dy;
+    if(nx<0||ny<0||nx>=size||ny>=size) return;
+    packet.x=nx; packet.y=ny;
+    if(maze[nx][ny]==='malware'){ alert("💥 You hit malware! Try again."); packet.x=0; packet.y=0; }
+    else if(packet.x===exit.x && packet.y===exit.y){
+      alert("🏆 You reached the exit!");
+      if(currentLevel<5){ currentLevel++; loadMazeLevel(); } 
+      else alert("🏆 All Malware Maze Levels Completed!");
+    }
+    renderMaze();
+  }
+
+  renderMaze();
+  document.onkeydown=(e)=>{ if(e.key==='ArrowUp') move(-1,0); if(e.key==='ArrowDown') move(1,0); if(e.key==='ArrowLeft') move(0,-1); if(e.key==='ArrowRight') move(0,1);}
+}
+
+// ================== CLOSE PUZZLE ==================
+function closePuzzle(){
+  puzzleModal.style.display="none";
+  document.onkeydown=null;
+}
+</script>
+
 </body>
 </html>

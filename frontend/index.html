@@ -6,6 +6,33 @@
   <title>iReport - Your Cybercrime Assistant</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="assets/chatbot.css">
+
+  <style>
+    /* Center everything */
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;                  /* full viewport height */
+      display: flex;
+      justify-content: center;            /* horizontal center */
+      align-items: center;                /* vertical center */
+      background: url('./assets/images/background.png') no-repeat center center fixed;
+  background-size: cover;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+    
+      text-align: center;
+      max-width: 900px;
+      width: 95%;
+      background: rgba(0, 0, 0, 0.6);     /* dark semi-transparent box */
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      color: #e9dedef6;
+    }
+  </style>
 </head>
 <body>
 
@@ -48,10 +75,10 @@
       <img src="assets/icons/malware.png" alt="Check Malware">
       <p>Check Malware</p>
     </div>
-    <div class="menu-item" data-page="talktous">
-      <img src="assets/icons/talk to us.png" alt="Talk to Us">
-      <p>Talk to Us</p>
-    </div>
+   <div class="menu-item" data-page="talktous">
+  <img src="assets/icons/641657.png" alt="Talk to Us">
+  <p>Talk to Us</p>
+</div>
   </section>
 
   <footer>
@@ -59,20 +86,21 @@
     <a href="#" aria-label="Twitter"><img src="assets/icons/twitter.png" alt="Twitter"></a>
     <a href="#" aria-label="Facebook"><img src="assets/icons/facebook.png" alt="Facebook"></a>
   </footer>
+
+  <!-- chat container inside main so it appears centered -->
+  <div id="chat-container"></div>
 </main>
 
-<div id="chat-container"></div>
 <script src="assets/chatbot.js"></script>
 <script>
   fetch("assets/chatbot.html")
     .then(response => response.text())
     .then(data => {
       document.getElementById("chat-container").innerHTML = data;
-
-      if (typeof initChat === "function") {
+      if (typeof initChat === "function") 
         initChat();
       }
-    });
+    );
 
   document.querySelectorAll('.menu-item').forEach(item => {
     item.addEventListener('click', () => {

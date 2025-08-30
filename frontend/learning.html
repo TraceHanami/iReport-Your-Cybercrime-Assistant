@@ -1,33 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>iReport-Your-Cybercrime-Assistant</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="assets/chatbot.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cybercrime Learning Portal</title>
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: url('./assets/images/background.png') no-repeat center center fixed;
+  background-size: cover;
+  color: #ffffff; /* default font color white */
+}
+.container {
+  display: flex;
+  height: 100vh;
+  backdrop-filter: blur(8px);
+}
+.sidebar {
+  width: 280px;
+  background: rgba(0,0,0,0.85);
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  border-right: 2px solid #ff0000; /* red border */
+}
+.sidebar h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: #ff0000; /* sidebar title red */
+  text-align: center;
+}
+#search {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  border: none;
+  background: #111;
+  color: #ffffff; /* search text white */
+}
+.topic {
+  padding: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.3s;
+  color: #ff0000; /* topics in red */
+}
+.topic:hover { background: rgba(255,0,0,0.2); } /* red hover */
+.content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+  background: rgba(0,0,0,0.6);
+}
+.content h1 {
+  color: #ffffff; /* main content title white */
+  font-size: 2rem;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ffffff;
+  padding-bottom: 5px;
+}
+.content p { font-size: 1rem; line-height: 1.6; margin-bottom: 15px; color: #ffffff; }
+pre {
+  background: rgba(0,0,0,0.85);
+  padding: 20px;
+  border-radius: 8px;
+  overflow-x: auto;
+  border-left: 4px solid #ff0000; /* code block left border red */
+  color: #ffffff;
+}
+.lesson-nav { margin: 10px 0; }
+.lesson-nav button {
+  padding: 8px 15px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background: #111;
+  color: #ffffff;
+  transition: 0.3s;
+}
+.lesson-nav button:hover { background: #ff0000; color:#000; }
+.quiz { margin-top: 25px; padding-top: 15px; border-top: 1px solid #ff0000; }
+.quiz p { font-weight: bold; margin-bottom: 10px; color: #ffffff; }
+.quiz button {
+  margin: 5px 0;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background: #111;
+  color: #ffffff;
+  transition: background 0.3s, transform 0.2s;
+}
+.quiz button:hover { background: #ff0000; color: #000; transform: scale(1.05);}
+.sidebar::-webkit-scrollbar { width: 8px; }
+.sidebar::-webkit-scrollbar-thumb { background: #ff0000; border-radius: 4px;}
+@media (max-width:768px){
+  .container{flex-direction:column;}
+  .sidebar{width:100%;height:200px;border-right:none;border-bottom:2px solid #ff0000;}
+}
+</style>
 </head>
 <body>
-    <main class="container">
-    <header>
-    <h1>iReport - Your Cybercrime Assistant</h1>
-    <p class="subtitle">Get Learned , stay Safe.</p>
-    </header>
+<div class="container">
+<div class="sidebar">
+<h2>Cyber Topics</h2>
+<input type="text" id="search" placeholder="Search topics..." oninput="filterTopics()">
+<div class="topic" onclick="loadTopic(0)">Phishing Attacks</div>
+<div class="topic" onclick="loadTopic(1)">Malware Basics</div>
+<div class="topic" onclick="loadTopic(2)">Ethical Hacking</div>
+<div class="topic" onclick="loadTopic(3)">Ransomware</div>
+<div class="topic" onclick="loadTopic(4)">Social Engineering</div>
+<div class="topic" onclick="loadTopic(5)">Network Security</div>
+</div>
 
-    <section class="menu" aria-label="Main Menu">
-    <div class="menu-item" data-page="complaint">
-        </div>
-        </section>
-    <div id="chat-container"></div>
-    <script src="assets/chatbot.js"></script>
-    <script>
-        fetch("assets/chatbot.html")
-        .then(response => response.text())
-        .then(data => {
-        document.getElementById("chat-container").innerHTML = data;
-        if (typeof initChat === "function") {
-            initChat();
-        }
-        });
-    </script>
+<div class="content">
+<h1 id="topic-title">Welcome</h1>
+<p id="topic-content">Select a topic from the sidebar to start learning about cybercrime and digital security.</p>
+<pre id="topic-code"></pre>
+<div class="lesson-nav">
+<button onclick="prevLesson()">Previous Lesson</button>
+<button onclick="nextLesson()">Next Lesson</button>
+</div>
+<div class="quiz" id="quiz"></div>
+</div>
+</div>
+
+<script>
+const topics = [
+{
+title:"Phishing Attacks",
+lessons:[
+{title:"Introduction", content:"Phishing is a cyber attack where attackers try to steal sensitive information...", code:`const email="user@example.com";\nif(email.includes("example.com")){alert("Possible phishing attempt!");}`},
+{title:"Types of Phishing", content:"Email phishing, spear phishing, whaling and smishing are common types.", code:`function detectPhishing(email){return email.includes("suspicious");}`}
+],
+quiz:[
+{question:"What is phishing?", options:["A cyber attack","A programming language","A game","A browser"], answer:"A cyber attack"},
+{question:"Which is a type of phishing?", options:["Email phishing","Waterfall method","Chess","VPN"], answer:"Email phishing"}
+]
+},
+{
+title:"Malware Basics",
+lessons:[
+{title:"Introduction", content:"Malware is malicious software designed to harm or exploit computers.", code:`function detectMalware(file){return file.includes("virus");}`},
+{title:"Types", content:"Common malware includes viruses, trojans, worms and ransomware.", code:`function malwareType(name){return ["virus","trojan","worm"].includes(name);}`}
+],
+quiz:[
+{question:"Malware is?", options:["Safe software","Malicious software","A browser","A game"], answer:"Malicious software"},
+{question:"Example of malware?", options:["Trojan","Firewall","Word","Excel"], answer:"Trojan"}
+]
+},
+{
+title:"Ethical Hacking",
+lessons:[
+{title:"Introduction", content:"Ethical hacking involves testing systems for vulnerabilities.", code:`function scanSystem(){console.log("Scanning...");}`},
+{title:"Tools", content:"Common tools: Nmap, Wireshark, Metasploit.", code:`console.log("Using Nmap");`}
+],
+quiz:[
+{question:"Purpose of ethical hacking?", options:["Break laws","Find vulnerabilities","Steal info","Crash systems"], answer:"Find vulnerabilities"}
+]
+},
+{
+title:"Ransomware",
+lessons:[
+{title:"Definition", content:"Ransomware encrypts your files and demands payment.", code:`function ransomwareWarning(){alert("Do not click suspicious links!");}`},
+{title:"Prevention", content:"Always backup data and keep software updated.", code:`console.log("Backup data regularly");`}
+],
+quiz:[
+{question:"Ransomware is?", options:["Data encryption attack","Safe software","Firewall tool","Network protocol"], answer:"Data encryption attack"}
+]
+},
+{
+title:"Social Engineering",
+lessons:[
+{title:"Introduction", content:"Social engineering manipulates people into giving confidential info.", code:`function verifyIdentity(user){if(!user.verified) alert("Possible social engineering attempt");}`},
+{title:"Techniques", content:"Impersonation, pretexting, baiting, and tailgating are common.", code:`console.log("Be aware of social engineering");`}
+],
+quiz:[
+{question:"Social engineering targets?", options:["Humans","Routers","Software bugs","Files"], answer:"Humans"}
+]
+},
+{
+title:"Network Security",
+lessons:[
+{title:"Introduction", content:"Network security protects data and resources from unauthorized access.", code:`function checkFirewall(){console.log("Firewall status OK");}`},
+{title:"Methods", content:"Use firewalls, VPNs, IDS, and encryption.", code:`console.log("Implement VPN and IDS");`}
+],
+quiz:[
+{question:"Network security involves?", options:["Protecting data","Hacking emails","Playing games","Streaming videos"], answer:"Protecting data"}
+]
+}
+];
+
+let currentTopic = 0;
+let lessonIndex = 0;
+let currentQuiz = 0;
+let score = 0;
+
+function loadTopic(index){
+currentTopic=index; lessonIndex=0; currentQuiz=0; score=0;
+loadLesson(currentTopic,lessonIndex);
+loadQuiz();
+}
+
+function loadLesson(topicIdx,lessonIdx){
+const lesson = topics[topicIdx].lessons[lessonIdx];
+document.getElementById('topic-title').innerText=lesson.title;
+document.getElementById('topic-content').innerText=lesson.content;
+document.getElementById('topic-code').innerText=lesson.code;
+}
+
+function nextLesson(){ 
+if(lessonIndex < topics[currentTopic].lessons.length-1){lessonIndex++; loadLesson(currentTopic,lessonIndex);}
+}
+
+function prevLesson(){
+if(lessonIndex>0){lessonIndex--; loadLesson(currentTopic,lessonIndex);}
+}
+
+function loadQuiz(){
+const quizDiv = document.getElementById('quiz'); quizDiv.innerHTML='';
+const q = topics[currentTopic].quiz[currentQuiz];
+if(!q) return;
+const question = document.createElement('p'); question.innerText=q.question; quizDiv.appendChild(question);
+q.options.forEach(opt=>{
+const btn=document.createElement('button'); btn.innerText=opt; btn.onclick=()=>checkAnswer(opt); quizDiv.appendChild(btn);
+});
+}
+
+function checkAnswer(option){
+const q = topics[currentTopic].quiz[currentQuiz];
+if(option===q.answer) score++;
+currentQuiz++;
+if(currentQuiz<topics[currentTopic].quiz.length){loadQuiz();}
+else{alert(`Quiz completed! Score: ${score}/${topics[currentTopic].quiz.length}`); currentQuiz=0; loadQuiz();}
+}
+
+function filterTopics(){
+const query = document.getElementById('search').value.toLowerCase();
+document.querySelectorAll('.topic').forEach(t=>{
+t.style.display=t.innerText.toLowerCase().includes(query)?'block':'none';
+}
+);
+}
+</script>
 </body>
 </html>

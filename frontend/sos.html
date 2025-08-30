@@ -1,33 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>iReport-Your-Cybercrime-Assistant</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="assets/chatbot.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cybercrime Emergency Options</title>
+  <style>
+    :root {
+      --accent: #e63946;
+      --highlight: #ff6b6b;
+      --text: #f4f4f4;
+      --muted: #bbb;
+      --card-bg: rgba(0,0,0,0.5);
+    }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url("assets/images/background.png") no-repeat center center fixed;
+      background-size: cover;
+      color: var(--text);
+      padding: 50px;
+    }
+    h1 {
+      color: var(--highlight);
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    table {
+      width: 100%;
+      max-width: 1000px;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background: var(--card-bg);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 15px;
+      text-align: left;
+    }
+    th {
+      background-color: var(--accent);
+      color: #fff;
+      font-size: 1.1rem;
+    }
+    tr:nth-child(even) {
+      background-color: rgba(255,255,255,0.05);
+    }
+    button {
+      padding: 8px 15px;
+      font-size: 1rem;
+      color: white;
+      background-color: var(--accent);
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background-color: #ff4b4b;
+    }
+  </style>
 </head>
 <body>
-  <main class="container">
-    <header>
-    <h1>iReport - Your Cybercrime Assistant</h1>
-    <p class="subtitle">Get Learned , stay Safe.</p>
-    </header>
+  <h1>🚨 Cybercrime Emergency Options 🚨</h1>
 
-    <section class="menu" aria-label="Main Menu">
-    <div class="menu-item" data-page="complaint">
-    </div>
-    </section>
-<div id="chat-container"></div>
-<script src="assets/chatbot.js"></script>
-<script>
-  fetch("assets/chatbot.html")
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById("chat-container").innerHTML = data;
-      if (typeof initChat === "function") {
-        initChat();
-      }
-    });
-</script>
+  <table>
+    <thead>
+      <tr>
+        <th>Cybercrime Type</th>
+        <th>Description / Immediate Action</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Hacking & Unauthorized Access</td>
+        <td>Immediate action to protect systems and accounts</td>
+        <td><button onclick="sendAlert('Hacking and Unauthorized Access')">Send SOS</button></td>
+      </tr>
+      <tr>
+        <td>Ransomware Attack</td>
+        <td>Prevent data loss and system lockdown</td>
+        <td><button onclick="sendAlert('Ransomware Attack')">Send SOS</button></td>
+      </tr>
+      <tr>
+        <td>Phishing & Identity Theft</td>
+        <td>Alert users and secure compromised accounts</td>
+        <td><button onclick="sendAlert('Phishing and Identity Theft')">Send SOS</button></td>
+      </tr>
+      <tr>
+        <td>Malware & Virus Infection</td>
+        <td>Run antivirus, isolate infected devices</td>
+        <td><button onclick="sendAlert('Malware and Virus Infections')">Send SOS</button></td>
+      </tr>
+      <tr>
+        <td>Denial-of-Service (DoS/DDoS)</td>
+        <td>Mitigate attack and restore service</td>
+        <td><button onclick="sendAlert('Denial-of-Service Attack')">Send SOS</button></td>
+      </tr>
+      <tr>
+        <td>Financial Fraud & Online Scams</td>
+        <td>Freeze accounts and report fraud</td>
+        <td><button onclick="sendAlert('Financial Fraud and Online Scams')">Send SOS</button></td>
+      </tr>
+      <tr>
+        <td>Data Breach</td>
+        <td>Notify users and secure systems</td>
+        <td><button onclick="sendAlert('Data Breach')">Send SOS</button></td>
+      </tr>
+      <tr>
+        <td>Cyberstalking / Harassment</td>
+        <td>Report to authorities and preserve evidence</td>
+        <td><button onclick="sendAlert('Cyberstalking or Harassment')">Send SOS</button></td>
+      </tr>
+      <tr>
+        <td>Social Engineering Attack</td>
+        <td>Alert staff and investigate compromised access</td>
+        <td><button onclick="sendAlert('Social Engineering Attack')">Send SOS</button></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <script>
+    function sendAlert(type) {
+      const adminEmail = 'admin@example.com'; // Replace with your admin email
+      const message = `Cybercrime Emergency Alert: ${type}`;
+      window.location.href = `mailto:${adminEmail}?subject=Cybercrime Emergency&body=${encodeURIComponent(message)}`;
+      alert(`Cybercrime alert for '${type}' sent to admin!`);
+    }
+  </script>
 </body>
 </html>
