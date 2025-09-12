@@ -1,104 +1,248 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>iReport-Your-Cybercrime-Assistant</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="assets/chatbot.css">
-    <style>
-      /* Talk to Us Popup Styling */
-      #talk-section {
-        display: none;
-        text-align: center;
-        padding: 20px;
-        background: rgba(0,0,0,0.85);
-        color: white;
-        border-radius: 10px;
-        position: fixed;
-        top: 15%;
-        left: 50%;
-        transform: translate(-50%, -15%);
-        z-index: 1000;
-        width: 80%;
-        max-width: 450px;
-      }
-      #talk-section input, #talk-section textarea {
-        width: 90%;
-        padding: 10px;
-        margin: 8px 0;
-        border-radius: 5px;
-        border: none;
-      }
-      #talk-section button {
-        background: #007bff;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        margin-top: 10px;
-        cursor: pointer;
-      }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talk to Us - iReport</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: url('./assets/images/background.png') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #fff;
+  }
+  .container {
+    background: rgba(0,0,0,0.85);
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 650px;
+    width: 95%;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+  }
+  h1 {
+    color: red;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .box-options {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    gap: 15px;
+  }
+  .box {
+    flex: 1;
+    background: #111;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid red;
+    transition: 0.3s;
+  }
+  .box:hover {
+    background: red;
+    color: #000;
+  }
+  .hidden {
+    display: none;
+  }
+  label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+  }
+  input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    margin-bottom: 15px;
+    background: #111;
+    color: #fff;
+  }
+  textarea { resize: none; height: 120px; }
+  button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    background: rgb(51, 9, 221);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  button:hover { background: #2c07e4; }
+  .message { margin-top: 15px; text-align: center; font-weight: bold; }
+  .contact-list a {
+    display: block;
+    margin: 8px 0;
+    color: lightgreen;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  .contact-list a:hover { text-decoration: underline; }
+</style>
 </head>
 <body>
-    <main class="container">
-        <header>
-            <h1>iReport - Your Cybercrime Assistant</h1>
-            <p class="subtitle">Get Learned , stay Safe.</p>
-        </header>
 
-        <section class="menu" aria-label="Main Menu">
-            <!-- Example Talk to Us Menu Item -->
-            <div class="menu-item" onclick="openTalk()">
-                <h3>💬 Talk to Us</h3>
-                <p>Contact our team</p>
-            </div>
-        </section>
+<div class="container">
+  <h1>Talk to Us</h1>
 
-        <!-- Talk to Us Popup -->
-        <div id="talk-section">
-            <h2>💬 Talk to Us</h2>
-            <form id="contactForm">
-                <input type="text" id="name" placeholder="Your Name" required><br>
-                <input type="email" id="email" placeholder="Your Email" required><br>
-                <textarea id="message" placeholder="Type your message..." required></textarea><br>
-                <button type="submit">Send Message</button>
-            </form>
-            <p id="msg-status" style="margin-top:10px;color:lightgreen;font-weight:bold;"></p>
-            <button onclick="closeTalk()" style="background:gray;">Close</button>
-        </div>
+  <!-- Two option boxes -->
+  <div class="box-options">
+    <div class="box" onclick="showEmergency()">🚨 Emergency Contact</div>
+    <div class="box" onclick="showDatabase()">🏢 Police Station Finder</div>
+  </div>
 
-        <!-- Chat container -->
-        <div id="chat-container"></div>
-    </main>
+  <!-- Emergency Contacts -->
+  <div id="emergencyBox" class="hidden">
+    <h2 style="color:rgb(107, 18, 223);">Emergency Admin Numbers</h2>
+    <div class="contact-list">
+      <a href="tel:+911234567890">📞 +91 12345 67890 (Admin 1)</a>
+      <a href="tel:+919876543210">📞 +91 98765 43210 (Admin 2)</a>
+    </div>
+  </div>
 
-    <script src="assets/chatbot.js"></script>
-    <script>
-        // Load chatbot HTML
-        fetch("assets/chatbot.html")
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById("chat-container").innerHTML = data;
-            if (typeof initChat === "function") {
-                initChat();
-            }
-        });
+  <!-- Police Station Database -->
+  <div id="databaseBox" class="hidden">
+    <h2 style="color:rgb(71, 9, 227);">Police Station Database</h2>
+    <label for="state">Select State</label>
+    <select id="state" onchange="loadDistricts()">
+      <option value="">-- Select State --</option>
+      <option value="TamilNadu">Tamil Nadu</option>
+      <option value="Maharashtra">Maharashtra</option>
+    </select>
 
-        // Talk to Us Functions
-        function openTalk() {
-            document.getElementById('talk-section').style.display = 'block';
-        }
+    <label for="district">Select District</label>
+    <select id="district" onchange="loadVillages()">
+      <option value="">-- Select District --</option>
+    </select>
 
-        function closeTalk() {
-            document.getElementById('talk-section').style.display = 'none';
-        }
+    <label for="village">Select Village</label>
+    <select id="village" onchange="showStation()">
+      <option value="">-- Select Village --</option>
+    </select>
 
-        document.getElementById("contactForm").addEventListener("submit", function(event){
-            event.preventDefault();
-            document.getElementById('msg-status').innerText = "✅ Message Sent. We'll get back to you soon!";
-            this.reset();
-            // 🔗 Here you could send the form data to backend API
-        });
-    </script>
+    <div id="stationDetails" style="margin-top:15px;"></div>
+  </div>
+
+  <!-- Contact Form -->
+  <form id="contactForm">
+    <label for="name">Your Name</label>
+    <input type="text" id="name" placeholder="Enter your name" required>
+
+    <label for="email">Your Email</label>
+    <input type="email" id="email" placeholder="Enter your email" required>
+
+    <label for="message">Your Message</label>
+    <textarea id="message" placeholder="Type your message..." required></textarea>
+
+    <button type="submit">Send Message</button>
+  </form>
+  <div id="response" class="message"></div>
+</div>
+
+<script>
+function showEmergency(){
+  document.getElementById("emergencyBox").classList.remove("hidden");
+  document.getElementById("databaseBox").classList.add("hidden");
+}
+function showDatabase(){
+  document.getElementById("databaseBox").classList.remove("hidden");
+  document.getElementById("emergencyBox").classList.add("hidden");
+}
+
+// Example database
+const policeData = {
+  "TamilNadu": {
+    "Chennai": {
+      "T Nagar": {station:"T Nagar Police Station", phone:"+91 4444 555 666"},
+      "Anna Nagar": {station:"Anna Nagar Police Station", phone:"+91 4444 777 888"}
+    },
+    "Madurai": {
+      "Madurai South": {station:"Madurai South PS", phone:"+91 4545 111 222"}
+    }
+  },
+  "Maharashtra": {
+    "Mumbai": {
+      "Andheri": {station:"Andheri Police Station", phone:"+91 2222 333 444"},
+      "Dadar": {station:"Dadar Police Station", phone:"+91 2222 555 666"}
+    },
+    "Pune": {
+      "Shivaji Nagar": {station:"Shivaji Nagar PS", phone:"+91 2020 888 999"}
+    }
+  }
+};
+
+function loadDistricts(){
+  const state = document.getElementById("state").value;
+  const districtSel = document.getElementById("district");
+  districtSel.innerHTML='<option value="">-- Select District --</option>';
+  document.getElementById("village").innerHTML='<option value="">-- Select Village --</option>';
+  document.getElementById("stationDetails").innerHTML="";
+  if(state && policeData[state]){
+    Object.keys(policeData[state]).forEach(d=>{
+      let opt=document.createElement("option");
+      opt.value=d; opt.innerText=d; districtSel.appendChild(opt);
+    });
+  }
+}
+function loadVillages(){
+  const state = document.getElementById("state").value;
+  const district = document.getElementById("district").value;
+  const villageSel = document.getElementById("village");
+  villageSel.innerHTML='<option value="">-- Select Village --</option>';
+  document.getElementById("stationDetails").innerHTML="";
+  if(state && district && policeData[state][district]){
+    Object.keys(policeData[state][district]).forEach(v=>{
+      let opt=document.createElement("option");
+      opt.value=v; opt.innerText=v; villageSel.appendChild(opt);
+    });
+  }
+}
+function showStation(){
+  const state = document.getElementById("state").value;
+  const district = document.getElementById("district").value;
+  const village = document.getElementById("village").value;
+  const details = document.getElementById("stationDetails");
+  details.innerHTML="";
+  if(state && district && village){
+    const ps = policeData[state][district][village];
+    details.innerHTML=`<p><b>Station:</b> ${ps.station}</p><p><b>Phone:</b> <a href="tel:${ps.phone}">${ps.phone}</a></p>`;
+  }
+}
+
+// Contact form
+document.getElementById("contactForm").addEventListener("submit", function(e){
+  e.preventDefault();
+  const name = document.getElementById("name").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const message = document.getElementById("message").value.trim();
+  const response = document.getElementById("response");
+
+  if(name==="" || email==="" || message===""){
+    response.style.color="red";
+    response.innerText = "⚠️ Please fill in all fields!";
+    return;
+  }
+
+  let messages = JSON.parse(localStorage.getItem("messages")) || [];
+  messages.push({name,email,message,date:new Date().toLocaleString()});
+  localStorage.setItem("messages", JSON.stringify(messages));
+
+  response.style.color="lightgreen";
+  response.innerText = "✅ Message sent successfully!";
+  document.getElementById("contactForm").reset();
+});
+</script>
+
 </body>
 </html>

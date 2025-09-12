@@ -1,174 +1,262 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Phishing Detector - iReport</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="assets/chatbot.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Phishing Problems Checklist</title>
   <style>
-    /* Extra styles for phishing detector */
-    .phishing-card {
-      margin: 20px auto;
-      padding: 20px;
-      max-width: 750px;
-      background:  rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      color: #fff;
-      text-align: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    body{
+      font-family:Arial, sans-serif;
+      margin:0; padding:0; color:#fff;
+      background: url('./assets/images/background.png') no-repeat center center fixed;
+      background-size: cover;
     }
-    .phishing-card h2 {
-      margin-bottom: 10px;
+    .container{
+      max-width:900px; margin:40px auto;
+      background:rgba(0,0,0,0.85); padding:24px;
+      border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.5);
     }
-    .phishing-input {
-      display: flex;
-      gap: 10px;
-      margin: 15px 0;
+    h1{text-align:center; margin-bottom:20px; color:#fff;}
+    h3{color:#f1f1f1;}
+    input[type="text"], input[type="email"]{
+      width:100%; padding:10px; margin-bottom:14px;
+      border:1px solid #555; border-radius:8px;
+      font-size:1rem; background:#222; color:#fff;
     }
-    .phishing-input input {
-      flex: 1;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
+    input::placeholder{color:#aaa;}
+    .option{padding:10px; border-bottom:1px solid #444; display:flex; align-items:center; color:#fff;}
+    .option label{margin-left:8px;}
+    .hidden{display:none;}
+    button{
+      margin-top:20px; padding:10px 16px; font-size:1rem;
+      border:none; border-radius:8px;
+      background:#2563eb; color:#fff; cursor:pointer;
     }
-    .phishing-input button {
-      padding: 12px 16px;
-      border-radius: 8px;
-      border: none;
-      background: #0ea5a3;
-      color: #022;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .result-box {
-      margin-top: 15px;
-      padding: 16px;
-      border-radius: 8px;
-      text-align: left;
-      min-width: 150px;
-      max-height: 300px;
-      overflow-y: auto;
-      font-size: 16px;
-      line-height: 1.5;
-     background-color: rgba(255, 255, 255, 0.1);
-    }
-    .phishing { background:#ff4d4f; color:#fff; }
-    .suspicious { background:#ffb020; color:#000; }
-    .legit { background:#10b981; color:#fff; }
-
-    .btn-group {
-      margin-top: 15px;
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-    .btn-action {
-      padding: 10px 16px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    .btn-report { background:#dc3545; color:#fff; }
-    .btn-download { background:#28a745; color:#fff; }
+    button:hover{background:#1e40af;}
+    .problem{margin:20px 0; padding:16px; background:#111; border:1px solid #444; border-radius:8px;}
+    .problem h3{margin:0 0 10px; color:#4ade80;}
+    ul{margin:0; padding-left:20px;}
   </style>
 </head>
 <body>
-  <main class="container">
-    <header>
-      <h1>iReport - Your Cybercrime Assistant</h1>
-      <p class="subtitle">Protect Yourself, Stay Informed..</p>
-    </header>
-
-
-    <section class="phishing-card">
-      <h2>Phishing Detector</h2>
-      <p>Enter a website URL to check if it’s safe:</p>
-
-      <div class="phishing-input">
-        <input id="urlInput" type="text" placeholder="https://example.com" />
-        <button onclick="checkPhishing()">Check</button>
+  <div class="container" id="formSection">
+    <h1>Phishing Problems Checklist</h1>
+    <h3>Enter Your Details</h3>
+    <input type="text" id="username" placeholder="Your Name">
+    <input type="email" id="useremail" placeholder="Your Email">
+    <h3>Search Phishing Problems</h3>
+    <input type="text" id="search" placeholder="Search problem..." onkeyup="filterOptions()">
+    <form id="phishingForm">
+      <div id="options">
+        <div class="option"><input type="checkbox" value="Identity Theft"><label>Identity Theft</label></div>
+        <div class="option"><input type="checkbox" value="Financial Loss"><label>Financial Loss</label></div>
+        <div class="option"><input type="checkbox" value="Credential Harvesting"><label>Credential Harvesting</label></div>
+        <div class="option"><input type="checkbox" value="Malware Distribution"><label>Malware Distribution</label></div>
+        <div class="option"><input type="checkbox" value="Business Email Compromise (BEC)"><label>Business Email Compromise (BEC)</label></div>
+        <div class="option"><input type="checkbox" value="Data Breaches"><label>Data Breaches</label></div>
+        <div class="option"><input type="checkbox" value="Reputation Damage"><label>Reputation Damage</label></div>
+        <div class="option"><input type="checkbox" value="Service Disruption"><label>Service Disruption</label></div>
+        <div class="option"><input type="checkbox" value="Account Takeover"><label>Account Takeover</label></div>
+        <div class="option"><input type="checkbox" value="Social Engineering Risks"><label>Social Engineering Risks</label></div>
+        <div class="option"><input type="checkbox" value="Regulatory Penalties"><label>Regulatory Penalties</label></div>
+        <div class="option"><input type="checkbox" value="Phishing at Scale"><label>Phishing at Scale</label></div>
       </div>
-
-      <div id="result" class="result-box"></div>
-
-      <div class="btn-group">
-        <button class="btn-action btn-report" onclick="reportPhishing()">Report</button>
-        <button class="btn-action btn-download" onclick="downloadReport()">Download</button>
-      </div>
-    </section>
-
-    
-    <div id="chat-container"></div>
-  </main>
-
-  
-  <script src="assets/chatbot.js"></script>
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+  <div class="container hidden" id="resultSection">
+    <h1>Phishing Verification Results</h1>
+    <div id="userDetails" class="detail"></div>
+    <div id="problemDetails"></div>
+  </div>
   <script>
-    fetch("assets/chatbot.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("chat-container").innerHTML = data;
-        if (typeof initChat === "function") {
-          initChat();
+    function filterOptions(){
+      let input = document.getElementById('search').value.toLowerCase();
+      let options = document.querySelectorAll('#options .option');
+      options.forEach(opt => {
+        let text = opt.innerText.toLowerCase();
+        if(text.includes(input)){
+          opt.classList.remove('hidden');
+        } else {
+          opt.classList.add('hidden');
         }
       });
-
-    async function checkPhishing() {
-      const url = document.getElementById("urlInput").value.trim();
-      const resultBox = document.getElementById("result");
-      resultBox.innerHTML = "Checking...";
-
-      try {
-        const res = await fetch("/api/check", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url })
-        });
-        const data = await res.json();
-
-        if (data.error) {
-          resultBox.innerHTML = `<div class="phishing">⚠️ ${data.error}</div>`;
-          return;
-        }
-
-        let verdictClass = data.verdict === "phishing" ? "phishing" :
-                           data.verdict === "suspicious" ? "suspicious" : "legit";
-
-        resultBox.innerHTML = `
-          <div class="${verdictClass}">
-            <strong>${data.verdict.toUpperCase()}</strong><br>
-            Score: ${data.score}/100
-          </div>
-          <ul>
-            ${data.reasons.map(r => `<li>${r}</li>`).join("")}
-          </ul>
-        `;
-      } catch (e) {
-        resultBox.innerHTML = `<div class="phishing">❌ Error: ${e.message}</div>`;
+    }
+    const phishingDB = {
+      "Identity Theft": [
+        "Attackers steal personal details like SSN, bank info, or login credentials.",
+        "Identity theft can be used to open new accounts fraudulently.",
+        "Victims may not know until they face credit issues.",
+        "Often caused by phishing links or fake login portals.",
+        "Stolen identity data is often sold on dark web markets.",
+        "Recovery is lengthy and may require legal support.",
+        "Financial institutions suffer losses too.",
+        "Targeted mostly at individuals with good credit.",
+        "Government ID theft is also common.",
+        "Prevention: verify links and enable credit monitoring."
+      ],
+      "Financial Loss": [
+        "Phishing often results in direct monetary theft.",
+        "Attackers may trick users into wiring money.",
+        "Fraudulent invoices are a common vector.",
+        "Crypto wallets are frequent phishing targets.",
+        "Losses can affect both individuals and companies.",
+        "Victims may never recover stolen money.",
+        "Social engineering increases financial pressure.",
+        "Fake charities exploit disasters for money.",
+        "Insurance fraud may follow phishing events.",
+        "Training employees reduces risk of loss."
+      ],
+      "Credential Harvesting": [
+        "Phishing pages imitate login screens.",
+        "Collected usernames and passwords are reused.",
+        "Attackers use them for credential stuffing.",
+        "Victims may face multiple account compromises.",
+        "Passwords are stored in attacker databases.",
+        "Often paired with fake multi-factor prompts.",
+        "Dark web marketplaces resell stolen creds.",
+        "Reused passwords increase the damage.",
+        "Enterprise apps are targeted for remote access.",
+        "Strong MFA can block credential abuse."
+      ],
+      "Malware Distribution": [
+        "Phishing emails often carry malicious attachments.",
+        "Links may download trojans or ransomware.",
+        "Macros in documents can trigger malware.",
+        "Fake updates are a malware delivery method.",
+        "Keyloggers are common phishing payloads.",
+        "Backdoors allow persistent attacker access.",
+        "Phishing malware steals financial details.",
+        "Adversaries may use polymorphic malware.",
+        "Phishing campaigns spread worms in networks.",
+        "Endpoint protection reduces malware risks."
+      ],
+      "Business Email Compromise (BEC)": [
+        "Attackers impersonate company executives.",
+        "They request fake wire transfers.",
+        "BEC causes billions in annual losses.",
+        "Spoofed emails bypass weak filters.",
+        "BEC is highly targeted phishing.",
+        "Employees often trust CEO/CFO lookalikes.",
+        "Fraudulent payroll redirection is common.",
+        "Multi-factor authentication helps prevent BEC.",
+        "Law enforcement tracks major BEC groups.",
+        "Awareness training reduces BEC success."
+      ],
+      "Data Breaches": [
+        "Phishing can lead to wider data breaches.",
+        "Stolen credentials open corporate databases.",
+        "PII leaks damage trust with customers.",
+        "Breaches often trigger regulatory action.",
+        "Attackers may sell breached data.",
+        "Healthcare and finance are frequent targets.",
+        "Breaches cause reputation loss.",
+        "Remediation is costly and lengthy.",
+        "Incident response plans are critical.",
+        "Regular phishing training reduces breach risk."
+      ],
+      "Reputation Damage": [
+        "Phishing incidents harm organizational reputation.",
+        "Customers lose trust quickly.",
+        "Brand image suffers after leaks.",
+        "Media coverage amplifies the damage.",
+        "Competitors may exploit weakened trust.",
+        "Stock prices may drop.",
+        "Employees feel unsafe at work.",
+        "Partnerships may be lost.",
+        "Recovery can take years.",
+        "Strong public relations are needed."
+      ],
+      "Service Disruption": [
+        "Phishing may install ransomware.",
+        "Critical IT services can be locked.",
+        "Business operations grind to a halt.",
+        "Downtime results in financial losses.",
+        "Hospitals face life-threatening risks.",
+        "Energy and utilities are targeted.",
+        "Attackers may demand cryptocurrency ransom.",
+        "Disruption damages customer loyalty.",
+        "Legal consequences may follow outages.",
+        "Backup systems help recovery."
+      ],
+      "Account Takeover": [
+        "Stolen login credentials allow account hijacking.",
+        "Email accounts are prime takeover targets.",
+        "Social media profiles get hijacked.",
+        "Fraudulent messages spread from stolen accounts.",
+        "Cloud services face compromise risks.",
+        "Takeovers spread phishing further.",
+        "Bank accounts can be drained.",
+        "Recovery is often difficult.",
+        "Phishing is a main vector.",
+        "MFA stops many takeover attempts."
+      ],
+      "Social Engineering Risks": [
+        "Phishing is a social engineering attack.",
+        "Attackers exploit human psychology.",
+        "Urgency tricks victims into acting fast.",
+        "Fear of punishment is exploited.",
+        "Greed via fake prizes lures victims.",
+        "Authority pressure is used.",
+        "Pretexting builds false trust.",
+        "Phishing overlaps with vishing and smishing.",
+        "Employees are weakest security link.",
+        "Awareness training reduces risks."
+      ],
+      "Regulatory Penalties": [
+        "Data breaches trigger regulatory fines.",
+        "GDPR fines can be billions.",
+        "HIPAA penalties apply in healthcare.",
+        "PCI DSS fines hit retailers.",
+        "Regulators may suspend licenses.",
+        "Fines add to breach costs.",
+        "Executives may face legal charges.",
+        "Reputation worsens due to fines.",
+        "Insurance may not cover penalties.",
+        "Compliance programs reduce risks."
+      ],
+      "Phishing at Scale": [
+        "Attackers use automated phishing kits.",
+        "Thousands of emails are sent daily.",
+        "Global spam campaigns spread malware.",
+        "Cheap phishing kits lower barriers.",
+        "AI improves phishing personalization.",
+        "Phishing-as-a-Service exists.",
+        "Scale makes attacks harder to stop.",
+        "Phishing bypasses weak filters.",
+        "ISPs struggle against mass attacks.",
+        "User education is key defense."
+      ]
+    };
+    document.getElementById("phishingForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      const name = document.getElementById("username").value;
+      const email = document.getElementById("useremail").value;
+      if(!name || !email){
+        alert("Please fill in your details before submitting.");
+        return;
       }
-    }
-
-
-    function reportPhishing() {
-      const url = document.getElementById("urlInput").value.trim();
-      if (!url) return alert("Enter a URL to report.");
-      alert("✅ Report submitted for: " + url);
-    }
-
-    function downloadReport() {
-      const url = document.getElementById("urlInput").value.trim();
-      const result = document.getElementById("result").innerText;
-      if (!url) return alert("Enter a URL first.");
-
-      const content = `Phishing Check Report\n\nURL: ${url}\nResult:\n${result}`;
-      const blob = new Blob([content], { type: "text/plain" });
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = "phishing_report.txt";
-      link.click();
-    }
-  </script>
+      const checked = Array.from(document.querySelectorAll("#options input[type=checkbox]:checked")).map(cb => cb.value);
+      document.getElementById("formSection").classList.add("hidden");
+      document.getElementById("resultSection").classList.remove("hidden");
+      document.getElementById("userDetails").innerHTML = `
+        <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Selected Problems:</strong> ${checked.join(", ")}</p>
+      `;
+      let problemsDiv = document.getElementById("problemDetails");
+      problemsDiv.innerHTML = "";
+      checked.forEach(problem => {
+        let details = phishingDB[problem] || ["No details available."];
+        let listItems = details.map(d => `<li>${d}</li>`).join("");
+        problemsDiv.innerHTML += `
+          <div class="problem">
+            <h3>${problem}</h3>
+            <ul>${listItems}</ul>
+          </div>
+        `;
+      });
+    });
+</script>
 </body>
 </html>

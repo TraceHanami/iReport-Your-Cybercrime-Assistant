@@ -16,11 +16,11 @@ body {
     padding-top: 50px;
 }
 .container {
-    background: rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.6);
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.5);
-    width: 400px;
+    width: 450px;
     text-align: center;
 }
 input[type="text"] {
@@ -43,140 +43,163 @@ button:disabled {
     background-color: #555;
     cursor: not-allowed;
 }
-table {
-    margin: 15px auto;
-    border-collapse: collapse;
-}
-td {
-    border: 1px solid #ccc;
-    padding: 10px 15px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background 0.2s;
-}
-td:hover {
-    background-color: #007bff;
-    color: white;
-}
-.selected {
-    background-color: #007bff;
-    color: white;
-}
 .result {
     font-weight: bold;
     margin-top: 15px;
     text-align: left;
+}
+/* --- CAPTCHA STYLE --- */
+canvas {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f9f9f9;
+    margin-bottom: 10px;
 }
 </style>
 </head>
 <body>
 <div class="container">
     <h2>Check Suspect Details</h2>
-    <input type="text" id="name" placeholder="Enter Name"><br>
-    <input type="text" id="phone" placeholder="Enter Phone Number"><br>
-    <input type="text" id="state" placeholder="Enter State"><br>
-    <input type="text" id="district" placeholder="Enter District"><br>
-    <input type="text" id="village" placeholder="Enter Village"><br>
+    <input type="text" id="aadhaar" placeholder="Enter Aadhaar Number"><br>
+    <input type="text" id="name" placeholder="Enter Name with Initial"><br>
 
     <p>Letters CAPTCHA:</p>
-    <div id="captchaLetters" style="font-size: 24px; font-weight: bold; letter-spacing: 5px; margin-bottom: 10px;"></div>
+    <canvas id="captchaCanvas" width="220" height="80"></canvas>
+    <br>
     <input type="text" id="captchaInput" placeholder="Enter letters here">
+    <button type="button" onclick="generateCaptcha()">↻ Refresh</button>
 
-    <p>Select the correct option:</p>
-    <table>
-        <tr>
-            <td onclick="selectOption(this)">I’m human</td>
-        </tr>
-    </table>
-
-    <button id="submitBtn" disabled onclick="submitForm()">Submit</button>
+    <button id="submitBtn" onclick="submitForm()">Submit</button>
     <div class="result" id="result"></div>
 </div>
 
 <script>
 // ---------- CAPTCHA ----------
-let generatedCaptcha = "";
-let selectedOption = null;
+let captchaCode = "";
 
 function generateCaptcha() {
-    const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let captcha = "";
-    for (let i = 0; i < 6; i++) {
-        captcha += letters.charAt(Math.floor(Math.random() * letters.length));
-    }
-    generatedCaptcha = captcha;
-    document.getElementById('captchaLetters').textContent = captcha;
-}
+    const canvas = document.getElementById("captchaCanvas");
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-function selectOption(cell) {
-    document.querySelectorAll('td').forEach(td => td.classList.remove('selected'));
-    cell.classList.add('selected');
-    selectedOption = cell.textContent;
-    document.getElementById('submitBtn').disabled = false;
+    // Background
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    captchaCode = "";
+    for (let i = 0; i < 6; i++) {
+        captchaCode += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    // Draw text
+    for (let i = 0; i < captchaCode.length; i++) {
+        ctx.font = `${Math.floor(Math.random() * 10) + 32}px Arial`;
+        ctx.fillStyle = `rgb(${Math.random()*150}, ${Math.random()*150}, ${Math.random()*150})`;
+        const x = 20 + i * 30;
+        const y = 40 + Math.random() * 20;
+        const angle = (Math.random() - 0.5) * 0.5;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.fillText(captchaCode[i], 0, 0);
+        ctx.restore();
+    }
+
+    // Distortion lines
+    for (let i = 0; i < 6; i++) {
+        ctx.strokeStyle = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.7)`;
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.stroke();
+    }
+
+    // Noise dots
+    for (let i = 0; i < 50; i++) {
+        ctx.fillStyle = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.6)`;
+        ctx.beginPath();
+        ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, 1, 0, 2*Math.PI);
+        ctx.fill();
+    }
 }
 
 // ---------- SUSPECT DATABASE ----------
 const suspects = [
-    { name: "Rahul Sharma", phone: "9876543210", state: "Maharashtra", district: "Pune", village: "Hinjewadi", gender: "Male", aadhaar: "1234 5678 9012" },
-    { name: "Priya Verma", phone: "8765432109", state: "Uttar Pradesh", district: "Lucknow", village: "Aliganj", gender: "Female", aadhaar: "2345 6789 0123" },
-    { name: "Amit Singh", phone: "7654321098", state: "Bihar", district: "Patna", village: "Kankarbagh", gender: "Male", aadhaar: "3456 7890 1234" },
-    { name: "Sneha Roy", phone: "6543210987", state: "West Bengal", district: "Kolkata", village: "Behala", gender: "Female", aadhaar: "4567 8901 2345" },
-    { name: "Alex Kumar", phone: "5432109876", state: "Karnataka", district: "Bangalore", village: "Whitefield", gender: "Other", aadhaar: "5678 9012 3456" }
+    { 
+        aadhaar: "1234 5678 9012", 
+        name: "R. Sharma", 
+        state: "Maharashtra", 
+        district: "Pune", 
+        village: "Hinjewadi", 
+        phone: "9876543210", 
+        family: [
+            { member: "Wife - S. Sharma", phone: "9988776655" },
+            { member: "Son - A. Sharma", phone: "8877665544" }
+        ] 
+    },
+    { 
+        aadhaar: "2345 6789 0123", 
+        name: "P. Verma", 
+        state: "Uttar Pradesh", 
+        district: "Lucknow", 
+        village: "Aliganj", 
+        phone: "8765432109", 
+        family: [
+            { member: "Father - V. Verma", phone: "7766554433" },
+            { member: "Mother - R. Verma", phone: "6655443322" }
+        ] 
+    }
 ];
 
 // ---------- FORM SUBMIT ----------
 function submitForm() {
+    const aadhaar = document.getElementById('aadhaar').value.trim();
     const name = document.getElementById('name').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const state = document.getElementById('state').value.trim();
-    const district = document.getElementById('district').value.trim();
-    const village = document.getElementById('village').value.trim();
-    const captchaInput = document.getElementById('captchaInput').value.trim().toUpperCase();
+    const captchaInput = document.getElementById('captchaInput').value.trim();
     const resultDiv = document.getElementById('result');
 
-    if (!name || !phone || !state || !district || !village) {
+    if (!aadhaar || !name) {
         resultDiv.style.color = 'red';
-        resultDiv.textContent = "Please fill all fields.";
+        resultDiv.textContent = "Please fill Aadhaar and Name.";
         return;
     }
 
-    if (captchaInput !== generatedCaptcha) {
+    if (captchaInput !== captchaCode) {
         resultDiv.style.color = 'red';
-        resultDiv.textContent = "CAPTCHA letters do not match. Try again.";
+        resultDiv.textContent = "CAPTCHA does not match. Try again.";
         generateCaptcha();
         document.getElementById('captchaInput').value = "";
         return;
     }
 
-    if (selectedOption !== "I’m human") {
-        resultDiv.style.color = 'red';
-        resultDiv.textContent = "You must select 'I’m human' to proceed.";
-        return;
-    }
-
     const found = suspects.find(s => 
-        s.name.toLowerCase() === name.toLowerCase() &&
-        s.phone === phone &&
-        s.state.toLowerCase() === state.toLowerCase() &&
-        s.district.toLowerCase() === district.toLowerCase() &&
-        s.village.toLowerCase() === village.toLowerCase()
+        s.aadhaar === aadhaar &&
+        s.name.toLowerCase() === name.toLowerCase()
     );
 
     if (found) {
-        resultDiv.style.color = 'green';
+        let familyDetails = "<ul>";
+        found.family.forEach(f => {
+            familyDetails += `<li><strong>${f.member}:</strong> ${f.phone}</li>`;
+        });
+        familyDetails += "</ul>";
+
+        resultDiv.style.color = 'lightgreen';
         resultDiv.innerHTML = `
-            <p>Suspect Found:</p>
+            <p>✅ Suspect Found:</p>
+            <p><strong>Aadhaar:</strong> ${found.aadhaar}</p>
             <p><strong>Name:</strong> ${found.name}</p>
-            <p><strong>Phone:</strong> ${found.phone}</p>
             <p><strong>State:</strong> ${found.state}</p>
             <p><strong>District:</strong> ${found.district}</p>
             <p><strong>Village:</strong> ${found.village}</p>
-            <p><strong>Gender:</strong> ${found.gender}</p>
-            <p><strong>Aadhaar:</strong> ${found.aadhaar}</p>
+            <p><strong>Phone:</strong> ${found.phone}</p>
+            <p><strong>Family Members:</strong></p>
+            ${familyDetails}
         `;
     } else {
         resultDiv.style.color = 'orange';
-        resultDiv.textContent = "No suspect found.";
+        resultDiv.textContent = "⚠️ No suspect found.";
     }
 }
 

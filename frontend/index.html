@@ -6,36 +6,196 @@
   <title>iReport - Your Cybercrime Assistant</title>
   <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="assets/chatbot.css">
-
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
-    /* Center everything */
     body {
       margin: 0;
       padding: 0;
-      min-height: 100vh;                  /* full viewport height */
+      min-height: 100vh;
       display: flex;
-      justify-content: center;            /* horizontal center */
-      align-items: center;                /* vertical center */
+      justify-content: center;
+      align-items: center;
       background: url('./assets/images/background.png') no-repeat center center fixed;
-  background-size: cover;
+      background-size: cover;
       font-family: Arial, sans-serif;
+      color: #e9dedef6;
     }
-
     .container {
-    
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       text-align: center;
       max-width: 900px;
       width: 95%;
-      background: rgba(0, 0, 0, 0.6);     /* dark semi-transparent box */
-      padding: 30px;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 20px;
       border-radius: 16px;
       box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-      color: #e9dedef6;
+      min-height: 80vh;
+    }
+    .chart-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: #4caf50;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 50px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: 0.3s;
+    }
+    .chart-btn:hover { background: #45a049; }
+.side-panel {
+  width: 260px;
+  height: 100vh;        /* full viewport height */
+  overflow-y: auto;     /* manual scroll */
+  background: url('./assets/images/background.png') no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+  padding: 15px;
+  position: fixed;      /* <-- key to detach from center */
+  top: 0;
+  z-index: 1000;
+}
+
+.left-panel {
+  left: 0;              /* sticks to left */
+  border-right: 2px solid #333;
+}
+
+.right-panel {
+  right: 0;             /* sticks to right */
+  border-left: 2px solid #333;
+}
+
+/* Push the main container away from both panels */
+main.container {
+  margin: 0 260px;      /* leaves space for side panels */
+}
+
+.scroll-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: none !important;
+}
+
+
+    .topic {
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 10px;
+      border-bottom: 1px solid #444;
+      transition: 0.3s;
+    }
+    .topic:hover {
+      color: #4caf50;
+      text-decoration: underline;
+    }
+
+    @keyframes scroll-up {
+      0% { transform: translateY(100%); }
+      100% { transform: translateY(-100%); }
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+    }
+    .modal-content {
+      background: #111;
+      padding: 20px;
+      border-radius: 12px;
+      width: 80%;
+      max-width: 700px;
+      max-height: 80vh;
+      overflow-y: auto;
+      color: #ddd;
+      text-align: left;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    .modal-content h2 { margin-top: 0; color: #4caf50; }
+    .close {
+      float: right;
+      font-size: 22px;
+      cursor: pointer;
+      color: #fff;
+    }
+    .modal-content img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 12px;
     }
   </style>
 </head>
 <body>
 
+<!-- Left Panel (Cybersecurity Awareness) 
+<div class="side-panel left-panel">
+   <h2 class="panel-title">🛡️ Cyber Awareness</h2>
+  <div class="scroll-content">
+    <div class="topic" onclick="openArticle('otp')">🔒 Never Share OTP</div>
+    <div class="topic" onclick="openArticle('passwords')">🔑 Strong Passwords</div>
+    <div class="topic" onclick="openArticle('phishing')">📧 Beware of Phishing</div>
+    <div class="topic" onclick="openArticle('updates')">🛡️ Update Software</div>
+    <div class="topic" onclick="openArticle('2fa')">🔐 Enable 2FA</div>
+    <div class="topic" onclick="openArticle('wifi')">📶 Secure Wi-Fi</div>
+    <div class="topic" onclick="openArticle('publicwifi')">🚫 Avoid Public Wi-Fi</div>
+    <div class="topic" onclick="openArticle('backup')">💾 Regular Backups</div>
+    <div class="topic" onclick="openArticle('downloads')">📂 Safe Downloads</div>
+    <div class="topic" onclick="openArticle('firewall')">🔥 Use Firewalls</div>
+    <div class="topic" onclick="openArticle('antivirus')">💉 Install Antivirus</div>
+    <div class="topic" onclick="openArticle('socialmedia')">📱 Social Media Privacy</div>
+    <div class="topic" onclick="openArticle('banking')">🏦 Safe Online Banking</div>
+    <div class="topic" onclick="openArticle('children')">👶 Teach Kids Online Safety</div>
+    <div class="topic" onclick="openArticle('emails')">✉️ Verify Emails</div>
+    <div class="topic" onclick="openArticle('usb')">🔌 Avoid Unknown USBs</div>
+    <div class="topic" onclick="openArticle('apps')">📲 Download Apps Carefully</div>
+    <div class="topic" onclick="openArticle('cameras')">🎥 Cover Cameras</div>
+    <div class="topic" onclick="openArticle('vpn')">🌐 Use VPN</div>
+    <div class="topic" onclick="openArticle('logs')">📊 Monitor Activity Logs</div>
+  </div>
+</div>-->
+<!-- Right Panel (Cases Solved) 
+<div class="side-panel right-panel">
+  <h2 class="panel-title">📂 Cases Solved</h2>
+  <div class="scroll-content">
+    <div class="topic" onclick="openArticle('delhi-case')">🚨 Fraud Gang Busted in Delhi</div>
+    <div class="topic" onclick="openArticle('phishing-case')">💰 ₹2 Crore Scam Cracked</div>
+    <div class="topic" onclick="openArticle('senior-case')">👵 Seniors Targeted by Hackers</div>
+    <div class="topic" onclick="openArticle('shopping-case')">🛒 Fake Shopping Sites</div>
+    <div class="topic" onclick="openArticle('atm-case')">🏧 ATM Skimming in Pune</div>
+    <div class="topic" onclick="openArticle('crypto-case')">🪙 Crypto Scam in Hyderabad</div>
+    <div class="topic" onclick="openArticle('job-case')">💼 Fake Job Portals</div>
+    <div class="topic" onclick="openArticle('loan-case')">💳 Fraudulent Loan Apps</div>
+    <div class="topic" onclick="openArticle('ransomware-case')">🖥️ Ransomware Attack on Firm</div>
+    <div class="topic" onclick="openArticle('upi-case')">📱 UPI Fraud in Lucknow</div>
+    <div class="topic" onclick="openArticle('gaming-case')">🎮 Online Gaming Scam</div>
+    <div class="topic" onclick="openArticle('insurance-case')">📑 Fake Insurance Calls</div>
+    <div class="topic" onclick="openArticle('identity-case')">🪪 Identity Theft Ring</div>
+    <div class="topic" onclick="openArticle('fraud-call-center')">📞 Fraudulent Call Centers</div>
+    <div class="topic" onclick="openArticle('dating-case')">❤️ Dating App Scam</div>
+    <div class="topic" onclick="openArticle('ticket-case')">🎟️ Fake Ticketing Websites</div>
+    <div class="topic" onclick="openArticle('parcel-case')">📦 Fake Courier Scam</div>
+    <div class="topic" onclick="openArticle('ad-case')">📢 Social Media Ad Scam</div>
+    <div class="topic" onclick="openArticle('ngo-case')">🤲 Fake Charity NGO Fraud</div>
+    <div class="topic" onclick="openArticle('data-case')">💾 Data Breach in IT Firm</div>
+  </div>
+</div>
+-->
 <main class="container">
   <header>
     <h1>iReport - Your Cybercrime Assistant</h1>
@@ -43,65 +203,55 @@
   </header>
 
   <section class="menu" aria-label="Main Menu">
-    <div class="menu-item" data-page="complaint">
-      <img src="assets/icons/complaint.png" alt="File Complaint">
-      <p>File Complaint</p>
-    </div>
-    <div class="menu-item" data-page="learning">
-      <img src="assets/icons/educator.png" alt="Learning Space">
-      <p>Learning Space</p>
-    </div>
-    <div class="menu-item" data-page="suspect">
-      <img src="assets/icons/suspect.png" alt="Check Suspect">
-      <p>Check Suspect</p>
-    </div>
-    <div class="menu-item" data-page="volunteer">
-      <img src="assets/icons/volunteer.png" alt="Volunteer">
-      <p>Volunteer</p>
-    </div>
-    <div class="menu-item" data-page="puzzle">
-      <img src="assets/icons/puzzle.png" alt="Puzzle Game">
-      <p>Puzzle</p>
-    </div>
-    <div class="menu-item" data-page="sos">
-      <img src="assets/icons/sos.png" alt="SOS">
-      <p>SOS</p>
-    </div>
-    <div class="menu-item" data-page="phishing">
-      <img src="assets/icons/phishing.png" alt="Check Phishing">
-      <p>Check Phishing</p>
-    </div>
-    <div class="menu-item" data-page="malware">
-      <img src="assets/icons/malware.png" alt="Check Malware">
-      <p>Check Malware</p>
-    </div>
-   <div class="menu-item" data-page="talktous">
-  <img src="assets/icons/641657.png" alt="Talk to Us">
-  <p>Talk to Us</p>
-</div>
+    <div class="menu-item" data-page="complaint"><p>📝 File Complaint</p></div>
+    <div class="menu-item" data-page="learning"><p>📘 Learning Space</p></div>
+    <div class="menu-item" data-page="suspect"><p>🔍 Check Suspect</p></div>
+    <div class="menu-item" data-page="volunteer"><p>🤝 Volunteer</p></div>
+    <div class="menu-item" data-page="puzzle"><p>🧩 Puzzle Game</p></div>
+    <div class="menu-item" data-page="sos"><p>🚨 SOS</p></div>
+    <div class="menu-item" data-page="phishing"><p>📧 Check Phishing</p></div>
+    <div class="menu-item" data-page="malware"><p>💻 Check Malware</p></div>
+    <div class="menu-item" data-page="talktous"><p>💬 Talk to Us</p></div>
   </section>
 
+  <button class="chart-btn" onclick="openChart()">📊 Case Live Chart</button>
+
   <footer>
-    <a href="#" aria-label="Instagram"><img src="assets/icons/instagram.png" alt="Instagram"></a>
-    <a href="#" aria-label="Twitter"><img src="assets/icons/twitter.png" alt="Twitter"></a>
-    <a href="#" aria-label="Facebook"><img src="assets/icons/facebook.png" alt="Facebook"></a>
+    <p>Follow us: Instagram | Twitter | Facebook</p>
   </footer>
 
-  <!-- chat container inside main so it appears centered -->
   <div id="chat-container"></div>
 </main>
 
+<!-- Article Modal -->
+<div class="modal" id="articleModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeArticle()">&times;</span>
+    <h2 id="articleTitle"></h2>
+    <div id="articleBody"></div>
+  </div>
+</div>
+
+<!-- Chart Modal -->
+<div class="modal" id="chartModal">
+  <div class="modal-content">
+    <span class="close" onclick="closeChart()">&times;</span>
+    <h2>Cases Submitted (Last 30 Days)</h2>
+    <canvas id="casesChart"></canvas>
+  </div>
+</div>
+
 <script src="assets/chatbot.js"></script>
 <script>
+  // Load chatbot
   fetch("assets/chatbot.html")
     .then(response => response.text())
     .then(data => {
       document.getElementById("chat-container").innerHTML = data;
-      if (typeof initChat === "function") 
-        initChat();
-      }
-    );
+      if (typeof initChat === "function") initChat();
+    });
 
+  // Menu navigation
   document.querySelectorAll('.menu-item').forEach(item => {
     item.addEventListener('click', () => {
       const page = item.dataset.page;
@@ -123,7 +273,271 @@
       }
     });
   });
-</script>
+const articles = {
+  // 🔹 Cyber Awareness (Left Panel)
+  otp: { 
+    title: "Never Share OTP", 
+    body: "Your One-Time Password (OTP) is private and must never be shared, even with someone claiming to be a bank or government officer. Scammers often pose as officials to trick victims into revealing OTPs, leading to immediate financial theft.", 
+    image: "assets/images/otp.png" 
+  },
+  passwords: { 
+    title: "Strong Passwords", 
+    body: "Use complex passwords with a mix of uppercase, lowercase, numbers, and symbols. Avoid personal details like birthdays or names. Consider using a password manager to securely store and generate unique passwords.", 
+    image: "assets/images/passwords.png" 
+  },
+  phishing: { 
+    title: "Beware of Phishing", 
+    body: "Phishing scams use fake emails, SMS, or websites to steal your sensitive information. Always verify the sender’s address and never click on suspicious links or attachments.", 
+    image: "assets/images/phishing.png" 
+  },
+  updates: { 
+    title: "Update Software", 
+    body: "Regularly update your operating system, apps, and antivirus software. Updates patch security flaws and protect against new cyber threats.", 
+    image: "assets/images/updates.png" 
+  },
+  "2fa": { 
+    title: "Enable 2FA", 
+    body: "Two-Factor Authentication (2FA) adds an extra layer of protection to your accounts by requiring a code from your phone or email in addition to your password.", 
+    image: "assets/images/2fa.png" 
+  },
+  wifi: { 
+    title: "Secure Wi-Fi", 
+    body: "Always protect your home Wi-Fi with a strong password and encryption. Disable WPS and hide your SSID if possible to reduce risks of hacking.", 
+    image: "assets/images/wifi.png" 
+  },
+  publicwifi: { 
+    title: "Avoid Public Wi-Fi", 
+    body: "Public Wi-Fi is often unsecured and can expose you to man-in-the-middle attacks. Avoid online banking or sensitive logins on public networks unless using a VPN.", 
+    image: "assets/images/publicwifi.png" 
+  },
+  backup: { 
+    title: "Regular Backups", 
+    body: "Keep regular backups of important files on secure cloud services or external drives. This ensures data recovery in case of ransomware or system crashes.", 
+    image: "assets/images/backup.png" 
+  },
+  downloads: { 
+    title: "Safe Downloads", 
+    body: "Only download files and apps from trusted websites and official app stores. Malicious downloads can carry hidden malware.", 
+    image: "assets/images/downloads.png" 
+  },
+  firewall: { 
+    title: "Use Firewalls", 
+    body: "Enable firewalls on your computer and router to block unauthorized access attempts from hackers.", 
+    image: "assets/images/firewall.png" 
+  },
+  antivirus: { 
+    title: "Install Antivirus", 
+    body: "Antivirus software detects and removes harmful programs. Keep it updated to protect against the latest threats.", 
+    image: "assets/images/antivirus.png" 
+  },
+  socialmedia: { 
+    title: "Social Media Privacy", 
+    body: "Be mindful of what you share online. Cybercriminals can misuse personal details for identity theft or scams.", 
+    image: "assets/images/socialmedia.png" 
+  },
+  banking: { 
+    title: "Safe Online Banking", 
+    body: "Access banking only through official apps or websites. Avoid clicking on banking links received through SMS or email.", 
+    image: "assets/images/banking.png" 
+  },
+  children: { 
+    title: "Teach Kids Online Safety", 
+    body: "Educate children about cyber risks such as online predators, gaming scams, and phishing attempts. Use parental controls where necessary.", 
+    image: "assets/images/children.png" 
+  },
+  emails: { 
+    title: "Verify Emails", 
+    body: "Check the sender’s address and avoid clicking suspicious links. Phishing emails often look urgent or offer rewards.", 
+    image: "assets/images/emails.png" 
+  },
+  usb: { 
+    title: "Avoid Unknown USBs", 
+    body: "Never connect unverified USB devices, as they may contain malware that can infect your system instantly.", 
+    image: "assets/images/usb.png" 
+  },
+  apps: { 
+    title: "Download Apps Carefully", 
+    body: "Always install apps from official stores. Fake apps often request unnecessary permissions and can steal personal data.", 
+    image: "assets/images/apps.png" 
+  },
+  cameras: { 
+    title: "Cover Cameras", 
+    body: "Cybercriminals can hack webcams. Cover your camera when not in use to ensure privacy.", 
+    image: "assets/images/cameras.png" 
+  },
+  vpn: { 
+    title: "Use VPN", 
+    body: "A VPN encrypts your internet traffic, making it harder for hackers to spy on your activity.", 
+    image: "assets/images/vpn.png" 
+  },
+  logs: { 
+    title: "Monitor Activity Logs", 
+    body: "Keep an eye on account activity logs for suspicious logins or actions. This helps in spotting unauthorized access early.", 
+    image: "assets/images/logs.png" 
+  },
 
+  // 🔹 Cases Solved (Right Panel)
+  "delhi-case": { 
+    title: "Fraud Gang Busted in Delhi", 
+    body: "Delhi police busted a cybercrime gang running fake call centers. They tricked victims into sharing banking details, stealing lakhs. 200 SIM cards and laptops were seized.", 
+    image: "assets/images/delhi-case.png" 
+  },
+  "phishing-case": { 
+    title: "₹2 Crore Scam Cracked", 
+    body: "Authorities cracked a ₹2 crore phishing scam where fraudsters created fake bank websites. Victims unknowingly gave away login credentials, allowing criminals to empty accounts.", 
+    image: "assets/images/phishing-case.png" 
+  },
+  "senior-case": { 
+    title: "Seniors Targeted by Hackers", 
+    body: "Fraudsters tricked elderly citizens by pretending to be tech support. They installed remote access software and stole funds.", 
+    image: "assets/images/senior-case.png" 
+  },
+  "shopping-case": { 
+    title: "Fake Shopping Sites", 
+    body: "Over 50 fraudulent e-commerce websites scammed customers by taking payments but never delivering products. Authorities shut them down.", 
+    image: "assets/images/shopping-case.png" 
+  },
+  "atm-case": { 
+    title: "ATM Skimming in Pune", 
+    body: "Hackers placed skimming devices on ATMs to clone cards and steal money. Several were arrested in Pune.", 
+    image: "assets/images/atm-case.png" 
+  },
+  "crypto-case": { 
+    title: "Crypto Scam in Hyderabad", 
+    body: "Fraudsters lured investors into fake crypto schemes promising high returns. Victims lost lakhs when platforms vanished overnight.", 
+    image: "assets/images/crypto-case.png" 
+  },
+  "job-case": { 
+    title: "Fake Job Portals", 
+    body: "Scammers created fake job websites to collect fees and personal details from applicants, leaving them jobless and cheated.", 
+    image: "assets/images/job-case.png" 
+  },
+  "loan-case": { 
+    title: "Fraudulent Loan Apps", 
+    body: "Fake loan apps promised instant loans but instead stole personal data, misused contacts, and blackmailed victims.", 
+    image: "assets/images/loan-case.png" 
+  },
+  "ransomware-case": { 
+    title: "Ransomware Attack", 
+    body: "A mid-sized IT firm was hit by ransomware. Hackers encrypted files and demanded cryptocurrency ransom. Lack of backups worsened losses.", 
+    image: "assets/images/ransomware-case.png" 
+  },
+  "upi-case": { 
+    title: "UPI Fraud in Lucknow", 
+    body: "Scammers sent fake UPI requests disguised as refunds. Once approved, victims’ money was instantly transferred.", 
+    image: "assets/images/upi-case.png" 
+  },
+  "gaming-case": { 
+    title: "Online Gaming Scam", 
+    body: "Hackers targeted gamers with fake in-game purchases. Clicking links installed malware stealing payment details.", 
+    image: "assets/images/gaming-case.png" 
+  },
+  "insurance-case": { 
+    title: "Fake Insurance Calls", 
+    body: "Scammers posed as insurance agents, collecting money for fake policies. Victims discovered fraud when claims were rejected.", 
+    image: "assets/images/insurance-case.png" 
+  },
+  "identity-case": { 
+    title: "Identity Theft Ring", 
+    body: "A gang stole Aadhaar and PAN details from leaked databases to open fake accounts and commit fraud.", 
+    image: "assets/images/identity-case.png" 
+  },
+  "fraud-call-center": { 
+    title: "Fraudulent Call Centers", 
+    body: "Police raided fake call centers impersonating global tech support. They scammed foreigners into paying for non-existent fixes.", 
+    image: "assets/images/fraud-call-center.png" 
+  },
+  "dating-case": { 
+    title: "Dating App Scam", 
+    body: "Scammers created fake profiles on dating apps to emotionally manipulate victims into sending money.", 
+    image: "assets/images/dating-case.png" 
+  },
+  "ticket-case": { 
+    title: "Fake Ticketing Websites", 
+    body: "Fraudsters built websites mimicking travel portals, selling fake tickets. Victims found out only at airports or stations.", 
+    image: "assets/images/ticket-case.png" 
+  },
+  "parcel-case": { 
+    title: "Fake Courier Scam", 
+    body: "Victims were threatened with legal action over fake parcels stuck at customs, forced to pay ‘fines’ to scammers.", 
+    image: "assets/images/parcel-case.png" 
+  },
+  "ad-case": { 
+    title: "Social Media Ad Scam", 
+    body: "Fraudsters used fake ads on social platforms to lure victims into fake investments. Money was siphoned to unknown accounts.", 
+    image: "assets/images/ad-case.png" 
+  },
+  "ngo-case": { 
+    title: "Fake Charity NGO", 
+    body: "Scammers posed as NGOs, collecting donations for disaster relief but pocketing the funds themselves.", 
+    image: "assets/images/ngo-case.png" 
+  },
+  "data-case": { 
+    title: "Data Breach in IT Firm", 
+    body: "Hackers leaked sensitive employee and client data on the dark web after breaching an IT company’s security systems.", 
+    image: "assets/images/data-case.png" 
+  }
+};
+
+  // Open article with image support
+  function openArticle(key) {
+    document.getElementById("articleTitle").innerText = articles[key].title;
+    document.getElementById("articleBody").innerHTML = `
+      <img src="${articles[key].image}" alt="${articles[key].title}">
+      <p>${articles[key].body}</p>
+    `;
+    document.getElementById("articleModal").style.display = "flex";
+  }
+  function closeArticle() {
+    document.getElementById("articleModal").style.display = "none";
+  }
+
+  // Chart
+  let chartInstance;
+  function openChart() {
+    document.getElementById("chartModal").style.display = "flex";
+    if (!chartInstance) {
+      const ctx = document.getElementById('casesChart').getContext('2d');
+      const labels = Array.from({length: 30}, (_, i) => `Day ${i+1}`);
+      const data = Array.from({length: 30}, () => Math.floor(Math.random()*20)+1);
+      chartInstance = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Cases',
+            data: data,
+            borderColor: 'rgba(54, 162, 235, 1)',
+            backgroundColor: 'rgba(54, 162, 235, 0.3)',
+            fill: true,
+            tension: 0.3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { labels: { color: '#fff' } } },
+          scales: {
+            x: { ticks: { color: '#fff' } },
+            y: { ticks: { color: '#fff' }, beginAtZero: true }
+          }
+        }
+      });
+    }
+  }
+  function closeChart() {
+    document.getElementById("chartModal").style.display = "none";
+  }
+  window.onclick = function(event) {
+    const articleModal = document.getElementById("articleModal");
+    const chartModal = document.getElementById("chartModal");
+    if (event.target === articleModal) {
+      closeArticle();
+    }
+    if (event.target === chartModal) {
+      closeChart();
+    }
+  };
+</script>
 </body>
 </html>
