@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Cybercrime Emergency Options</title>
   <style>
     :root {
@@ -58,11 +58,48 @@
     }
     button:hover {
       background-color: #ff4b4b;
-  <title>iReport-Your-Cybercrime-Assistant</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="assets/chatbot.css">
-  <style>
-    /* SOS Modal */
+    }
+
+    .top-right-panel {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 1100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+    }
+    .top-right-panel .subtitle {
+      background: rgba(0,0,0,0.6);
+      padding: 8px 12px;
+      border-radius: 8px;
+      color: var(--text);
+      font-weight: 600;
+      font-size: 0.95rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    .big-sos {
+      background: var(--accent);
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(230,57,70,0.35);
+      border: 4px solid rgba(255,0,0,0.08);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .big-sos:active { transform: scale(0.98); }
+    .big-sos:hover { box-shadow: 0 14px 40px rgba(230,57,70,0.45); }
+
     #sos-section {
       display: none;
       text-align: center;
@@ -79,7 +116,6 @@
       max-width: 450px;
       box-shadow: 0 6px 20px rgba(0,0,0,0.6);
     }
-
     #sos-section h2 {
       font-size: 28px;
       font-weight: bold;
@@ -88,14 +124,12 @@
     #sos-section p {
       margin: 3px 0;
     }
-
     .sos-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 15px;
       margin-top: 20px;
     }
-
     .sos-card {
       background: rgba(255,255,255,0.08);
       border-radius: 14px;
@@ -117,7 +151,6 @@
       margin: 0;
       font-weight: 500;
     }
-
     #sos-section button.close-btn {
       background: gray;
       color: white;
@@ -126,11 +159,6 @@
       border-radius: 6px;
       margin-top: 15px;
       cursor: pointer;
-    }
-    #sos-status {
-      margin-top: 12px;
-      font-weight: bold;
-      color: yellow;
     }
   </style>
 </head>
@@ -196,26 +224,27 @@
 
   <script>
     function sendAlert(type) {
-      const adminEmail = 'admin@example.com'; // Replace with your admin email
+      const adminEmail = 'admin@example.com';
       const message = `Cybercrime Emergency Alert: ${type}`;
       window.location.href = `mailto:${adminEmail}?subject=Cybercrime Emergency&body=${encodeURIComponent(message)}`;
-      alert(`Cybercrime alert for '${type}' sent to admin!`);
+    }
+  </script>
+
+  <div class="top-right-panel">
+    <div class="subtitle">Get Learned, Stay Safe.</div>
+    <button class="big-sos" id="big-sos-btn" title="Press for Emergency" onclick="allocateEmergency()">SOS</button>
+  </div>
 
   <main class="container">
     <header>
-      <h1>iReport - Your Cybercrime Assistant</h1>
-      <p class="subtitle">Get Learned, Stay Safe.</p>
+      <h2>iReport - Your Cybercrime Assistant</h2>
     </header>
 
     <section class="menu" aria-label="Main Menu">
-      <!-- SOS Menu Item -->
       <div class="menu-item" onclick="openSOS()">
-        <h3>🚨 SOS</h3>
-        <p>Send emergency alert</p>
       </div>
     </section>
 
-    <!-- SOS Popup -->
     <div id="sos-section">
       <h2 style="color:red;">🚨 SOS</h2>
       <p>Raise SOS Alert</p>
@@ -241,26 +270,10 @@
       </div>
 
       <button class="close-btn" onclick="closeSOS()">Close</button>
-      <p id="sos-status"></p>
     </div>
-
-    <!-- Chat container -->
-    <div id="chat-container"></div>
   </main>
 
-  <script src="assets/chatbot.js"></script>
   <script>
-    // Load chatbot HTML
-    fetch("assets/chatbot.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("chat-container").innerHTML = data;
-        if (typeof initChat === "function") {
-          initChat();
-        }
-      });
-
-    // SOS Functions
     function openSOS() {
       document.getElementById('sos-section').style.display = 'block';
     }
@@ -268,10 +281,22 @@
       document.getElementById('sos-section').style.display = 'none';
     }
     function triggerSOS(type) {
-      document.getElementById('sos-status').innerText = "🚨 " + type + " Alert Sent!";
-      alert(type + " SOS request has been triggered! Authorities will be notified.");
-      // 🔗 Connect backend API/SMS/Email here
-
+      const sosBtn = document.getElementById('big-sos-btn');
+      sosBtn.innerText = "🚨 " + type + " Sent!";
+      setTimeout(() => {
+        sosBtn.innerText = "SOS";
+      }, 4000);
+    }
+    function allocateEmergency() {
+      openSOS();
+      const sosBtn = document.getElementById('big-sos-btn');
+      sosBtn.innerText = "⏳ Sending...";
+      setTimeout(() => {
+        sosBtn.innerText = "✅ Alert Sent";
+        setTimeout(() => {
+          sosBtn.innerText = "SOS";
+        }, 4000);
+      }, 1500);
     }
   </script>
 </body>

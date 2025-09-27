@@ -113,8 +113,8 @@ button:hover { background: #005bb5; }
     <input type="time" id="time">
 
     <label data-key="details"></label>
-    <textarea id="details"></textarea>
-
+    <textarea id="details" placeholder="Recording will appear here..."></textarea><br>
+    <button id="mic-button"> Speak 🗣️ </button>
     <label data-key="policeComplaint"></label>
     <select id="police-complaint" onchange="toggleFIRFields()">
       <option value="no">No</option><option value="yes">Yes</option>
@@ -438,7 +438,39 @@ function generatePDF() {
 
   doc.save("complaint.pdf");
 }
+ if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+    alert("Sorry, your browser doesn't support speech recognition.");
+}
 
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.continuous = true;
+recognition.interimResults = true;
+recognition.lang = 'en-US'; 
+let recording = false;
+
+document.getElementById("mic-button").onclick = function() {
+    if (!recording) {
+        recording = true;
+        this.textContent = "🛑 Stop Recording";
+        recognition.start();
+    } else {
+        recording = false;
+        this.textContent = "🎤 Start Recording";
+        recognition.stop();
+    }
+};
+
+recognition.onresult = function(event) {
+    let transcript = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+    }
+    document.getElementById("details").value = transcript;
+};
+
+recognition.onerror = function(event) {
+    console.error("Speech recognition error:", event.error);
+};
 window.onload = loadTranslations;
 </script>
 </body>

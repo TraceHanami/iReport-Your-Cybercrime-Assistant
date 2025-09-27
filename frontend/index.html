@@ -19,7 +19,7 @@
       background-size: cover;
       font-family: Arial, sans-serif;
       color: #e9dedef6;
-    }
+    } 
     .container {
       display: flex;
       flex-direction: column;
@@ -143,7 +143,7 @@ main.container {
 </head>
 <body>
 
-<!-- Left Panel (Cybersecurity Awareness) 
+<!-- Left Panel (Cybersecurity Awareness)-->
 <div class="side-panel left-panel">
    <h2 class="panel-title">🛡️ Cyber Awareness</h2>
   <div class="scroll-content">
@@ -168,8 +168,9 @@ main.container {
     <div class="topic" onclick="openArticle('vpn')">🌐 Use VPN</div>
     <div class="topic" onclick="openArticle('logs')">📊 Monitor Activity Logs</div>
   </div>
-</div>-->
-<!-- Right Panel (Cases Solved) 
+</div>
+
+<!-- Right Panel (Cases Solved)-->
 <div class="side-panel right-panel">
   <h2 class="panel-title">📂 Cases Solved</h2>
   <div class="scroll-content">
@@ -195,29 +196,57 @@ main.container {
     <div class="topic" onclick="openArticle('data-case')">💾 Data Breach in IT Firm</div>
   </div>
 </div>
--->
+
 <main class="container">
   <header>
     <h1>iReport - Your Cybercrime Assistant</h1>
     <p class="subtitle">Stay safe, stay informed.</p>
+    <button class="chart-btn" onclick="openChart()">📊 Case Live Chart</button>
   </header>
 
-  <section class="menu" aria-label="Main Menu">
-    <div class="menu-item" data-page="complaint"><p>📝 File Complaint</p></div>
-    <div class="menu-item" data-page="learning"><p>📘 Learning Space</p></div>
-    <div class="menu-item" data-page="suspect"><p>🔍 Check Suspect</p></div>
-    <div class="menu-item" data-page="volunteer"><p>🤝 Volunteer</p></div>
-    <div class="menu-item" data-page="puzzle"><p>🧩 Puzzle Game</p></div>
-    <div class="menu-item" data-page="sos"><p>🚨 SOS</p></div>
-    <div class="menu-item" data-page="phishing"><p>📧 Check Phishing</p></div>
-    <div class="menu-item" data-page="malware"><p>💻 Check Malware</p></div>
-    <div class="menu-item" data-page="talktous"><p>💬 Talk to Us</p></div>
-  </section>
+<section class="menu" aria-label="Main Menu">
+    <div class="menu-item" data-page="complaint">
+      <img src="assets/icons/complaint.png" alt="File Complaint">
+      <p>File Complaint</p>
+    </div>
+    <div class="menu-item" data-page="learning">
+      <img src="assets/icons/educator.png" alt="Learning Space">
+      <p>Learning Space</p>
+    </div>
+    <div class="menu-item" data-page="suspect">
+      <img src="assets/icons/suspect.png" alt="Check Suspect">
+      <p>Check Suspect</p>
+    </div>
+    <div class="menu-item" data-page="volunteer">
+      <img src="assets/icons/volunteer.png" alt="Volunteer">
+      <p>Volunteer</p>
+    </div>
+    <div class="menu-item" data-page="puzzle">
+      <img src="assets/icons/puzzle.png" alt="Puzzle Game">
+      <p>Puzzle</p>
+    </div>
+    <div class="menu-item" data-page="sos">
+      <img src="assets/icons/sos.png" alt="SOS">
+      <p>SOS</p>
+    </div>
+    <div class="menu-item" data-page="phishing">
+      <img src="assets/icons/phishing.png" alt="Check Phishing">
+      <p>Check Phishing</p>
+    </div>
+    <div class="menu-item" data-page="malware">
+      <img src="assets/icons/malware.png" alt="Check Malware">
+      <p>Check Malware</p>
+    </div>
+   <div class="menu-item" data-page="talktous">
+  <img src="assets/icons/talk to us.png" alt="Talk to Us">
+  <p>Talk to Us</p>
+</div>
 
-  <button class="chart-btn" onclick="openChart()">📊 Case Live Chart</button>
 
   <footer>
-    <p>Follow us: Instagram | Twitter | Facebook</p>
+    <a href="#" aria-label="Instagram"><img src="assets/icons/instagram.png" alt="Instagram"></a>
+    <a href="#" aria-label="Twitter"><img src="assets/icons/twitter.png" alt="Twitter"></a>
+    <a href="#" aria-label="Facebook"><img src="assets/icons/facebook.png" alt="Facebook"></a>
   </footer>
 
   <div id="chat-container"></div>
@@ -240,7 +269,6 @@ main.container {
     <canvas id="casesChart"></canvas>
   </div>
 </div>
-
 <script src="assets/chatbot.js"></script>
 <script>
   // Load chatbot
@@ -540,4 +568,4 @@ const articles = {
   };
 </script>
 </body>
-</html>
+</html>  i want cyber awarness button after click show the details and cases solved also
