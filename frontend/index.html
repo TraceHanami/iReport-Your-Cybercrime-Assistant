@@ -162,20 +162,9 @@
     </div>
   </div>
 
-  <!-- chat container inside main so it appears centered -->
-  <div id="chat-container"></div>
 </main>
 
-<script src="assets/chatbot.js"></script>
 <script>
-  fetch("assets/chatbot.html")
-    .then(response => response.text())
-    .then(data => {
-      document.getElementById("chat-container").innerHTML = data;
-      if (typeof initChat === "function") 
-        initChat();
-      }
-    );
 
   document.querySelectorAll('.menu-item').forEach(item => {
     item.addEventListener('click', () => {

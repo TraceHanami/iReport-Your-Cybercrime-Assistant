@@ -1,251 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cybercrime Learning Portal</title>
-<style>
-body {
-  margin: 0;
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HTB Dashboard - Single Page</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+* { box-sizing: border-box; margin:0; padding:0; }
+:root{
+  --bg-img: url('./assets/images/background.png');
+  --glass: rgba(255,255,255,0.12);
+  --panel: rgba(0,0,0,0.55);
+  --muted: #dbe9ff;
+  --accent: #0073e6;
+  --accent-dark: #005bb5;
+  --success: #28a745;
+}
+body{
   font-family: Arial, sans-serif;
-  background: url('./assets/images/background.png') no-repeat center center fixed;
+  background: var(--bg-img) no-repeat center center fixed;
   background-size: cover;
-  color: #ffffff; /* default font color white */
+  color: white;
+  -webkit-font-smoothing:antialiased;
 }
-.container {
-  display: flex;
-  height: 100vh;
-  backdrop-filter: blur(8px);
-}
-.sidebar {
-  width: 280px;
-  background: rgba(0,0,0,0.85);
-  padding: 20px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  border-right: 2px solid #ff0000; /* red border */
-}
-.sidebar h2 {
-  font-size: 1.8rem;
-  margin-bottom: 15px;
-  color: #ff0000; /* sidebar title red */
-  text-align: center;
-}
-#search {
-  width: 100%;
-  padding: 8px;
-  margin-bottom: 15px;
-  border-radius: 5px;
-  border: none;
-  background: #111;
-  color: #ffffff; /* search text white */
-}
-.topic {
-  padding: 12px;
-  margin-bottom: 12px;
-  cursor: pointer;
-  border-radius: 6px;
-  transition: background 0.3s;
-  color: #ff0000; /* topics in red */
-}
-.topic:hover { background: rgba(255,0,0,0.2); } /* red hover */
-.content {
-  flex: 1;
-  padding: 30px;
-  overflow-y: auto;
-  background: rgba(0,0,0,0.6);
-}
-.content h1 {
-  color: #ffffff; /* main content title white */
-  font-size: 2rem;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ffffff;
-  padding-bottom: 5px;
-}
-.content p { font-size: 1rem; line-height: 1.6; margin-bottom: 15px; color: #ffffff; }
-pre {
-  background: rgba(0,0,0,0.85);
-  padding: 20px;
-  border-radius: 8px;
-  overflow-x: auto;
-  border-left: 4px solid #ff0000; /* code block left border red */
-  color: #ffffff;
-}
-.lesson-nav { margin: 10px 0; }
-.lesson-nav button {
-  padding: 8px 15px;
-  margin-right: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background: #111;
-  color: #ffffff;
-  transition: 0.3s;
-}
-.lesson-nav button:hover { background: #ff0000; color:#000; }
-.quiz { margin-top: 25px; padding-top: 15px; border-top: 1px solid #ff0000; }
-.quiz p { font-weight: bold; margin-bottom: 10px; color: #ffffff; }
-.quiz button {
-  margin: 5px 0;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background: #111;
-  color: #ffffff;
-  transition: background 0.3s, transform 0.2s;
-}
-.quiz button:hover { background: #ff0000; color: #000; transform: scale(1.05);}
-.sidebar::-webkit-scrollbar { width: 8px; }
-.sidebar::-webkit-scrollbar-thumb { background: #ff0000; border-radius: 4px;}
-@media (max-width:768px){
-  .container{flex-direction:column;}
-  .sidebar{width:100%;height:200px;border-right:none;border-bottom:2px solid #ff0000;}
-}
-</style>
+.app-wrap{max-width:1200px;margin:24px auto;padding:18px;background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
+.header{display:flex;justify-content:space-between;align-items:center;padding:12px}
+.brand{font-weight:700;font-size:18px}
+.lang-select select{padding:8px;border-radius:8px;border:none;background:rgba(255,255,255,0.04);color:white}
+.content{display:flex;gap:20px}
+/* Sidebar */
+.sidebar{width:240px;background:var(--panel);padding:18px;border-radius:10px}
+.sidebar .profile{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.avatar{width:54px;height:54px;border-radius:50%;background:linear-gradient(90deg,#7c3aed,#00a3ff);display:flex;align-items:center;justify-content:center;font-weight:700}
+.nav-tabs{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.nav-tabs button{background:transparent;border:none;color:var(--muted);padding:8px 10px;text-align:left;border-radius:8px;cursor:pointer}
+.nav-tabs button.active{background:rgba(255,255,255,0.03);color:var(--accent);box-shadow:inset 0 0 0 1px rgba(0,0,0,0.2)}
+/* Main area */
+.main{flex:1}
+.top-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.tabs{display:flex;gap:8px}
+.tab{padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
+.tab.active{border-bottom:3px solid var(--accent);font-weight:700;color:var(--accent)}
+.panel{background:var(--panel);padding:14px;border-radius:10px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.stat{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:14px;border-radius:8px;text-align:center}
+.stat .big{font-size:18px;font-weight:700}
+/* Modules list */
+.modules-list{margin-top:12px}
+.module-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;background:rgba(255,255,255,0.03);margin-bottom:8px;cursor:pointer}
+.module-item .meta{display:flex;flex-direction:column}
+.module-item .meta .title{font-weight:700}
+.module-item .actions button{padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:white;cursor:pointer}
+.module-item .actions button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06)}
+/* Right preview panel */
+.preview{width:360px;display:flex;flex-direction:column;gap:12px}
+.preview .box{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:12px;border-radius:8px}
+#preview{border:1px solid var(--accent);padding:12px;border-radius:8px;background:#f0f8ff;color:#071025;max-height:520px;overflow:auto}
+#preview table{width:100%;border-collapse:collapse}
+#preview th,#preview td{border:1px solid var(--accent);padding:6px;text-align:left}
+#preview th{background:#d0e4ff}
+/* Buttons */
+.btn{padding:10px 14px;border-radius:8px;border:none;background:var(--accent);color:white;cursor:pointer}
+.btn.alt{background:transparent;border:1px solid rgba(255,255,255,0.06)}
+.btn.success{background:var(--success)}
+/* Responsive */
+@media (max-width:1000px){.content{flex-direction:column}.preview{width:100%}.grid{grid-template-columns:repeat(1,1fr)}}
+  </style>
 </head>
 <body>
-<div class="container">
-<div class="sidebar">
-<h2>Cyber Topics</h2>
-<input type="text" id="search" placeholder="Search topics..." oninput="filterTopics()">
-<div class="topic" onclick="loadTopic(0)">Phishing Attacks</div>
-<div class="topic" onclick="loadTopic(1)">Malware Basics</div>
-<div class="topic" onclick="loadTopic(2)">Ethical Hacking</div>
-<div class="topic" onclick="loadTopic(3)">Ransomware</div>
-<div class="topic" onclick="loadTopic(4)">Social Engineering</div>
-<div class="topic" onclick="loadTopic(5)">Network Security</div>
-</div>
+  <div class="app-wrap">
+    <div class="header">
+      <div class="brand">HTB Academy — Dashboard</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div class="lang-select"><select><option>EN</option><option>ES</option><option>FR</option></select></div>
+        <button class="btn">Purchase Cubes</button>
+      </div>
+    </div>
 
-<div class="content">
-<h1 id="topic-title">Welcome</h1>
-<p id="topic-content">Select a topic from the sidebar to start learning about cybercrime and digital security.</p>
-<pre id="topic-code"></pre>
-<div class="lesson-nav">
-<button onclick="prevLesson()">Previous Lesson</button>
-<button onclick="nextLesson()">Next Lesson</button>
-</div>
-<div class="quiz" id="quiz"></div>
-</div>
-</div>
+    <div class="content">
+      <aside class="sidebar">
+        <div class="profile"><div class="avatar">T</div><div><div style="font-weight:700">TraceHanami</div><div style="font-size:12px;color:#bcd">Free</div></div></div>
+        <div class="nav-tabs">
+          <button class="nav-btn active" data-target="dashboard">Dashboard</button>
+          <button class="nav-btn" data-target="modules">Modules</button>
+          <button class="nav-btn" data-target="paths">Paths</button>
+          <button class="nav-btn" data-target="exams">Exams</button>
+          <button class="nav-btn" data-target="labs">Labs</button>
+        </div>
+      </aside>
 
-<script>
-const topics = [
-{
-title:"Phishing Attacks",
-lessons:[
-{title:"Introduction", content:"Phishing is a cyber attack where attackers try to steal sensitive information...", code:`const email="user@example.com";\nif(email.includes("example.com")){alert("Possible phishing attempt!");}`},
-{title:"Types of Phishing", content:"Email phishing, spear phishing, whaling and smishing are common types.", code:`function detectPhishing(email){return email.includes("suspicious");}`}
-],
-quiz:[
-{question:"What is phishing?", options:["A cyber attack","A programming language","A game","A browser"], answer:"A cyber attack"},
-{question:"Which is a type of phishing?", options:["Email phishing","Waterfall method","Chess","VPN"], answer:"Email phishing"}
-]
-},
-{
-title:"Malware Basics",
-lessons:[
-{title:"Introduction", content:"Malware is malicious software designed to harm or exploit computers.", code:`function detectMalware(file){return file.includes("virus");}`},
-{title:"Types", content:"Common malware includes viruses, trojans, worms and ransomware.", code:`function malwareType(name){return ["virus","trojan","worm"].includes(name);}`}
-],
-quiz:[
-{question:"Malware is?", options:["Safe software","Malicious software","A browser","A game"], answer:"Malicious software"},
-{question:"Example of malware?", options:["Trojan","Firewall","Word","Excel"], answer:"Trojan"}
-]
-},
-{
-title:"Ethical Hacking",
-lessons:[
-{title:"Introduction", content:"Ethical hacking involves testing systems for vulnerabilities.", code:`function scanSystem(){console.log("Scanning...");}`},
-{title:"Tools", content:"Common tools: Nmap, Wireshark, Metasploit.", code:`console.log("Using Nmap");`}
-],
-quiz:[
-{question:"Purpose of ethical hacking?", options:["Break laws","Find vulnerabilities","Steal info","Crash systems"], answer:"Find vulnerabilities"}
-]
-},
-{
-title:"Ransomware",
-lessons:[
-{title:"Definition", content:"Ransomware encrypts your files and demands payment.", code:`function ransomwareWarning(){alert("Do not click suspicious links!");}`},
-{title:"Prevention", content:"Always backup data and keep software updated.", code:`console.log("Backup data regularly");`}
-],
-quiz:[
-{question:"Ransomware is?", options:["Data encryption attack","Safe software","Firewall tool","Network protocol"], answer:"Data encryption attack"}
-]
-},
-{
-title:"Social Engineering",
-lessons:[
-{title:"Introduction", content:"Social engineering manipulates people into giving confidential info.", code:`function verifyIdentity(user){if(!user.verified) alert("Possible social engineering attempt");}`},
-{title:"Techniques", content:"Impersonation, pretexting, baiting, and tailgating are common.", code:`console.log("Be aware of social engineering");`}
-],
-quiz:[
-{question:"Social engineering targets?", options:["Humans","Routers","Software bugs","Files"], answer:"Humans"}
-]
-},
-{
-title:"Network Security",
-lessons:[
-{title:"Introduction", content:"Network security protects data and resources from unauthorized access.", code:`function checkFirewall(){console.log("Firewall status OK");}`},
-{title:"Methods", content:"Use firewalls, VPNs, IDS, and encryption.", code:`console.log("Implement VPN and IDS");`}
-],
-quiz:[
-{question:"Network security involves?", options:["Protecting data","Hacking emails","Playing games","Streaming videos"], answer:"Protecting data"}
-]
-}
-];
+      <main class="main">
+        <div class="top-controls">
+          <div class="tabs">
+            <div class="tab active" data-tab="overview">Overview</div>
+            <div class="tab" data-tab="progress">Progress</div>
+            <div class="tab" data-tab="activity">Activity</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <button id="download-btn" class="btn success">Download Progress (PDF)</button>
+            <button id="share-btn" class="btn alt">Share</button>
+          </div>
+        </div>
 
-let currentTopic = 0;
-let lessonIndex = 0;
-let currentQuiz = 0;
-let score = 0;
+        <!-- Dashboard view -->
+        <section class="panel form-step active" id="dashboard">
+          <div class="grid">
+            <div class="stat"><div class="big">0.00%</div><div class="small-muted">Offensive</div></div>
+            <div class="stat"><div class="big">0.00%</div><div class="small-muted">Defensive</div></div>
+            <div class="stat"><div class="big">7.37%</div><div class="small-muted">General</div></div>
+          </div>
 
-function loadTopic(index){
-currentTopic=index; lessonIndex=0; currentQuiz=0; score=0;
-loadLesson(currentTopic,lessonIndex);
-loadQuiz();
-}
+          <div style="display:flex;gap:14px;margin-top:12px">
+            <div style="flex:1">
+              <div class="panel" style="margin-bottom:12px">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <div>
+                    <strong>Currently Enrolled Path</strong>
+                    <div style="font-size:13px;color:#bcd">Information Security Foundations</div>
+                  </div>
+                  <div><button class="btn">Continue</button></div>
+                </div>
 
-function loadLesson(topicIdx,lessonIdx){
-const lesson = topics[topicIdx].lessons[lessonIdx];
-document.getElementById('topic-title').innerText=lesson.title;
-document.getElementById('topic-content').innerText=lesson.content;
-document.getElementById('topic-code').innerText=lesson.code;
-}
+                <div style="margin-top:12px" class="modules-list" id="enrolled-modules">
+                  <!-- modules inserted by JS -->
+                </div>
+              </div>
 
-function nextLesson(){ 
-if(lessonIndex < topics[currentTopic].lessons.length-1){lessonIndex++; loadLesson(currentTopic,lessonIndex);}
-}
+              <div class="panel">
+                <strong>Favorite Modules</strong>
+                <div class="modules-list" id="favorite-modules" style="margin-top:10px"></div>
+              </div>
+            </div>
 
-function prevLesson(){
-if(lessonIndex>0){lessonIndex--; loadLesson(currentTopic,lessonIndex);}
-}
+            <aside class="preview">
+              <div class="box">
+                <strong>Weekly Streak</strong>
+                <div style="margin-top:6px;color:#bcd">0 / 30 Streak pts</div>
+              </div>
 
-function loadQuiz(){
-const quizDiv = document.getElementById('quiz'); quizDiv.innerHTML='';
-const q = topics[currentTopic].quiz[currentQuiz];
-if(!q) return;
-const question = document.createElement('p'); question.innerText=q.question; quizDiv.appendChild(question);
-q.options.forEach(opt=>{
-const btn=document.createElement('button'); btn.innerText=opt; btn.onclick=()=>checkAnswer(opt); quizDiv.appendChild(btn);
-});
-}
+              <div class="box">
+                <strong>Refer a friend</strong>
+                <div style="margin-top:6px;color:#bcd">Refer a Friend, Earn Cubes, Unlock Modules!</div>
+                <div style="margin-top:8px"><button class="btn alt">Start Referring</button></div>
+              </div>
 
-function checkAnswer(option){
-const q = topics[currentTopic].quiz[currentQuiz];
-if(option===q.answer) score++;
-currentQuiz++;
-if(currentQuiz<topics[currentTopic].quiz.length){loadQuiz();}
-else{alert(`Quiz completed! Score: ${score}/${topics[currentTopic].quiz.length}`); currentQuiz=0; loadQuiz();}
-}
+              <div class="box">
+                <strong>Preview</strong>
+                <div id="preview">
+                  <em>Select a module to see details here.</em>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <button id="pdf-snapshot" class="btn">Save Preview as PDF</button>
+                  <button id="copy-json" class="btn alt">Copy JSON</button>
+                </div>
+              </div>
+            </aside>
+          </div>
+        </section>
 
-function filterTopics(){
-const query = document.getElementById('search').value.toLowerCase();
-document.querySelectorAll('.topic').forEach(t=>{
-t.style.display=t.innerText.toLowerCase().includes(query)?'block':'none';
-}
-);
-}
-</script>
+        <!-- Modules view -->
+        <section class="panel form-step" id="modules" style="margin-top:12px">
+          <h3>All Modules</h3>
+          <div class="modules-list" id="all-modules" style="margin-top:10px"></div>
+        </section>
+
+        <!-- Paths view -->
+        <section class="panel form-step" id="paths" style="margin-top:12px">
+          <h3>Paths</h3>
+          <div style="margin-top:10px">Information Security Foundations, Web Application Security, etc.</div>
+        </section>
+
+        <section class="panel form-step" id="exams" style="margin-top:12px">
+          <h3>Exams</h3>
+          <div style="margin-top:10px">No active exams.</div>
+        </section>
+
+        <section class="panel form-step" id="labs" style="margin-top:12px">
+          <h3>HTB Labs</h3>
+          <div style="margin-top:10px">Access lab environments here.</div>
+        </section>
+      </main>
+
+      <aside class="preview">
+        <div class="box panel">
+          <strong>My Plan</strong>
+          <div style="margin-top:8px;color:#bcd">Subscribe now to unlock all modules.</div>
+          <div style="margin-top:8px"><button class="btn">Subscribe now!</button></div>
+        </div>
+
+        <div class="box panel">
+          <strong>Completed Modules</strong>
+          <div style="margin-top:8px;color:#bcd">Learning Process • Intro to Academy</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    // Sample data
+    const modules = [
+      {id:1,title:'Intro to Academy',difficulty:'Fundamental',progress:100,desc:'Overview of the platform and how to use it.'},
+      {id:2,title:'Learning Process',difficulty:'Fundamental',progress:100,desc:'How to structure your study.'},
+      {id:3,title:'Setting Up',difficulty:'Fundamental',progress:0,desc:'Tools and environment setup.'},
+      {id:4,title:'Linux Fundamentals',difficulty:'Fundamental',progress:25,desc:'Basics of Linux commands and filesystem.'},
+      {id:5,title:'Windows Fundamentals',difficulty:'Fundamental',progress:0,desc:'Windows basics and command line.'},
+      {id:6,title:'Intro to Networking',difficulty:'Fundamental',progress:0,desc:'Networking fundamentals.'}
+    ];
+
+    // DOM refs
+    const enrolledEl = document.getElementById('enrolled-modules');
+    const favoriteEl = document.getElementById('favorite-modules');
+    const allModulesEl = document.getElementById('all-modules');
+    const previewEl = document.getElementById('preview');
+
+    function renderModuleRow(m){
+      const div = document.createElement('div');
+      div.className='module-item';
+      div.dataset.id = m.id;
+      div.innerHTML = `<div class="meta"><div class="title">${m.title}</div><div style="font-size:13px;color:#bcd">${m.difficulty} • ${m.progress}%</div></div><div class="actions"><button class="btn">Open</button></div>`;
+      div.addEventListener('click',()=>showPreview(m));
+      return div;
+    }
+
+    // populate lists
+    modules.forEach(m=>{
+      if(enrolledEl) enrolledEl.appendChild(renderModuleRow(m));
+      if(allModulesEl) allModulesEl.appendChild(renderModuleRow(m));
+      if(m.progress===100 && favoriteEl) favoriteEl.appendChild(renderModuleRow(m));
+    });
+
+    function showPreview(m){
+      previewEl.innerHTML = `<table><tr><th>Field</th><th>Value</th></tr><tr><td>Title</td><td>${m.title}</td></tr><tr><td>Difficulty</td><td>${m.difficulty}</td></tr><tr><td>Progress</td><td>${m.progress}%</td></tr><tr><td>Description</td><td>${m.desc}</td></tr></table>`;
+    }
+
+    // Sidebar nav switching
+    document.querySelectorAll('.nav-btn').forEach(b=>{
+      b.addEventListener('click',()=>{
+        document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+        b.classList.add('active');
+        const tgt = b.dataset.target;
+        document.querySelectorAll('.form-step').forEach(s=>s.classList.remove('active'));
+        const el = document.getElementById(tgt);
+        if(el) el.classList.add('active');
+      });
+    });
+
+    // Top small tabs (UI only)
+    document.querySelectorAll('.tab').forEach(t=>{
+      t.addEventListener('click',()=>{
+        document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+        t.classList.add('active');
+      });
+    });
+
+    // Save preview as PDF (simple text conversion)
+    document.getElementById('pdf-snapshot').addEventListener('click',()=>{
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({orientation:'portrait',unit:'pt',format:'a4'});
+      doc.setFontSize(14); doc.text('Module Preview',40,40);
+      let y = 70;
+      const rows = Array.from(previewEl.querySelectorAll('tr'));
+      doc.setFontSize(11);
+      rows.forEach(r=>{
+        const cols = Array.from(r.querySelectorAll('td,th')).map(c=>c.innerText.replace(/\s+/g,' '));
+        doc.text(`${cols[0]}: ${cols[1] || ''}`,40,y);
+        y += 16;
+      });
+      doc.save('module-preview.pdf');
+    });
+
+    // Copy preview object as JSON
+    document.getElementById('copy-json').addEventListener('click',()=>{
+      const titleCell = previewEl.querySelector('tr:nth-child(2) td:last-child');
+      if(!titleCell) return alert('Select a module first');
+      const title = titleCell.innerText;
+      const obj = modules.find(m=>m.title === title);
+      if(!obj) return alert('No data');
+      navigator.clipboard.writeText(JSON.stringify(obj,null,2)).then(()=>alert('Copied JSON to clipboard'));
+    });
+
+    // Download all progress PDF
+    document.getElementById('download-btn').addEventListener('click',()=>{
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(16); doc.text('HTB Academy - Progress Report',20,40);
+      let y = 70;
+      modules.forEach(m=>{
+        doc.setFontSize(12);
+        doc.text(`${m.title} — ${m.progress}%`,20,y);
+        y += 14;
+      });
+      doc.save('htb-progress.pdf');
+    });
+
+    document.getElementById('share-btn').addEventListener('click',()=>alert('Share link copied to clipboard (placeholder)'));
+  </script>
 </body>
 </html>
