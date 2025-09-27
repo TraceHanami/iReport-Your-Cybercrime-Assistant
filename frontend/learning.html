@@ -1,299 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>HTB Dashboard - Single Page</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTB Dashboard Clone</title>
   <style>
-* { box-sizing: border-box; margin:0; padding:0; }
-:root{
-  --bg-img: url('./assets/images/background.png');
-  --glass: rgba(255,255,255,0.12);
-  --panel: rgba(0,0,0,0.55);
-  --muted: #dbe9ff;
-  --accent: #0073e6;
-  --accent-dark: #005bb5;
-  --success: #28a745;
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
-body{
+body {
   font-family: Arial, sans-serif;
-  background: var(--bg-img) no-repeat center center fixed;
+  background: url('./assets/images/background.png') no-repeat center center fixed;
   background-size: cover;
   color: white;
-  -webkit-font-smoothing:antialiased;
 }
-.app-wrap{max-width:1200px;margin:24px auto;padding:18px;background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.55));border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.6)}
-.header{display:flex;justify-content:space-between;align-items:center;padding:12px}
-.brand{font-weight:700;font-size:18px}
-.lang-select select{padding:8px;border-radius:8px;border:none;background:rgba(255,255,255,0.04);color:white}
-.content{display:flex;gap:20px}
-/* Sidebar */
-.sidebar{width:240px;background:var(--panel);padding:18px;border-radius:10px}
-.sidebar .profile{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.avatar{width:54px;height:54px;border-radius:50%;background:linear-gradient(90deg,#7c3aed,#00a3ff);display:flex;align-items:center;justify-content:center;font-weight:700}
-.nav-tabs{display:flex;flex-direction:column;gap:8px;margin-top:6px}
-.nav-tabs button{background:transparent;border:none;color:var(--muted);padding:8px 10px;text-align:left;border-radius:8px;cursor:pointer}
-.nav-tabs button.active{background:rgba(255,255,255,0.03);color:var(--accent);box-shadow:inset 0 0 0 1px rgba(0,0,0,0.2)}
-/* Main area */
-.main{flex:1}
-.top-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
-.tabs{display:flex;gap:8px}
-.tab{padding:8px 12px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.03);cursor:pointer}
-.tab.active{border-bottom:3px solid var(--accent);font-weight:700;color:var(--accent)}
-.panel{background:var(--panel);padding:14px;border-radius:10px}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.stat{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:14px;border-radius:8px;text-align:center}
-.stat .big{font-size:18px;font-weight:700}
-/* Modules list */
-.modules-list{margin-top:12px}
-.module-item{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;background:rgba(255,255,255,0.03);margin-bottom:8px;cursor:pointer}
-.module-item .meta{display:flex;flex-direction:column}
-.module-item .meta .title{font-weight:700}
-.module-item .actions button{padding:8px 12px;border-radius:8px;border:none;background:var(--accent);color:white;cursor:pointer}
-.module-item .actions button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06)}
-/* Right preview panel */
-.preview{width:360px;display:flex;flex-direction:column;gap:12px}
-.preview .box{background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);padding:12px;border-radius:8px}
-#preview{border:1px solid var(--accent);padding:12px;border-radius:8px;background:#f0f8ff;color:#071025;max-height:520px;overflow:auto}
-#preview table{width:100%;border-collapse:collapse}
-#preview th,#preview td{border:1px solid var(--accent);padding:6px;text-align:left}
-#preview th{background:#d0e4ff}
-/* Buttons */
-.btn{padding:10px 14px;border-radius:8px;border:none;background:var(--accent);color:white;cursor:pointer}
-.btn.alt{background:transparent;border:1px solid rgba(255,255,255,0.06)}
-.btn.success{background:var(--success)}
-/* Responsive */
-@media (max-width:1000px){.content{flex-direction:column}.preview{width:100%}.grid{grid-template-columns:repeat(1,1fr)}}
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 12px;
+}
+.sidebar {
+  width: 250px;
+  background: rgba(0,0,0,0.6);
+  padding: 20px;
+  border-radius: 12px;
+  display: none;
+  flex-shrink: 0;
+}
+.sidebar ul { list-style:none; }
+.sidebar ul li { margin: 15px 0; }
+.sidebar ul li a { text-decoration:none; color:white; font-weight:bold; }
+.main {
+  flex: 1;
+  margin-left: 20px;
+}
+.dashboard-stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 20px 0;
+}
+.stat {
+  text-align: center;
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 12px;
+  width: 30%;
+}
+.progress-bar {
+  height: 8px;
+  background: #0073e6;
+  border-radius: 5px;
+  margin-top: 5px;
+}
+.module-list {
+  margin-top: 20px;
+}
+.module {
+  background: rgba(0,0,0,0.5);
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.module button {
+  background: #0073e6;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: white;
+}
+.module button:hover { background:#005bb5; }
+.account-btn {
+  background:#0073e6;
+  padding:8px 15px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  color:white;
+}
+.account-btn:hover { background:#005bb5; }
   </style>
 </head>
 <body>
-  <div class="app-wrap">
-    <div class="header">
-      <div class="brand">HTB Academy — Dashboard</div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <div class="lang-select"><select><option>EN</option><option>ES</option><option>FR</option></select></div>
-        <button class="btn">Purchase Cubes</button>
+  <div style="display:flex;">
+    <div class="sidebar" id="sidebar">
+      <h2>HTB Academy</h2>
+      <ul>
+        <li><a href="#">Dashboard</a></li>
+        <li><a href="#">Exams</a></li>
+        <li><a href="#">Modules</a></li>
+        <li><a href="#">Paths</a></li>
+        <li><a href="#">HTB Labs</a></li>
+        <li><a href="#">My Certificates</a></li>
+        <li><a href="#">My Badges</a></li>
+        <li><a href="#">Help Center</a></li>
+      </ul>
+    </div>
+    <div class="main">
+      <header>
+        <h2>Dashboard</h2>
+        <div>
+          <button class="account-btn" onclick="toggleSidebar()">Account</button>
+          <button>Purchase Cubes</button>
+        </div>
+      </header>
+      <div class="dashboard-stats">
+        <div class="stat">
+          <h3>0.00%</h3>
+          <p>Offensive</p>
+        </div>
+        <div class="stat">
+          <h3>0.00%</h3>
+          <p>Defensive</p>
+        </div>
+        <div class="stat">
+          <h3>7.37%</h3>
+          <p>General</p>
+        </div>
+      </div>
+      <div class="container">
+        <h2>Currently Enrolled Path</h2>
+        <div class="module-list">
+          <div class="module">
+            <span>Intro to Academy</span>
+            <button>View</button>
+          </div>
+          <div class="module">
+            <span>Learning Process</span>
+            <button>View</button>
+          </div>
+          <div class="module">
+            <span>Setting Up</span>
+            <button>Unlock</button>
+          </div>
+          <div class="module">
+            <span>Linux Fundamentals</span>
+            <button>Continue</button>
+          </div>
+          <div class="module">
+            <span>Windows Fundamentals</span>
+            <button>Unlock</button>
+          </div>
+        </div>
       </div>
     </div>
-
-    <div class="content">
-      <aside class="sidebar">
-        <div class="profile"><div class="avatar">T</div><div><div style="font-weight:700">TraceHanami</div><div style="font-size:12px;color:#bcd">Free</div></div></div>
-        <div class="nav-tabs">
-          <button class="nav-btn active" data-target="dashboard">Dashboard</button>
-          <button class="nav-btn" data-target="modules">Modules</button>
-          <button class="nav-btn" data-target="paths">Paths</button>
-          <button class="nav-btn" data-target="exams">Exams</button>
-          <button class="nav-btn" data-target="labs">Labs</button>
-        </div>
-      </aside>
-
-      <main class="main">
-        <div class="top-controls">
-          <div class="tabs">
-            <div class="tab active" data-tab="overview">Overview</div>
-            <div class="tab" data-tab="progress">Progress</div>
-            <div class="tab" data-tab="activity">Activity</div>
-          </div>
-          <div style="display:flex;gap:8px">
-            <button id="download-btn" class="btn success">Download Progress (PDF)</button>
-            <button id="share-btn" class="btn alt">Share</button>
-          </div>
-        </div>
-
-        <!-- Dashboard view -->
-        <section class="panel form-step active" id="dashboard">
-          <div class="grid">
-            <div class="stat"><div class="big">0.00%</div><div class="small-muted">Offensive</div></div>
-            <div class="stat"><div class="big">0.00%</div><div class="small-muted">Defensive</div></div>
-            <div class="stat"><div class="big">7.37%</div><div class="small-muted">General</div></div>
-          </div>
-
-          <div style="display:flex;gap:14px;margin-top:12px">
-            <div style="flex:1">
-              <div class="panel" style="margin-bottom:12px">
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <div>
-                    <strong>Currently Enrolled Path</strong>
-                    <div style="font-size:13px;color:#bcd">Information Security Foundations</div>
-                  </div>
-                  <div><button class="btn">Continue</button></div>
-                </div>
-
-                <div style="margin-top:12px" class="modules-list" id="enrolled-modules">
-                  <!-- modules inserted by JS -->
-                </div>
-              </div>
-
-              <div class="panel">
-                <strong>Favorite Modules</strong>
-                <div class="modules-list" id="favorite-modules" style="margin-top:10px"></div>
-              </div>
-            </div>
-
-            <aside class="preview">
-              <div class="box">
-                <strong>Weekly Streak</strong>
-                <div style="margin-top:6px;color:#bcd">0 / 30 Streak pts</div>
-              </div>
-
-              <div class="box">
-                <strong>Refer a friend</strong>
-                <div style="margin-top:6px;color:#bcd">Refer a Friend, Earn Cubes, Unlock Modules!</div>
-                <div style="margin-top:8px"><button class="btn alt">Start Referring</button></div>
-              </div>
-
-              <div class="box">
-                <strong>Preview</strong>
-                <div id="preview">
-                  <em>Select a module to see details here.</em>
-                </div>
-                <div style="display:flex;gap:8px;margin-top:8px">
-                  <button id="pdf-snapshot" class="btn">Save Preview as PDF</button>
-                  <button id="copy-json" class="btn alt">Copy JSON</button>
-                </div>
-              </div>
-            </aside>
-          </div>
-        </section>
-
-        <!-- Modules view -->
-        <section class="panel form-step" id="modules" style="margin-top:12px">
-          <h3>All Modules</h3>
-          <div class="modules-list" id="all-modules" style="margin-top:10px"></div>
-        </section>
-
-        <!-- Paths view -->
-        <section class="panel form-step" id="paths" style="margin-top:12px">
-          <h3>Paths</h3>
-          <div style="margin-top:10px">Information Security Foundations, Web Application Security, etc.</div>
-        </section>
-
-        <section class="panel form-step" id="exams" style="margin-top:12px">
-          <h3>Exams</h3>
-          <div style="margin-top:10px">No active exams.</div>
-        </section>
-
-        <section class="panel form-step" id="labs" style="margin-top:12px">
-          <h3>HTB Labs</h3>
-          <div style="margin-top:10px">Access lab environments here.</div>
-        </section>
-      </main>
-
-      <aside class="preview">
-        <div class="box panel">
-          <strong>My Plan</strong>
-          <div style="margin-top:8px;color:#bcd">Subscribe now to unlock all modules.</div>
-          <div style="margin-top:8px"><button class="btn">Subscribe now!</button></div>
-        </div>
-
-        <div class="box panel">
-          <strong>Completed Modules</strong>
-          <div style="margin-top:8px;color:#bcd">Learning Process • Intro to Academy</div>
-        </div>
-      </aside>
-    </div>
   </div>
-
   <script>
-    // Sample data
-    const modules = [
-      {id:1,title:'Intro to Academy',difficulty:'Fundamental',progress:100,desc:'Overview of the platform and how to use it.'},
-      {id:2,title:'Learning Process',difficulty:'Fundamental',progress:100,desc:'How to structure your study.'},
-      {id:3,title:'Setting Up',difficulty:'Fundamental',progress:0,desc:'Tools and environment setup.'},
-      {id:4,title:'Linux Fundamentals',difficulty:'Fundamental',progress:25,desc:'Basics of Linux commands and filesystem.'},
-      {id:5,title:'Windows Fundamentals',difficulty:'Fundamental',progress:0,desc:'Windows basics and command line.'},
-      {id:6,title:'Intro to Networking',difficulty:'Fundamental',progress:0,desc:'Networking fundamentals.'}
-    ];
-
-    // DOM refs
-    const enrolledEl = document.getElementById('enrolled-modules');
-    const favoriteEl = document.getElementById('favorite-modules');
-    const allModulesEl = document.getElementById('all-modules');
-    const previewEl = document.getElementById('preview');
-
-    function renderModuleRow(m){
-      const div = document.createElement('div');
-      div.className='module-item';
-      div.dataset.id = m.id;
-      div.innerHTML = `<div class="meta"><div class="title">${m.title}</div><div style="font-size:13px;color:#bcd">${m.difficulty} • ${m.progress}%</div></div><div class="actions"><button class="btn">Open</button></div>`;
-      div.addEventListener('click',()=>showPreview(m));
-      return div;
+    function toggleSidebar(){
+      const sidebar = document.getElementById('sidebar');
+      if(sidebar.style.display === 'block'){
+        sidebar.style.display = 'none';
+      } else {
+        sidebar.style.display = 'block';
+      }
     }
-
-    // populate lists
-    modules.forEach(m=>{
-      if(enrolledEl) enrolledEl.appendChild(renderModuleRow(m));
-      if(allModulesEl) allModulesEl.appendChild(renderModuleRow(m));
-      if(m.progress===100 && favoriteEl) favoriteEl.appendChild(renderModuleRow(m));
-    });
-
-    function showPreview(m){
-      previewEl.innerHTML = `<table><tr><th>Field</th><th>Value</th></tr><tr><td>Title</td><td>${m.title}</td></tr><tr><td>Difficulty</td><td>${m.difficulty}</td></tr><tr><td>Progress</td><td>${m.progress}%</td></tr><tr><td>Description</td><td>${m.desc}</td></tr></table>`;
-    }
-
-    // Sidebar nav switching
-    document.querySelectorAll('.nav-btn').forEach(b=>{
-      b.addEventListener('click',()=>{
-        document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
-        b.classList.add('active');
-        const tgt = b.dataset.target;
-        document.querySelectorAll('.form-step').forEach(s=>s.classList.remove('active'));
-        const el = document.getElementById(tgt);
-        if(el) el.classList.add('active');
-      });
-    });
-
-    // Top small tabs (UI only)
-    document.querySelectorAll('.tab').forEach(t=>{
-      t.addEventListener('click',()=>{
-        document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-        t.classList.add('active');
-      });
-    });
-
-    // Save preview as PDF (simple text conversion)
-    document.getElementById('pdf-snapshot').addEventListener('click',()=>{
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({orientation:'portrait',unit:'pt',format:'a4'});
-      doc.setFontSize(14); doc.text('Module Preview',40,40);
-      let y = 70;
-      const rows = Array.from(previewEl.querySelectorAll('tr'));
-      doc.setFontSize(11);
-      rows.forEach(r=>{
-        const cols = Array.from(r.querySelectorAll('td,th')).map(c=>c.innerText.replace(/\s+/g,' '));
-        doc.text(`${cols[0]}: ${cols[1] || ''}`,40,y);
-        y += 16;
-      });
-      doc.save('module-preview.pdf');
-    });
-
-    // Copy preview object as JSON
-    document.getElementById('copy-json').addEventListener('click',()=>{
-      const titleCell = previewEl.querySelector('tr:nth-child(2) td:last-child');
-      if(!titleCell) return alert('Select a module first');
-      const title = titleCell.innerText;
-      const obj = modules.find(m=>m.title === title);
-      if(!obj) return alert('No data');
-      navigator.clipboard.writeText(JSON.stringify(obj,null,2)).then(()=>alert('Copied JSON to clipboard'));
-    });
-
-    // Download all progress PDF
-    document.getElementById('download-btn').addEventListener('click',()=>{
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.setFontSize(16); doc.text('HTB Academy - Progress Report',20,40);
-      let y = 70;
-      modules.forEach(m=>{
-        doc.setFontSize(12);
-        doc.text(`${m.title} — ${m.progress}%`,20,y);
-        y += 14;
-      });
-      doc.save('htb-progress.pdf');
-    });
-
-    document.getElementById('share-btn').addEventListener('click',()=>alert('Share link copied to clipboard (placeholder)'));
   </script>
 </body>
 </html>
