@@ -117,16 +117,14 @@ canvas {
 
     <!-- Case Form -->
     <div id="caseForm" style="display:none;">
-        <h2>📁 Track or Add Case</h2>
+        <h2>📁 Track Case</h2>
         <input type="text" id="caseId" placeholder="Enter Case ID"><br>
-        <input type="text" id="caseStatus" placeholder="Enter Case Status"><br>
 
         <p>Letters CAPTCHA:</p>
         <canvas id="captchaCanvas2" width="220" height="80"></canvas><br>
         <input type="text" id="captchaInput2" placeholder="Enter letters here">
         <button type="button" onclick="generateCaptcha('captchaCanvas2')">↻ Refresh</button>
-        <button class="submit" onclick="addCase()">Add / Update Case</button>
-        <button class="submit" onclick="viewCases()">View All Cases</button>
+        <button class="submit" onclick="trackCase()">Track Case</button>
         <div id="caseList"></div>
     </div>
 </div>
@@ -195,34 +193,6 @@ function generateCaptcha(canvasId) {
     }
 }
 
-// ---------- SUSPECT DATABASE ----------
-const suspects = [
-    { 
-        aadhaar: "1234 5678 9012", 
-        name: "R. Sharma", 
-        state: "Maharashtra", 
-        district: "Pune", 
-        village: "Hinjewadi", 
-        phone: "9876543210", 
-        family: [
-            { member: "Wife - S. Sharma", phone: "9988776655" },
-            { member: "Son - A. Sharma", phone: "8877665544" }
-        ] 
-    },
-    { 
-        aadhaar: "2345 6789 0123", 
-        name: "P. Verma", 
-        state: "Uttar Pradesh", 
-        district: "Lucknow", 
-        village: "Aliganj", 
-        phone: "8765432109", 
-        family: [
-            { member: "Father - V. Verma", phone: "7766554433" },
-            { member: "Mother - R. Verma", phone: "6655443322" }
-        ] 
-    }
-];
-
 // ---------- SUSPECT CHECK ----------
 function submitForm() {
     const aadhaar = document.getElementById('aadhaar').value.trim();
@@ -244,78 +214,74 @@ function submitForm() {
         return;
     }
 
-    const found = suspects.find(s => 
-        s.aadhaar === aadhaar &&
-        s.name.toLowerCase() === name.toLowerCase()
-    );
-
-    if (found) {
-        let familyDetails = "<ul>";
-        found.family.forEach(f => {
-            familyDetails += `<li><strong>${f.member}:</strong> ${f.phone}</li>`;
+    fetch(`http://localhost:5000/api/reports`)
+        .then(res => res.json())
+        .then(data => {
+            const found = data.find(r => r.aadhaar_id === aadhaar && r.reported_by.toLowerCase() === name.toLowerCase());
+            if (found) {
+                resultDiv.style.color = 'lightgreen';
+                resultDiv.innerHTML = `
+                    <p>✅ Suspect Found:</p>
+                    <p><strong>Name:</strong> ${found.reported_by}</p>
+                    <p><strong>Case Type:</strong> ${found.type}</p>
+                    <p><strong>Priority:</strong> ${found.priority}</p>
+                    <p><strong>Case Date:</strong> ${found.date}</p>
+                `;
+            } else {
+                resultDiv.style.color = 'orange';
+                resultDiv.textContent = "⚠️ No suspect found.";
+            }
+        })
+        .catch(err => {
+            resultDiv.style.color = 'red';
+            resultDiv.textContent = "Error connecting to backend.";
+            console.error(err);
         });
-        familyDetails += "</ul>";
-
-        resultDiv.style.color = 'lightgreen';
-        resultDiv.innerHTML = `
-            <p>✅ Suspect Found:</p>
-            <p><strong>Aadhaar:</strong> ${found.aadhaar}</p>
-            <p><strong>Name:</strong> ${found.name}</p>
-            <p><strong>State:</strong> ${found.state}</p>
-            <p><strong>District:</strong> ${found.district}</p>
-            <p><strong>Village:</strong> ${found.village}</p>
-            <p><strong>Phone:</strong> ${found.phone}</p>
-            <p><strong>Family Members:</strong></p>
-            ${familyDetails}
-        `;
-    } else {
-        resultDiv.style.color = 'orange';
-        resultDiv.textContent = "⚠️ No suspect found.";
-    }
 }
 
 // ---------- CASE TRACKING ----------
-function getCases() { return JSON.parse(localStorage.getItem('cases') || '[]'); }
-function saveCases(cases) { localStorage.setItem('cases', JSON.stringify(cases)); }
-
-function addCase() {
-    const id = document.getElementById('caseId').value.trim();
-    const status = document.getElementById('caseStatus').value.trim();
+function trackCase() {
+    const caseId = document.getElementById('caseId').value.trim();
     const captchaInput = document.getElementById('captchaInput2').value.trim();
+    const caseListDiv = document.getElementById('caseList');
 
-    if (!id || !status) { alert("Please fill Case ID and Status."); return; }
+    if (!caseId) {
+        caseListDiv.innerHTML = "<p>Please enter a Case ID.</p>";
+        return;
+    }
+
     if (captchaInput !== captchaCodes['captchaCanvas2']) {
-        alert("CAPTCHA does not match. Try again.");
+        caseListDiv.innerHTML = "<p>CAPTCHA does not match. Try again.</p>";
         generateCaptcha('captchaCanvas2');
         document.getElementById('captchaInput2').value = "";
         return;
     }
 
-    let cases = getCases();
-    const existing = cases.find(c => c.id === id);
-    if (existing) existing.status = status;
-    else cases.push({ id, status });
-    saveCases(cases);
-    alert(`Case '${id}' saved successfully.`);
-    viewCases();
+    fetch(`http://localhost:5000/api/reports`)
+        .then(res => res.json())
+        .then(data => {
+            const found = data.find(r => r.case_id == caseId);
+            if (found) {
+                caseListDiv.innerHTML = `
+                    <div class="case-item">
+                        <strong>Case ID:</strong> ${found.case_id}<br>
+                        <strong>Type:</strong> ${found.type}<br>
+                        <strong>Reported By:</strong> ${found.reported_by}<br>
+                        <strong>Date:</strong> ${found.date}<br>
+                        <strong>Priority:</strong> ${found.priority}
+                    </div>
+                `;
+            } else {
+                caseListDiv.innerHTML = "<p>No case found with that ID.</p>";
+            }
+        })
+        .catch(err => {
+            caseListDiv.innerHTML = "<p>Error connecting to backend.</p>";
+            console.error(err);
+        });
 }
 
-function viewCases() {
-    const cases = getCases();
-    const caseListDiv = document.getElementById('caseList');
-    if (cases.length === 0) {
-        caseListDiv.innerHTML = "<p>No cases available.</p>";
-        return;
-    }
-    caseListDiv.innerHTML = cases.map(c => `
-        <div class="case-item">
-            <strong>Case ID:</strong> ${c.id}<br>
-            <strong>Status:</strong> ${c.status}
-        </div>
-    `).join('');
-}
-
-// Initialize both CAPTCHAs
+// Initialize CAPTCHAs
 generateCaptcha('captchaCanvas1');
 generateCaptcha('captchaCanvas2');
 </script>

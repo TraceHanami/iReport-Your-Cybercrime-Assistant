@@ -2,9 +2,15 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import sqlite3
 from datetime import datetime
+import os
 
 app = Flask(__name__)
-CORS(app)  # Allow frontend to access API
+CORS(app)
+
+# Create upload folder
+UPLOAD_FOLDER = 'uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Initialize SQLite database
 def init_db():
@@ -29,6 +35,8 @@ def init_db():
             suspect_email TEXT,
             suspect_phone TEXT,
             police_complaint TEXT,
+            fir_file TEXT,
+            suspect_file TEXT,
             money REAL DEFAULT 0,
             injury TEXT DEFAULT 'None',
             missing TEXT DEFAULT 'None',
@@ -43,16 +51,59 @@ init_db()
 # Save complaint
 @app.route('/api/complaints', methods=['POST'])
 def save_complaint():
-    data = request.json
+    data = request.form.to_dict()
+    fir_file = request.files.get('fir-file')
+    suspect_file = request.files.get('suspect-file')
+
+    # Save files if provided
+    fir_filename = None
+    suspect_filename = None
+    if fir_file:
+        fir_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{fir_file.filename}"
+        fir_file.save(os.path.join(app.config['UPLOAD_FOLDER'], fir_filename))
+    if suspect_file:
+        suspect_filename = f"{datetime.now().strftime('%Y%m%d%H%M%S')}_{suspect_file.filename}"
+        suspect_file.save(os.path.join(app.config['UPLOAD_FOLDER'], suspect_filename))
+
+    # Prepare data
     try:
+        money = float(data.get('Money', 0))
+        injury = data.get('Injury', 'None')
+        missing = data.get('Missing', 'None')
+
+        # Calculate priority same as frontend
+        priority_score = 0
+        if money > 50000:
+            priority_score += 2
+        elif money > 10000:
+            priority_score += 1
+
+        if injury.lower() == "serious":
+            priority_score += 3
+        elif injury.lower() == "minor":
+            priority_score += 1
+
+        if missing.lower() == "person":
+            priority_score += 3
+        elif missing.lower() == "property":
+            priority_score += 1
+
+        if priority_score >= 5:
+            priority = "High"
+        elif priority_score >= 2:
+            priority = "Medium"
+        else:
+            priority = "Low"
+
         conn = sqlite3.connect('complaints.db')
         c = conn.cursor()
         c.execute('''
             INSERT INTO complaints (
                 name, aadhaar_id, category, state, district, village, landmark,
                 imei, sim, date, time, details, suspect_name, suspect_email,
-                suspect_phone, police_complaint, money, injury, missing, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                suspect_phone, police_complaint, fir_file, suspect_file, money,
+                injury, missing, created_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             data.get('Name'),
             data.get('ID'),
@@ -70,60 +121,55 @@ def save_complaint():
             data.get('SuspectEmail'),
             data.get('SuspectPhone'),
             data.get('PoliceComplaint'),
-            data.get('Money', 0),
-            data.get('Injury', 'None'),
-            data.get('Missing', 'None'),
+            fir_filename,
+            suspect_filename,
+            money,
+            injury,
+            missing,
             datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         ))
         conn.commit()
         complaint_id = c.lastrowid
         conn.close()
-        return jsonify({"status": "success", "id": complaint_id}), 201
+        return jsonify({"status": "success", "id": complaint_id, "priority": priority}), 201
     except Exception as e:
         print(e)
         return jsonify({"status": "error", "message": str(e)}), 500
 
-# Get reports with priority calculation
+# Get reports with frontend-style priority
 @app.route('/api/reports', methods=['GET'])
 def get_reports():
     try:
         conn = sqlite3.connect('complaints.db')
         c = conn.cursor()
-        c.execute("SELECT id, category, name, date, money, injury, missing, details FROM complaints ORDER BY created_at DESC")
+        c.execute("SELECT id, category, name, date, money, injury, missing FROM complaints ORDER BY created_at DESC")
         rows = c.fetchall()
         conn.close()
 
         reports = []
         for r in rows:
-            case_id, crime_type, reported_by, date, money, injury, missing, details = r
+            case_id, crime_type, reported_by, date, money, injury, missing = r
 
-            # Priority logic
+            # Frontend priority logic
             priority_score = 0
-
-            # Financial loss
-            if money > 100000:  # large loss
-                priority_score += 3
-            elif money > 50000:
+            if money > 50000:
                 priority_score += 2
-            elif money > 0:
+            elif money > 10000:
                 priority_score += 1
 
-            # Physical injury
-            if injury.lower() in ['serious', 'major', 'critical']:
+            if injury.lower() == "serious":
                 priority_score += 3
-            elif injury.lower() in ['minor', 'moderate']:
-                priority_score += 2
+            elif injury.lower() == "minor":
+                priority_score += 1
 
-            # Missing items/person
-            if missing.lower() in ['person', 'human']:
+            if missing.lower() == "person":
                 priority_score += 3
-            elif missing.lower() in ['valuable', 'expensive', 'property']:
-                priority_score += 2
+            elif missing.lower() == "property":
+                priority_score += 1
 
-            # Determine priority level
-            if priority_score >= 6:
+            if priority_score >= 5:
                 priority = "High"
-            elif priority_score >= 3:
+            elif priority_score >= 2:
                 priority = "Medium"
             else:
                 priority = "Low"
