@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Candy Crush Style Game Roadmap</title>
+    <style>
+        body { font-family: Arial; text-align: center; background: #fdf6e3; }
+        #roadmap { display: flex; justify-content: center; flex-wrap: wrap; margin: 20px; }
+        .level { padding: 15px 20px; margin: 10px; border-radius: 10px; background: #ffcccc; cursor: pointer; transition: transform 0.2s; }
+        .level.locked { background: #ccc; cursor: not-allowed; }
+        .level:hover { transform: scale(1.1); }
+        button { margin-top: 20px; padding: 10px 20px; background: #ff6666; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        #dashboard { display: none; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Candy Crush Style Game Roadmap</h1>
+    <div id="roadmap"></div>
+    <button id="dashboardBtn">Show Dashboard</button>
+    <div id="dashboard"></div>
+
+    <script>
+        let currentLevel = 1;
+        const totalLevels = 10;
+        let timePlayed = 0;
+        let levelTimes = [];
+
+        function createRoadmap() {
+            const roadmap = document.getElementById('roadmap');
+            roadmap.innerHTML = "";
+            for (let i = 1; i <= totalLevels; i++) {
+                const level = document.createElement('div');
+                level.className = `level ${i > currentLevel ? "locked" : ""}`;
+                level.innerText = `Level ${i}`;
+                level.onclick = () => playLevel(i);
+                roadmap.appendChild(level);
+            }
+        }
+
+        function playLevel(levelNumber) {
+            if (levelNumber > currentLevel) return;
+            const startTime = Date.now();
+            alert(`Playing Level ${levelNumber}...`);
+            setTimeout(() => {
+                const endTime = Date.now();
+                const timeTaken = Math.floor((endTime - startTime) / 1000) + 1;
+                timePlayed += timeTaken;
+                levelTimes[levelNumber] = timeTaken;
+                if (levelNumber === currentLevel && currentLevel < totalLevels) currentLevel++;
+                saveProgress();
+                createRoadmap();
+                alert(`Level ${levelNumber} finished in ${timeTaken} seconds!`);
+            }, 1000); // Simulated game time
+        }
+
+        function saveProgress() {
+            localStorage.setItem("currentLevel", currentLevel);
+            localStorage.setItem("timePlayed", timePlayed);
+            localStorage.setItem("levelTimes", JSON.stringify(levelTimes));
+        }
+
+        function loadProgress() {
+            currentLevel = parseInt(localStorage.getItem("currentLevel")) || 1;
+            timePlayed = parseInt(localStorage.getItem("timePlayed")) || 0;
+            levelTimes = JSON.parse(localStorage.getItem("levelTimes")) || [];
+        }
+
+        function showDashboard() {
+            const dashboardDiv = document.getElementById("dashboard");
+            dashboardDiv.innerHTML = `
+                <h2>Player Dashboard</h2>
+                <p><strong>Current Level:</strong> ${currentLevel}</p>
+                <p><strong>Total Time Played:</strong> ${timePlayed} seconds</p>
+                <p><strong>Level Times:</strong> ${JSON.stringify(levelTimes)}</p>
+            `;
+            dashboardDiv.style.display = "block";
+        }
+
+        document.getElementById("dashboardBtn").onclick = showDashboard;
+
+        loadProgress();
+        createRoadmap();
+    </script>
+</body>
+</html>

@@ -113,6 +113,15 @@ button:hover { background: #005bb5; }
     <label data-key="time"></label>
     <input type="time" id="time">
 
+    <label data-key="money"></label>
+    <input type="number" id="money">
+
+    <label data-key="injury"></label>
+    <select id="injury"></select>
+
+    <label data-key="missing"></label>
+    <select id="missing"></select>
+
     <label data-key="details"></label>
     <textarea id="details" placeholder="Recording will appear here..."></textarea><br>
     <button id="mic-button"> Speak 🗣️ </button>
@@ -143,28 +152,46 @@ button:hover { background: #005bb5; }
     <button onclick="prevStep(1)">Back</button>
     <button onclick="nextStep(3)">Next</button>
   </div>
-  <!-- Step 3 -->
-  <div class="form-step" id="step3">
-    <h3 data-key="step3"></h3>
-    <div id="preview"></div>
+ <!-- Step 3 -->
+<div class="form-step" id="step3">
+  <h3 data-key="step3"></h3>
+  <div id="preview"></div>
 
-    <div>
-      <label>Rate your experience:</label>
-      <div class="stars" id="stars">
-        <span onclick="rate(1)">★</span>
-        <span onclick="rate(2)">★</span>
-        <span onclick="rate(3)">★</span>
-        <span onclick="rate(4)">★</span>
-        <span onclick="rate(5)">★</span>
-      </div>
+  <div>
+    <label>Rate your experience:</label>
+    <div class="stars" id="stars">
+      <span onclick="rate(1)">★</span>
+      <span onclick="rate(2)">★</span>
+      <span onclick="rate(3)">★</span>
+      <span onclick="rate(4)">★</span>
+      <span onclick="rate(5)">★</span>
     </div>
-
-    <button onclick="prevStep(2)">Back</button>
-    <button type="button" onclick="generatePDF()" data-key="submit"></button>
-    <button onclick="Submit">Submit</button>
   </div>
+
+  <button onclick="prevStep(2)">Back</button>
+  <button type="button" onclick="generatePDF()" data-key="submit"></button>
+  <button type="button" onclick="saveToDatabase()">Submit</button>
+
+  <!-- Add this div for showing message -->
+  <div id="submission-message" style="display:none; text-align:center; margin-top:20px; color:yellow; font-weight:bold;"></div>
 </div>
+
 <script>
+const speechLangMap = {
+  en: 'en-US',
+  hi: 'hi-IN',
+  ta: 'ta-IN',
+  te: 'te-IN',
+  bn: 'bn-BD',
+  mr: 'mr-IN',
+  gu: 'gu-IN',
+  ml: 'ml-IN',
+  kn: 'kn-IN',
+  pa: 'pa-IN',
+  or: 'or-IN',
+  ur: 'ur-PK'
+};
+
 const translations = {
   en: {
     notice: "Please provide accurate details of the incident. False complaints are punishable under law.",
@@ -176,6 +203,9 @@ const translations = {
     imei: "Mobile IMEI Number (if mobile lost):",
     sim: "SIM Number (if available):",
     date:"Date of Incident:", time:"Approximate Time of Incident:", details:"Describe the Incident:",
+    money: "Amount Involved (₹):",
+    injury: "Injury (None/Minor/Serious):", injuryOptions:["None","Minor","Serious"],
+    missing: "Missing (None/Person/Property):", missingOptions:["None","Person","Property"],
     policeComplaint:"Have you complained at Police Station?", firFile:"Upload FIR Copy (if available):",
     step2:"Suspect Details", suspectName:"Suspect Name (if known):", suspectEmail:"Suspect Email:", suspectPhone:"Suspect Phone:",
     step3:"Preview & Rating", submit:"Generate Report"
@@ -189,6 +219,11 @@ const translations = {
     imei: "मोबाइल IMEI नंबर (यदि मोबाइल खो गया हो):",
     sim: "SIM नंबर (यदि उपलब्ध हो):",
     date:"घटना की तारीख:", time:"घटना का अनुमानित समय:", details:"घटना का विवरण दें:",
+    money: "शामिल राशि (₹):",
+    injury: "चोट (कोई/हल्की/गंभीर):",
+    injuryOptions:["कोई","हल्की","गंभीर"],
+    missing: "अनुपस्थित (कोई/व्यक्ति/संपत्ति):",
+    missingOptions:["कोई","व्यक्ति","संपत्ति"],
     policeComplaint:"क्या आपने पुलिस में शिकायत दर्ज कराई है?", firFile:"FIR कॉपी अपलोड करें (यदि उपलब्ध हो):",
     step2:"संदिग्ध विवरण", suspectName:"संदिग्ध का नाम (यदि ज्ञात हो):", suspectEmail:"संदिग्ध ईमेल:", suspectPhone:"संदिग्ध फोन:",
     step3:"पूर्वावलोकन और रेटिंग", submit:"रिपोर्ट जनरेट करें"
@@ -202,6 +237,11 @@ const translations = {
     imei:"மொபைல் IMEI எண் (மொபைல் இழந்தால்):",
     sim:"SIM எண் (கிடைக்குமானால்):",
     date:"சம்பவ தேதி:", time:"சம்பவத்தின் சுமார் நேரம்:", details:"சம்பவத்தை விவரிக்கவும்:",
+    money: "பணம் சம்பந்தப்பட்டது (₹):",
+    injury: "காயம் (இல்லை/சிறிய/கடுமையான):",
+    injuryOptions:["இல்லை","சிறிய","கடுமையான"],
+    missing: "மறைந்தது (இல்லை/பெர்சன்/சொத்து):",
+    missingOptions:["இல்லை","பெர்சன்","சொத்து"],
     policeComplaint:"நீங்கள் காவல் நிலையத்தில் புகார் செய்தீர்களா?", firFile:"FIR நகலை பதிவேற்றவும் (உள்ளது என்றால்):",
     step2:"குற்றவாளி விவரங்கள்", suspectName:"குற்றவாளியின் பெயர் (அறிந்திருந்தால்):", suspectEmail:"குற்றவாளி மின்னஞ்சல்:", suspectPhone:"குற்றவாளி தொலைபேசி:",
     step3:"முன்னோட்டம் & மதிப்பீடு", submit:"அறிக்கையை உருவாக்கு"
@@ -215,6 +255,11 @@ const translations = {
     imei:"మొబైల్ IMEI నంబర్ (మొబైల్ కోల్పోతే):",
     sim:"SIM నంబర్ (లభిస్తే):",
     date:"సంభవించిన తేదీ:", time:"సంభవ సమయం అంచనా:", details:"సంభవాన్ని వివరించండి:",
+    money: "చెల్లించిన మొత్తం (₹):",
+    injury: "గాయం (ఏమీ/చిన్నది/గంభీరమైనది):",
+    injuryOptions:["ఏమీ","చిన్నది","గంభీరమైనది"],
+    missing: "గాయం (ఏమీ/వ్యక్తి/ఆస్తి):",
+    missingOptions:["ఏమీ","వ్యక్తి","ఆస్తి"],
     policeComplaint:"మీరు పోలీస్ స్టేషన్‌లో ఫిర్యాదు చేసారా?", firFile:"FIR కాపీని అప్‌లోడ్ చేయండి (అందుబాటులో ఉంటే):",
     step2:"సందేహితుడు వివరాలు", suspectName:"సందేహితుడి పేరు (తెలిస్తే):", suspectEmail:"సందేహితుడి ఇమెయిల్:", suspectPhone:"సందేహితుడి ఫోన్:",
     step3:"మునుపరి & రేటింగ్", submit:"రిపోర్ట్ ఉత్పత్తి చేయండి"
@@ -228,6 +273,11 @@ const translations = {
     imei:"মোবাইল IMEI নম্বর (যদি মোবাইল হারানো হয়):",
     sim:"SIM নম্বর (যদি পাওয়া যায়):",
     date:"ঘটনার তারিখ:", time:"ঘটনার আনুমানিক সময়:", details:"ঘটনাটি বর্ণনা করুন:",
+    money: "অঙ্কিত পরিমাণ (₹):",
+    injury: "আঘাত (কোনো/হালকা/গুরুতর):",
+    injuryOptions:["কোনো","হালকা","গুরুতর"],
+    missing: "নিখোঁজ (কোনো/ব্যক্তি/সম্পত্তি):",
+    missingOptions:["কোনো","ব্যক্তি","সম্পত্তি"],
     policeComplaint:"আপনি কি থানায় অভিযোগ করেছেন?", firFile:"FIR কপি আপলোড করুন (যদি থাকে):",
     step2:"সন্দেহভাজনের বিবরণ", suspectName:"সন্দেহভাজনের নাম (যদি জানা থাকে):", suspectEmail:"সন্দেহভাজনের ইমেল:", suspectPhone:"সন্দেহভাজনের ফোন:",
     step3:"প্রাকদর্শন ও রেটিং", submit:"রিপোর্ট তৈরি করুন"
@@ -241,6 +291,11 @@ const translations = {
     imei:"मोबाईल IMEI नंबर (जर मोबाइल हरवला असेल तर):",
     sim:"SIM नंबर (जर उपलब्ध असेल तर):",
     date:"घटनेची तारीख:", time:"घटनेचा अंदाजित वेळ:", details:"घटनेचे वर्णन करा:",
+    money:"रक्कम (₹):",
+    injury:"जखम (कोणतीही/लहान/गंभीर):",
+    injuryOptions:["कोणतीही","लहान","गंभीर"],
+    missing:"गायब (कोणतीही/व्यक्ति/मालमत्ता):",
+    missingOptions:["कोणतीही","व्यक्ति","मालमत्ता"],
     policeComplaint:"तुम्ही पोलीस ठाण्यात तक्रार नोंदवली आहे का?", firFile:"FIR प्रत अपलोड करा (उपलब्ध असल्यास):",
     step2:"शंका व्यक्ती तपशील", suspectName:"शंका व्यक्तीचे नाव (जर ज्ञात असेल तर):", suspectEmail:"शंका व्यक्ती ईमेल:", suspectPhone:"शंका व्यक्ती फोन:",
     step3:"पूर्वावलोकन & रेटिंग", submit:"अहवाल तयार करा"
@@ -251,9 +306,14 @@ const translations = {
     step1:"ફરિયાદ & ઘટના વિગતો", name:"તમારું પૂર્ણ નામ:", id:"આધાર / રેશન / પાન નંબર:",
     category:"ફરિયાદની શ્રેણી:", categoryOptions:["ફિશિંગ","હેકિંગ","ઓનલાઇન ઠગાઈ","ઉત્પીડન","ઓળખ ચોરી","મોબાઈલ ચોરી"],
     state:"રાજ્ય:", district:"જિલ્લો:", village:"ગામ / શહેર:", landmark:"નજીકનું મુખ્ય સ્થળ:",
-    imei:"મોબાઈલ IMEI નંબર (જો મોબાઈલ ગુમ થઈ જાય):",
+    imei:"મોબાઇલ IMEI નંબર (જો મોબાઇલ ગુમ થઈ જાય):",
     sim:"SIM નંબર (જો ઉપલબ્ધ હોય):",
     date:"ઘટના તારીખ:", time:"ઘટનાનો અંદાજિત સમય:", details:"ઘટનાનું વર્ણન કરો:",
+    money:"રકમ (₹):",
+    injury:"જખમ (કોઈ/નાની/ગંભીર):",
+    injuryOptions:["કોઈ","નાની","ગંભીર"],
+    missing:"ગાયબ (કોઈ/વ્યક્તિ/સંપત્તિ):",
+    missingOptions:["કોઈ","વ્યક્તિ","સંપત્તિ"],
     policeComplaint:"શું તમે પોલીસ સ્ટેશનમાં ફરિયાદ નોંધાવી છે?", firFile:"FIR નકલ અપલોડ કરો (ઉપલબ્ધ હોય તો):",
     step2:"શંકાસ્પદ વિગતો", suspectName:"શંકાસ્પદનું નામ (જાણતા હોય તો):", suspectEmail:"શંકાસ્પદ ઇમેઇલ:", suspectPhone:"શંકાસ્પદ ફોન:",
     step3:"પૂર્વાવલોકન અને રેટિંગ", submit:"અહેવાલ બનાવો"
@@ -267,6 +327,11 @@ const translations = {
     imei:"മൊബൈൽ IMEI നമ്പർ (മൊബൈൽ നഷ്ടപ്പെട്ടാൽ):",
     sim:"SIM നമ്പർ (ലഭ്യമെങ്കിൽ):",
     date:"സംഭവത്തിന്റെ തീയതി:", time:"സംഭവത്തിന്റെ ഏകദേശം സമയo:", details:"സംഭവം വിശദീകരിക്കുക:",
+    money:"രൂപം (₹):",
+    injury:"ആঘാതം (ഇല്ല/ലഘു/ഗുരുതര):",
+    injuryOptions:["ഇല്ല","ലഘു","ഗുരുതര"],
+    missing:"നഷ്ടം (ഇല്ല/വ്യക്തി/സ്വത്ത്):",
+    missingOptions:["ഇല്ല","വ്യക്തി","സ്വത്ത്"],
     policeComplaint:"നിങ്ങൾ പൊലീസിൽ പരാതി നൽകിയിട്ടുണ്ടോ?", firFile:"FIR പകർപ്പ് അപ്‌ലോഡ് ചെയ്യുക (ലഭ്യമെങ്കിൽ):",
     step2:"സംശയാർത്ഥിയുടെ വിശദാംശങ്ങൾ", suspectName:"സംശയാർത്ഥിയുടെ പേര് (അറിയാമെങ്കിൽ):", suspectEmail:"സംശയാർത്ഥിയുടെ ഇമെയിൽ:", suspectPhone:"സംശയാർത്ഥിയുടെ ഫോൺ:",
     step3:"പ്രിവ്യൂ & റേറ്റിംഗ്", submit:"റിപ്പോർട്ട് ജനറേറ്റ് ചെയ്യുക"
@@ -280,6 +345,11 @@ const translations = {
     imei:"ಮೊಬೈಲ್ IMEI ಸಂಖ್ಯೆ (ಮೊಬೈಲ್ ಕಳೆದುಕೊಂಡರೆ):",
     sim:"SIM ಸಂಖ್ಯೆ (ಲಭ್ಯವಿದ್ದರೆ):",
     date:"ಘಟನೆಯ ದಿನಾಂಕ:", time:"ಘಟನೆಯ ಅಂದಾಜು ಸಮಯ:", details:"ಘಟನೆಯ ವಿವರಣೆ ನೀಡಿ:",
+    money:"ಮೊತ್ತ (₹):",
+    injury:"ಜಖಂ (ಯಾವುದೇ/ಸಣ್ಣ/ಗಂಭೀರ):",
+    injuryOptions:["ಯಾವುದೇ","ಸಣ್ಣ","ಗಂಭೀರ"],
+    missing:"ನಷ್ಟ (ಯಾವುದೇ/ವ್ಯಕ್ತಿ/ಆಸ್ತಿ):",
+    missingOptions:["ಯಾವುದೇ","ವ್ಯಕ್ತಿ","ಆಸ್ತಿ"],
     policeComplaint:"ನೀವು ಪೊಲೀಸ್ ಸ್ಟೇಶನ್‌ನಲ್ಲಿ ದೂರು ಸಲ್ಲಿಸಿದ್ದೀರಾ?", firFile:"FIR ನಕಲನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ (ಇದಾಗಿದ್ದರೆ):",
     step2:"ಸಂದೇಹಾತ್ಮಕ ವಿವರಗಳು", suspectName:"ಸಂದೇಹಾತ್ಮಕ ಹೆಸರು (ತಿಳಿದಿದ್ದರೆ):", suspectEmail:"ಸಂದೇಹಾತ್ಮಕ ಇಮೇಲ್:", suspectPhone:"ಸಂದೇಹಾತ್ಮಕ ಫೋನ್:",
     step3:"ಪೂರ್ವಾವಲೋಕನ & ಮೌಲ್ಯಮಾಪನ", submit:"ವರದಿ ರಚಿಸಿ"
@@ -289,61 +359,103 @@ const translations = {
     tab1:"ਸ਼ਿਕਾਇਤ", tab2:"ਸ਼ੱਕੀ", tab3:"ਪ੍ਰੀਵਿਊ & ਰੇਟਿੰਗ",
     step1:"ਸ਼ਿਕਾਇਤ & ਘਟਨਾ ਵੇਰਵੇ", name:"ਤੁਹਾਡਾ ਪੂਰਾ ਨਾਮ:", id:"ਆਧਾਰ / ਰੇਸ਼ਨ / ਪੈਨ ਨੰਬਰ:",
     category:"ਸ਼ਿਕਾਇਤ ਦੀ ਸ਼੍ਰੇਣੀ:", categoryOptions:["ਫਿਸ਼ਿੰਗ","ਹੈਕਿੰਗ","ਆਨਲਾਈਨ ਧੋਖਾਧੜੀ","ਹੈਰਾਸਮੈਂਟ","ਪਹਚਾਣ ਚੋਰੀ","ਮੋਬਾਈਲ ਚੋਰੀ"],
-    state:"ਰਾਜ:", district:"ਜ਼ਿਲਾ:", village:"ਪਿੰਡ / ਸ਼ਹਿਰ:", landmark:"ਨੇੜੇ ਦਾ ਮੁੱਖ ਸਥਾਨ:",
-    imei:"ਮੋਬਾਈਲ IMEI ਨੰਬਰ (ਜੇ ਮੋਬਾਈਲ ਗੁੰਮ ਹੋਇਆ ਹੋਵੇ):",
+    state:"ਰਾਜ:", district:"ਜ਼ਿਲ੍ਹਾ:", village:"ਪਿੰਡ / ਸ਼ਹਿਰ:", landmark:"ਨਜ਼ਦੀਕੀ ਪ੍ਰਮੁੱਖ ਸਥਾਨ:",
+    imei:"ਮੋਬਾਈਲ IMEI ਨੰਬਰ (ਜੇ ਮੋਬਾਈਲ ਖੋਇਆ ਹੋਵੇ):",
     sim:"SIM ਨੰਬਰ (ਜੇ ਉਪਲਬਧ ਹੋਵੇ):",
-    date:"ਘਟਨਾ ਦੀ ਤਾਰੀਖ:", time:"ਘਟਨਾ ਦਾ ਅਨੁਮਾਨਿਤ ਸਮਾਂ:", details:"ਘਟਨਾ ਦਾ ਵੇਰਵਾ ਦਿਓ:",
-    policeComplaint:"ਕੀ ਤੁਸੀਂ ਪੁਲਿਸ ਸਟੇਸ਼ਨ ਵਿੱਚ ਸ਼ਿਕਾਇਤ ਕੀਤੀ ਹੈ?", firFile:"FIR ਕਾਪੀ ਅਪਲੋਡ ਕਰੋ (ਜੇ ਉਪਲਬਧ ਹੋਵੇ):",
-    step2:"ਸ਼ੱਕੀ ਵੇਰਵੇ", suspectName:"ਸ਼ੱਕੀ ਦਾ ਨਾਮ (ਜੇ ਪਤਾ ਹੋਵੇ):", suspectEmail:"ਸ਼ੱਕੀ ਈਮੇਲ:", suspectPhone:"ਸ਼ੱਕੀ ਫ਼ੋਨ:",
+    date:"ਘਟਨਾ ਦੀ ਤਾਰੀਖ:", time:"ਘਟਨਾ ਦਾ ਅੰਦਾਜ਼ਾ ਸਮਾਂ:", details:"ਘਟਨਾ ਵੇਰਵਾ ਦਿਓ:",
+    money:"ਰਕਮ (₹):",
+    injury:"ਚੋਟ (ਕੋਈ/ਛੋਟੀ/ਗੰਭੀਰ):",
+    injuryOptions:["ਕੋਈ","ਛੋਟੀ","ਗੰਭੀਰ"],
+    missing:"ਗਾਇਬ (ਕੋਈ/ਵਿਅਕਤੀ/ਸੰਪਤੀ):",
+    missingOptions:["ਕੋਈ","ਵਿਅਕਤੀ","ਸੰਪਤੀ"],
+    policeComplaint:"ਕੀ ਤੁਸੀਂ ਪੁਲੀਸ ਸਟੇਸ਼ਨ 'ਚ ਸ਼ਿਕਾਇਤ ਕੀਤੀ ਹੈ?", firFile:"FIR ਕਾਪੀ ਅਪਲੋਡ ਕਰੋ (ਜੇ ਉਪਲਬਧ ਹੋਵੇ):",
+    step2:"ਸ਼ੱਕੀ ਵੇਰਵੇ", suspectName:"ਸ਼ੱਕੀ ਦਾ ਨਾਮ (ਜੇ ਪਤਾ ਹੋਵੇ):", suspectEmail:"ਸ਼ੱਕੀ ਦਾ ਈਮੇਲ:", suspectPhone:"ਸ਼ੱਕੀ ਦਾ ਫੋਨ:",
     step3:"ਪ੍ਰੀਵਿਊ & ਰੇਟਿੰਗ", submit:"ਰਿਪੋਰਟ ਬਣਾਓ"
   },
   or: {
-    notice:"ଦୟାକରି ଘଟଣାର ସଠିକ ବିବରଣୀ ଦିଅନ୍ତୁ। ମିଥ୍ୟା ଅଭିଯୋଗ ଆଇନ ଅନୁସାରେ ଦଣ୍ଡନୀୟ।",
+    notice:"ଘଟଣାର ସଠିକ ବିବରଣୀ ଦିଅନ୍ତୁ। ମିଥ୍ୟା ଅଭିଯୋଗ ଆଇନ ଅନୁଯାୟୀ ଦଣ୍ଡନୀୟ।",
     tab1:"ଅଭିଯୋଗ", tab2:"ସନ୍ଦେହାସ୍ପଦ", tab3:"ପ୍ରିଭ୍ୟୁ & ରେଟିଂ",
     step1:"ଅଭିଯୋଗ & ଘଟଣା ବିବରଣୀ", name:"ଆପଣଙ୍କର ପୂର୍ଣ୍ଣ ନାମ:", id:"ଆଧାର / ରେସନ / ପ୍ୟାନ୍ ନମ୍ବର:",
-    category:"ଅଭିଯୋଗର ବର୍ଗ:", categoryOptions:["ଫିସିଂ","ହ୍ୟାକିଂ","ଅନଲାଇନ ଠକେଇ","ହେରାସମେଣ୍ଟ","ପରିଚୟ ଚୋରି","ମୋବାଇଲ ଚୋରି"],
-    state:"ରାଜ୍ୟ:", district:"ଜିଲ୍ଲା:", village:"ଗ୍ରାମ / ସହର:", landmark:"ନିକଟସ୍ଥ ପ୍ରମୁଖ ସ୍ଥାନ:",
-    imei:"ମୋବାଇଲ IMEI ନମ୍ବର (ଯଦି ମୋବାଇଲ ହରାଇଯାଇଛି):",
-    sim:"SIM ନମ୍ବର (ଯଦି ଉପଲବ୍ଧ):",
-    date:"ଘଟଣାର ତାରିଖ:", time:"ଘଟଣାର ଅନୁମାନିତ ସମୟ:", details:"ଘଟଣା ବିବରଣ କରନ୍ତୁ:",
-    policeComplaint:"ଆପଣ ପୋଲିସ ଷ୍ଟେସନରେ ଅଭିଯୋଗ ଦାଖଲ କରିଛନ୍ତି କି?", firFile:"FIR କପି ଅପଲୋଡ କରନ୍ତୁ (ଯଦି ଉପଲବ୍ଧ):",
-    step2:"ସନ୍ଦେହାସ୍ପଦ ବିବରଣୀ", suspectName:"ସନ୍ଦେହାସ୍ପଦଙ୍କ ନାମ (ଯଦି ଜାଣିଛନ୍ତି):", suspectEmail:"ସନ୍ଦେହାସ୍ପଦ ଇମେଲ୍:", suspectPhone:"ସନ୍ଦେହାସ୍ପଦ ଫୋନ୍:",
-    step3:"ପ୍ରିଭ୍ୟୁ & ରେଟିଂ", submit:"ରିପୋର୍ଟ ତିଆରି କରନ୍ତୁ"
+    category:"ଅଭିଯୋଗର ଶ୍ରେଣୀ:", categoryOptions:["ଫିସିଙ୍ଗ","ହ୍ୟାକିଂ","ଅନଲାଇନ ଠକାଇ","ହେରାସ୍ମେଣ୍ଟ","ପରିଚୟ ଚୋରି","ମୋବାଇଲ ଚୋରି"],
+    state:"ରାଜ୍ୟ:", district:"ଜିଲ୍ଲା:", village:"ଗ୍ରାମ / ସହର:", landmark:"ନିକଟସ୍ଥ ପ୍ରମୁଖ ସ୍ଥଳ:",
+    imei:"ମୋବାଇଲ IMEI ସଂଖ୍ୟା (ମୋବାଇଲ ହାରାଇଥିଲେ):",
+    sim:"SIM ସଂଖ୍ୟା (ଯଦି ଉପଲବ୍ଧ ହୁଏ):",
+    date:"ଘଟଣା ତାରିଖ:", time:"ଘଟଣାର ଅନୁମାନିତ ସମୟ:", details:"ଘଟଣା ବିବରଣୀ ଦିଅନ୍ତୁ:",
+    money:"ରାଶି (₹):",
+    injury:"ଆହତ (କିଛି/ସାଧାରଣ/ଗମ୍ଭୀର):",
+    injuryOptions:["କିଛି","ସାଧାରଣ","ଗମ୍ଭୀର"],
+    missing:"ନିଖୋଜ (କିଛି/ବ୍ୟକ୍ତି/ସଂପତ୍ତି):",
+    missingOptions:["କିଛି","ବ୍ୟକ୍ତି","ସଂପତ୍ତି"],
+    policeComplaint:"ଆପଣ ପୋଲିସ୍‌ ଷ୍ଟେସନ୍‌ରେ ଅଭିଯୋଗ କରିଛନ୍ତି କି?", firFile:"FIR କପି ଅପଲୋଡ୍ କରନ୍ତୁ (ଯଦି ଉପଲବ୍ଧ ହୋଇଥାଏ):",
+    step2:"ସନ୍ଦେହାସ୍ପଦ ବିବରଣୀ", suspectName:"ସନ୍ଦେହାସ୍ପଦଙ୍କର ନାମ (ଯଦି ଜଣା ଥାଏ):", suspectEmail:"ସନ୍ଦେହାସ୍ପଦ ଇମେଲ୍:", suspectPhone:"ସନ୍ଦେହାସ୍ପଦ ଫୋନ୍:",
+    step3:"ପ୍ରିଭ୍ୟୁ & ରେଟିଂ", submit:"ରିପୋର୍ଟ ସୃଷ୍ଟି କରନ୍ତୁ"
   },
   ur: {
-    notice:"براہ کرم واقعہ کی درست تفصیلات فراہم کریں۔ جھوٹی شکایات قانون کے تحت قابل سزا ہیں۔",
+    notice:"براہ کرم واقعے کی درست تفصیلات فراہم کریں۔ جھوٹی شکایات قانون کے تحت قابل سزا ہیں۔",
     tab1:"شکایت", tab2:"مشبہ", tab3:"پریویو اور درجہ بندی",
-    step1:"شکایت اور واقعے کی تفصیلات", name:"آپ کا پورا نام:", id:"آدھار / راشن / پین نمبر:",
+    step1:"شکایت اور واقعہ کی تفصیلات", name:"آپ کا مکمل نام:", id:"آدھار / راشن / پین نمبر:",
     category:"شکایت کی قسم:", categoryOptions:["فشنگ","ہیکنگ","آن لائن فراڈ","ہراساں کرنا","شناخت کی چوری","موبائل چوری"],
-    state:"ریاست:", district:"ضلع:", village:"گاؤں / شہر:", landmark:"قریب کا اہم مقام:",
-    imei:"موبائل IMEI نمبر (اگر موبائل گم ہو جائے):",
+    state:"ریاست:", district:"ضلع:", village:"گاؤں / شہر:", landmark:"قریبی اہم مقام:",
+    imei:"موبائل IMEI نمبر (اگر موبائل کھو گیا ہو):",
     sim:"SIM نمبر (اگر دستیاب ہو):",
-    date:"واقعے کی تاریخ:", time:"واقعے کا اندازہ وقت:", details:"واقعے کی تفصیل بیان کریں:",
-    policeComplaint:"کیا آپ نے پولیس اسٹیشن میں شکایت درج کرائی ہے؟", firFile:"FIR کی کاپی اپ لوڈ کریں (اگر دستیاب ہو):",
-    step2:"مشبہ کی تفصیلات", suspectName:"مشبہ کا نام (اگر معلوم ہو):", suspectEmail:"مشبہ کا ای میل:", suspectPhone:"مشبہ کا فون:",
+    date:"واقعے کی تاریخ:", time:"واقعے کا اندازہ وقت:", details:"واقعے کی تفصیل دیں:",
+    money:"رقم (₹):",
+    injury:"چوٹ (کوئی/چھوٹی/شدید):",
+    injuryOptions:["کوئی","چھوٹی","شدید"],
+    missing:"غائب (کوئی/شخص/املاک):",
+    missingOptions:["کوئی","شخص","املاک"],
+    policeComplaint:"کیا آپ نے پولیس اسٹیشن میں شکایت درج کروائی ہے؟", firFile:"FIR کی کاپی اپ لوڈ کریں (اگر دستیاب ہو):",
+    step2:"مشبہ کی تفصیلات", suspectName:"مشبہ کا نام (اگر معلوم ہو):", suspectEmail:"مشبہ ای میل:", suspectPhone:"مشبہ فون:",
     step3:"پریویو اور درجہ بندی", submit:"رپورٹ تیار کریں"
   }
 };
+
 
 function loadTranslations() {
   const lang = document.getElementById("language").value;
   const t = translations[lang];
   if (!t) return;
+
   document.querySelectorAll("[data-key]").forEach(el => {
     const key = el.getAttribute("data-key");
-    if (key === "category") {
-      const select = document.getElementById("category");
+    // Update label or heading text
+    if (t[key]) {
+      el.textContent = t[key];
+    }
+    if (key === "category" || key === "injury" || key === "missing") {
+      const select = document.getElementById(key);
       select.innerHTML = "";
-      t.categoryOptions.forEach(opt => {
-        const o = document.createElement("option");
-        o.textContent = opt;
-        select.appendChild(o);
+      const options = t[key + "Options"];
+    if(options){
+    options.forEach(opt => {
+      const o = document.createElement("option");
+      o.textContent = opt;
+      select.appendChild(o);
       });
+      }
+
+
     } else {
       el.textContent = t[key];
     }
   });
+
+  // 🔹 Add this inside loadTranslations:
+  if (speechLangMap[lang]) {
+    recognition.lang = speechLangMap[lang];
+  }
+  const micBtn = document.getElementById("mic-button");
+  if (micBtn) {
+    const langNames = {
+      en: "English", hi: "Hindi", ta: "Tamil", te: "Telugu",
+      bn: "Bengali", mr: "Marathi", gu: "Gujarati", ml: "Malayalam",
+      kn: "Kannada", pa: "Punjabi", or: "Odia", ur: "Urdu"
+      };
+    micBtn.textContent = `🎤 Speak in ${langNames[lang] || "English"}`;
+  }
+
 }
+
 
 function goStep(step){ 
   document.querySelectorAll('.form-step').forEach(s=>s.classList.remove('active')); 
@@ -374,22 +486,40 @@ function generatePreview(){
     Date: document.getElementById("date").value,
     Time: document.getElementById("time").value,
     Details: document.getElementById("details").value,
+    Money: document.getElementById("money").value,
+    Injury: document.getElementById("injury").value,
+    Missing: document.getElementById("missing").value,
     SuspectName: document.getElementById("suspect-name").value,
     SuspectEmail: document.getElementById("suspect-email").value,
     SuspectPhone: document.getElementById("suspect-phone").value,
     PoliceComplaint: document.getElementById("police-complaint").value
   };
+
   let html = "<table>";
-  for (let key in data) { html += `<tr><th>${key}</th><td>${data[key]}</td></tr>`; }
+  for (let key in data) {
+    html += `<tr><th>${key}</th><td>${data[key]}</td></tr>`;
+  }
   html += "</table>";
   document.getElementById("preview").innerHTML = html;
 }
+
 
 function rate(stars){ 
   document.querySelectorAll('#stars span').forEach((s,i)=>{ 
     if(i<stars) s.classList.add('active'); else s.classList.remove('active'); 
   }); 
 }
+
+function previewFile(){
+  const fileInput = document.getElementById("suspect-file");
+  const preview = document.getElementById("file-preview");
+  if(fileInput.files.length > 0){
+    preview.textContent = `Selected file: ${fileInput.files[0].name}`;
+  } else {
+    preview.textContent = "No file selected.";
+  }
+}
+
 function generatePDF() {
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -466,13 +596,75 @@ recognition.onresult = function(event) {
     for (let i = event.resultIndex; i < event.results.length; i++) {
         transcript += event.results[i][0].transcript;
     }
-    document.getElementById("details").value = transcript;
+    document.getElementById("details").value += transcript;
 };
 
 recognition.onerror = function(event) {
     console.error("Speech recognition error:", event.error);
 };
+
+async function saveToDatabase(){
+  // Get form data
+  const data = {
+    Name: document.getElementById("complainant-name").value,
+    ID: document.getElementById("complainant-id").value,
+    Category: document.getElementById("category").value,
+    State: document.getElementById("state").value,
+    District: document.getElementById("district").value,
+    Village: document.getElementById("village").value,
+    Landmark: document.getElementById("landmark").value,
+    IMEI: document.getElementById("imei").value,
+    SIM: document.getElementById("sim-number").value,
+    Date: document.getElementById("date").value,
+    Time: document.getElementById("time").value,
+    Details: document.getElementById("details").value,
+    Money: parseFloat(document.getElementById("money").value) || 0,
+    Injury: document.getElementById("injury").value,
+    Missing: document.getElementById("missing").value,
+    SuspectName: document.getElementById("suspect-name").value,
+    SuspectEmail: document.getElementById("suspect-email").value,
+    SuspectPhone: document.getElementById("suspect-phone").value,
+    PoliceComplaint: document.getElementById("police-complaint").value
+  };
+
+  // Calculate priority internally
+  let priorityScore = 0;
+  if (data.Money > 50000) priorityScore += 2;
+  else if (data.Money > 10000) priorityScore += 1;
+
+  if (data.Injury === "Serious") priorityScore += 3;
+  else if (data.Injury === "Minor") priorityScore += 1;
+
+  if (data.Missing === "Person") priorityScore += 3;
+  else if (data.Missing === "Property") priorityScore += 1;
+
+  if (priorityScore >= 5) data.Priority = "High";
+  else if (priorityScore >= 2) data.Priority = "Medium";
+  else data.Priority = "Low";
+
+  // Send to backend
+  try {
+    const res = await fetch("http://localhost:5000/api/complaints", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+    const result = await res.json();
+
+    document.querySelector('#step3 button[onclick="saveToDatabase()"]').style.display = "none";
+    const msgDiv = document.getElementById("submission-message");
+    msgDiv.style.display = "block";
+    msgDiv.textContent = `✅ Your case has been submitted successfully! Case ID: ${result.id}. It will be investigated shortly.`;
+
+  } catch(err) {
+    console.error(err);
+    alert("Error saving complaint");
+  }
+}
+
 window.onload = loadTranslations;
+
+
 </script>
 </body>
 </html>

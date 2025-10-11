@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Suspect Check with CAPTCHA</title>
+<title>Suspect Check & Case Tracker</title>
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -15,6 +15,7 @@ body {
     color: #ffffff;
     padding-top: 50px;
 }
+
 .container {
     background: rgba(0,0,0,0.6);
     padding: 30px;
@@ -23,6 +24,32 @@ body {
     width: 450px;
     text-align: center;
 }
+
+/* Switch buttons */
+.switch-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.switch-buttons button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+.switch-buttons button:not(:last-child) {
+    margin-right: 10px;
+}
+.switch-buttons button.active {
+    background: #28a745;
+}
+
 input[type="text"] {
     width: 90%;
     padding: 10px;
@@ -30,7 +57,8 @@ input[type="text"] {
     border-radius: 5px;
     border: 1px solid #ccc;
 }
-button {
+
+button.submit {
     padding: 10px 20px;
     border-radius: 5px;
     border: none;
@@ -43,57 +71,102 @@ button:disabled {
     background-color: #555;
     cursor: not-allowed;
 }
+
 .result {
     font-weight: bold;
     margin-top: 15px;
     text-align: left;
 }
-/* --- CAPTCHA STYLE --- */
+
 canvas {
     border: 1px solid #ccc;
     border-radius: 6px;
     background: #f9f9f9;
     margin-bottom: 10px;
 }
+
+.case-item {
+    background: rgba(255,255,255,0.15);
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
 </style>
 </head>
 <body>
 <div class="container">
-    <h2>Check Suspect Details</h2>
-    <input type="text" id="aadhaar" placeholder="Enter Aadhaar Number"><br>
-    <input type="text" id="name" placeholder="Enter Name with Initial"><br>
+    <div class="switch-buttons">
+        <button id="suspectBtn" class="active" onclick="showForm('suspect')">Check Suspect</button>
+        <button id="caseBtn" onclick="showForm('case')">Track Case</button>
+    </div>
 
-    <p>Letters CAPTCHA:</p>
-    <canvas id="captchaCanvas" width="220" height="80"></canvas>
-    <br>
-    <input type="text" id="captchaInput" placeholder="Enter letters here">
-    <button type="button" onclick="generateCaptcha()">↻ Refresh</button>
+    <!-- Suspect Form -->
+    <div id="suspectForm">
+        <h2>Check Suspect Details</h2>
+        <input type="text" id="aadhaar" placeholder="Enter Aadhaar Number"><br>
+        <input type="text" id="name" placeholder="Enter Name with Initial"><br>
 
-    <button id="submitBtn" onclick="submitForm()">Submit</button>
-    <div class="result" id="result"></div>
+        <p>Letters CAPTCHA:</p>
+        <canvas id="captchaCanvas1" width="220" height="80"></canvas>
+        <br>
+        <input type="text" id="captchaInput1" placeholder="Enter letters here">
+        <button type="button" onclick="generateCaptcha('captchaCanvas1')">↻ Refresh</button>
+        <button class="submit" onclick="submitForm()">Submit</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <!-- Case Form -->
+    <div id="caseForm" style="display:none;">
+        <h2>📁 Track or Add Case</h2>
+        <input type="text" id="caseId" placeholder="Enter Case ID"><br>
+        <input type="text" id="caseStatus" placeholder="Enter Case Status"><br>
+
+        <p>Letters CAPTCHA:</p>
+        <canvas id="captchaCanvas2" width="220" height="80"></canvas><br>
+        <input type="text" id="captchaInput2" placeholder="Enter letters here">
+        <button type="button" onclick="generateCaptcha('captchaCanvas2')">↻ Refresh</button>
+        <button class="submit" onclick="addCase()">Add / Update Case</button>
+        <button class="submit" onclick="viewCases()">View All Cases</button>
+        <div id="caseList"></div>
+    </div>
 </div>
 
 <script>
-// ---------- CAPTCHA ----------
-let captchaCode = "";
+// ---------- FORM SWITCH ----------
+function showForm(type) {
+    const suspectBtn = document.getElementById('suspectBtn');
+    const caseBtn = document.getElementById('caseBtn');
+    const suspectForm = document.getElementById('suspectForm');
+    const caseForm = document.getElementById('caseForm');
 
-function generateCaptcha() {
-    const canvas = document.getElementById("captchaCanvas");
+    if (type === 'suspect') {
+        suspectBtn.classList.add('active');
+        caseBtn.classList.remove('active');
+        suspectForm.style.display = 'block';
+        caseForm.style.display = 'none';
+    } else {
+        caseBtn.classList.add('active');
+        suspectBtn.classList.remove('active');
+        caseForm.style.display = 'block';
+        suspectForm.style.display = 'none';
+    }
+}
+
+// ---------- CAPTCHA ----------
+let captchaCodes = {};
+function generateCaptcha(canvasId) {
+    const canvas = document.getElementById(canvasId);
     const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Background
     ctx.fillStyle = "#fff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    captchaCode = "";
-    for (let i = 0; i < 6; i++) {
-        captchaCode += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
+    let code = "";
+    for (let i = 0; i < 6; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+    captchaCodes[canvasId] = code;
 
-    // Draw text
-    for (let i = 0; i < captchaCode.length; i++) {
+    for (let i = 0; i < code.length; i++) {
         ctx.font = `${Math.floor(Math.random() * 10) + 32}px Arial`;
         ctx.fillStyle = `rgb(${Math.random()*150}, ${Math.random()*150}, ${Math.random()*150})`;
         const x = 20 + i * 30;
@@ -102,11 +175,10 @@ function generateCaptcha() {
         ctx.save();
         ctx.translate(x, y);
         ctx.rotate(angle);
-        ctx.fillText(captchaCode[i], 0, 0);
+        ctx.fillText(code[i], 0, 0);
         ctx.restore();
     }
 
-    // Distortion lines
     for (let i = 0; i < 6; i++) {
         ctx.strokeStyle = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.7)`;
         ctx.beginPath();
@@ -115,7 +187,6 @@ function generateCaptcha() {
         ctx.stroke();
     }
 
-    // Noise dots
     for (let i = 0; i < 50; i++) {
         ctx.fillStyle = `rgba(${Math.random()*255}, ${Math.random()*255}, ${Math.random()*255}, 0.6)`;
         ctx.beginPath();
@@ -152,11 +223,11 @@ const suspects = [
     }
 ];
 
-// ---------- FORM SUBMIT ----------
+// ---------- SUSPECT CHECK ----------
 function submitForm() {
     const aadhaar = document.getElementById('aadhaar').value.trim();
     const name = document.getElementById('name').value.trim();
-    const captchaInput = document.getElementById('captchaInput').value.trim();
+    const captchaInput = document.getElementById('captchaInput1').value.trim();
     const resultDiv = document.getElementById('result');
 
     if (!aadhaar || !name) {
@@ -165,11 +236,11 @@ function submitForm() {
         return;
     }
 
-    if (captchaInput !== captchaCode) {
+    if (captchaInput !== captchaCodes['captchaCanvas1']) {
         resultDiv.style.color = 'red';
         resultDiv.textContent = "CAPTCHA does not match. Try again.";
-        generateCaptcha();
-        document.getElementById('captchaInput').value = "";
+        generateCaptcha('captchaCanvas1');
+        document.getElementById('captchaInput1').value = "";
         return;
     }
 
@@ -203,8 +274,50 @@ function submitForm() {
     }
 }
 
-// Initialize CAPTCHA
-generateCaptcha();
+// ---------- CASE TRACKING ----------
+function getCases() { return JSON.parse(localStorage.getItem('cases') || '[]'); }
+function saveCases(cases) { localStorage.setItem('cases', JSON.stringify(cases)); }
+
+function addCase() {
+    const id = document.getElementById('caseId').value.trim();
+    const status = document.getElementById('caseStatus').value.trim();
+    const captchaInput = document.getElementById('captchaInput2').value.trim();
+
+    if (!id || !status) { alert("Please fill Case ID and Status."); return; }
+    if (captchaInput !== captchaCodes['captchaCanvas2']) {
+        alert("CAPTCHA does not match. Try again.");
+        generateCaptcha('captchaCanvas2');
+        document.getElementById('captchaInput2').value = "";
+        return;
+    }
+
+    let cases = getCases();
+    const existing = cases.find(c => c.id === id);
+    if (existing) existing.status = status;
+    else cases.push({ id, status });
+    saveCases(cases);
+    alert(`Case '${id}' saved successfully.`);
+    viewCases();
+}
+
+function viewCases() {
+    const cases = getCases();
+    const caseListDiv = document.getElementById('caseList');
+    if (cases.length === 0) {
+        caseListDiv.innerHTML = "<p>No cases available.</p>";
+        return;
+    }
+    caseListDiv.innerHTML = cases.map(c => `
+        <div class="case-item">
+            <strong>Case ID:</strong> ${c.id}<br>
+            <strong>Status:</strong> ${c.status}
+        </div>
+    `).join('');
+}
+
+// Initialize both CAPTCHAs
+generateCaptcha('captchaCanvas1');
+generateCaptcha('captchaCanvas2');
 </script>
 </body>
 </html>
