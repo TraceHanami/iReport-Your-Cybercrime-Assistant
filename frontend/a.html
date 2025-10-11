@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Crime Complaint Form</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: Arial, sans-serif;
+  background: url('./assets/images/background.png') no-repeat center center fixed;
+  background-size: cover;
+}
+.container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+h2 { text-align: center; color: white; }
+.notice { text-align:center; font-size:14px;color:white; margin-bottom:20px; }
+.tabs { display: flex; justify-content: space-around; border-bottom: 2px solid #ccc; margin-bottom: 20px; }
+.tab { padding: 10px 20px; cursor: pointer;color: white; }
+.tab.active { border-bottom: 3px solid #0073e6; font-weight: bold;color: white; }
+.form-step { display: none; }
+.form-step.active { display: block; }
+label { font-weight: bold; display: block; margin: 10px 0 5px;color:white}
+input, select, textarea, button { width: 100%; padding: 10px; margin-bottom: 12px; border-radius: 8px; border: 1px solid #aaa; font-size: 15px; }
+button { background: #0073e6; color: white; border: none; cursor: pointer; }
+button:hover { background: #005bb5; }
+.lang-select { position: absolute; top: 20px; right: 20px; }
+.blue-box { border:2px solid #0073e6; border-radius:8px; padding:10px; }
+#download-btn { display:none; margin-top:10px; background:#28a745; }
+#download-btn:hover { background:#1e7e34; }
+.stars { display:flex; gap:5px; font-size:24px; cursor:pointer; }
+.stars span { color:#ccc; }
+.stars span.active { color:gold; }
+#preview { border:1px solid #0073e6; padding:15px; border-radius:8px; background:#f0f8ff; max-height:500px; overflow:auto; }
+#preview table { width:100%; border-collapse: collapse; }
+#preview th, #preview td { border:1px solid #0073e6; padding:5px; text-align:left; }
+#preview th { background:#d0e4ff; }
+  </style>
+</head>
+
+<body>
+
+<div class="lang-select">
+  <select id="language" onchange="loadTranslations()">
+    <option value="en">English</option>
+    <option value="hi">हिन्दी (Hindi)</option>
+    <option value="ta">தமிழ் (Tamil)</option>
+    <option value="te">తెలుగు (Telugu)</option>
+    <option value="bn">বাংলা (Bengali)</option>
+    <option value="mr">मराठी (Marathi)</option>
+    <option value="gu">ગુજરાતી (Gujarati)</option>
+    <option value="ml">മലയാളം (Malayalam)</option>
+    <option value="kn">ಕನ್ನಡ (Kannada)</option>
+    <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+    <option value="or">ଓଡ଼ିଆ (Odia)</option>
+    <option value="ur">اردو (Urdu)</option>
+  </select>
+</div>
+
+<div class="container">
+  <h2>🛡 Cyber Crime Complaint Form</h2>
+  <p class="notice" data-key="notice"></p>
+  <div class="tabs">
+      <div class="tab active" id="tab1" data-key="tab1"></div>
+      <div class="tab" id="tab2" data-key="tab2"></div>
+      <div class="tab" id="tab3" data-key="tab3"></div>
+  </div>
+  
+  <!-- Step 1 -->
+  <div class="form-step active" id="step1">
+    <h3 data-key="step1"></h3>
+    <label data-key="name"></label>
+    <input type="text" id="complainant-name">
+
+    <label data-key="id"></label>
+    <input type="text" id="complainant-id">
+
+    <label data-key="category"></label>
+    <select id="category"></select>
+
+    <label data-key="state"></label>
+    <input type="text" id="state">
+
+    <label data-key="district"></label>
+    <input type="text" id="district">
+
+    <label data-key="village"></label>
+    <input type="text" id="village">
+
+    <label data-key="landmark"></label>
+    <input type="text" id="landmark">
+
+    <label data-key="imei"></label>
+    <input type="text" id="imei">
+
+    <label data-key="sim"></label>
+    <input type="text" id="sim-number">
+
+    <label data-key="date"></label>
+    <input type="date" id="date">
+
+    <label data-key="time"></label>
+    <input type="time" id="time">
+
+    <label data-key="details"></label>
+    <textarea id="details" placeholder="Recording will appear here..."></textarea><br>
+    <button id="mic-button"> Speak 🗣️ </button>
+    <label data-key="policeComplaint"></label>
+    <select id="police-complaint" onchange="toggleFIRFields()">
+      <option value="no">No</option><option value="yes">Yes</option>
+    </select>
+    <div id="fir-section" style="display:none;">
+      <label data-key="firFile"></label>
+      <input type="file" id="fir-file">
+    </div>
+     <button onclick="prevStep(2)">Next</button>
+  </div>
+
+  <!-- Step 2 -->
+  <div class="form-step" id="step2">
+    <h3 data-key="step2"></h3>
+    <label data-key="suspectName"></label>
+    <input type="text" id="suspect-name">
+    <label data-key="suspectEmail"></label>
+    <input type="email" id="suspect-email">
+    <label data-key="suspectPhone"></label>
+    <input type="tel" id="suspect-phone">
+    <label>Upload Suspect Related File:</label>
+    <input type="file" id="suspect-file">
+    <p id="file-preview"></p>
+    <button type="button" onclick="previewFile()">Preview File</button>
+    <button onclick="prevStep(1)">Back</button>
+    <button onclick="nextStep(3)">Next</button>
+  </div>
+
+  <!-- Step 3 -->
+  <div class="form-step" id="step3">
+    <h3 data-key="step3"></h3>
+    <div id="preview"></div>
+
+    <div>
+      <label>Rate your experience:</label>
+      <div class="stars" id="stars">
+        <span onclick="rate(1)">★</span>
+        <span onclick="rate(2)">★</span>
+        <span onclick="rate(3)">★</span>
+        <span onclick="rate(4)">★</span>
+        <span onclick="rate(5)">★</span>
+      </div>
+    </div>
+
+    <button onclick="prevStep(2)">Back</button>
+    <button type="button" onclick="generatePDF()" data-key="submit"></button>
+    <button onclick="Submit">Submit</button>
+  </div>
+</div>
+
+<script>
+/* === Translations (unchanged) === */
+const translations = { /* ... your translation dictionary unchanged ... */ };
+
+/* === Load translations === */
+function loadTranslations() {
+  const lang = document.getElementById("language").value;
+  const t = translations[lang];
+  if (!t) return;
+  document.querySelectorAll("[data-key]").forEach(el => {
+    const key = el.getAttribute("data-key");
+    if (key === "category") {
+      const select = document.getElementById("category");
+      select.innerHTML = "";
+      t.categoryOptions.forEach(opt => {
+        const o = document.createElement("option");
+        o.textContent = opt;
+        select.appendChild(o);
+      });
+    } else {
+      el.textContent = t[key];
+    }
+  });
+}
+
+/* === Step Navigation === */
+function goStep(step){ 
+  document.querySelectorAll('.form-step').forEach(s=>s.classList.remove('active')); 
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active')); 
+  document.getElementById('step'+step).classList.add('active'); 
+  document.getElementById('tab'+step).classList.add('active'); 
+  if(step===3) generatePreview(); 
+}
+function nextStep(step){ goStep(step); }
+function prevStep(step){ goStep(step); }
+
+/* === FIR toggle === */
+function toggleFIRFields(){ 
+  const sel=document.getElementById('police-complaint').value; 
+  document.getElementById('fir-section').style.display=(sel==='yes')?'block':'none'; 
+}
+
+/* === AI Analysis === */
+function simulateAIAnalysis(description, type) {
+  const highPriorityKeywords = ['urgent','immediate','threatening','ransom','blackmail','hack'];
+  const mediumPriorityKeywords = ['fraud','scam','phishing','suspicious'];
+
+  const lowerDesc = description.toLowerCase();
+
+  let priority = 'Low';
+  let confidence = 75;
+
+  if (highPriorityKeywords.some(k => lowerDesc.includes(k))) {
+    priority = 'High';
+    confidence = 92;
+  } else if (mediumPriorityKeywords.some(k => lowerDesc.includes(k))) {
+    priority = 'Medium';
+    confidence = 85;
+  }
+
+  return {
+    category: type || "General Cybercrime",
+    priority,
+    confidence
+  };
+}
+
+/* === Case ID Generator === */
+function generateCaseId() {
+  const year = new Date().getFullYear();
+  const random = Math.floor(Math.random() * 900000) + 100000;
+  return `CR${year}${random}`;
+}
+
+/* === Preview with AI & Case ID === */
+function generatePreview(){
+  const description = document.getElementById("details").value;
+  const type = document.getElementById("category").value;
+
+  const analysis = simulateAIAnalysis(description, type);
+  const caseId = generateCaseId();
+
+  const data = {
+    "Case ID": caseId,
+    Name: document.getElementById("complainant-name").value,
+    ID: document.getElementById("complainant-id").value,
+    Category: document.getElementById("category").value,
+    State: document.getElementById("state").value,
+    District: document.getElementById("district").value,
+    Village: document.getElementById("village").value,
+    Landmark: document.getElementById("landmark").value,
+    IMEI: document.getElementById("imei").value,
+    SIM: document.getElementById("sim-number").value,
+    Date: document.getElementById("date").value,
+    Time: document.getElementById("time").value,
+    Details: description,
+    SuspectName: document.getElementById("suspect-name").value,
+    SuspectEmail: document.getElementById("suspect-email").value,
+    SuspectPhone: document.getElementById("suspect-phone").value,
+    PoliceComplaint: document.getElementById("police-complaint").value,
+    "AI Predicted Category": analysis.category,
+    "AI Priority Level": analysis.priority,
+    "Confidence Score": analysis.confidence + "%"
+  };
+
+  let html = "<table>";
+  for (let key in data) { html += `<tr><th>${key}</th><td>${data[key]}</td></tr>`; }
+  html += "</table>";
+  document.getElementById("preview").innerHTML = html;
+
+  window._currentCase = { ...data };
+}
+
+/* === Rating === */
+function rate(stars){ 
+  document.querySelectorAll('#stars span').forEach((s,i)=>{ 
+    if(i<stars) s.classList.add('active'); else s.classList.remove('active'); 
+  }); 
+}
+
+/* === Generate PDF === */
+function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.setFontSize(16);
+  doc.setFont("helvetica", "bold");
+  doc.text("Government of India", 105, 15, { align: "center" });
+  doc.setFontSize(14);
+  doc.text("National Cyber Crime Reporting Portal", 105, 25, { align: "center" });
+  doc.setLineWidth(0.5);
+  doc.circle(20, 20, 8); 
+  doc.text("🔒", 16, 24); 
+  doc.setLineWidth(0.2);
+  doc.rect(10, 10, 190, 270);
+  doc.setFontSize(12);
+  doc.setFont("helvetica", "bold");
+  doc.text("Cyber Crime Complaint Report", 105, 40, { align: "center" });
+
+  let y = 55;
+  doc.setFont("helvetica", "normal");
+
+  const data = window._currentCase || {};
+  for (let key in data) {
+    doc.text(`${key}: ${data[key]}`, 20, y);
+    y += 10;
+    if (y > 270) { doc.addPage(); y = 20; }
+  }
+
+  y += 20;
+  doc.line(20, y, 80, y);
+  doc.text("Complainant Signature", 20, y + 10);
+
+  y += 30;
+  doc.line(20, y, 80, y);
+  doc.text("Police Inspector Signature", 20, y + 10);
+
+  doc.save("complaint.pdf");
+}
+
+/* === Speech Recognition === */
+if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+    alert("Sorry, your browser doesn't support speech recognition.");
+}
+
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.continuous = true;
+recognition.interimResults = true;
+recognition.lang = 'en-US'; 
+let recording = false;
+
+document.getElementById("mic-button").onclick = function() {
+    if (!recording) {
+        recording = true;
+        this.textContent = "🛑 Stop Recording";
+        recognition.start();
+    } else {
+        recording = false;
+        this.textContent = "🎤 Start Recording";
+        recognition.stop();
+    }
+};
+
+recognition.onresult = function(event) {
+    let transcript = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+    }
+    document.getElementById("details").value = transcript;
+};
+
+recognition.onerror = function(event) {
+    console.error("Speech recognition error:", event.error);
+};
+
+window.onload = loadTranslations;
+</script>
+</body>
+</html>
