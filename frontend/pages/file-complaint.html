@@ -1,0 +1,61 @@
+<div class="complaint-form-container">
+    <h2>🚨 File a Complaint</h2>
+    
+    <form id="complaint-form" class="complaint-form">
+        <div class="form-section">
+            <h3>Incident Details</h3>
+            
+            <div class="form-group">
+                <label for="crime-type">Crime Type *</label>
+                <select id="crime-type" name="crime_type" required>
+                    <option value="">Select crime type</option>
+                    <option value="theft">Theft</option>
+                    <option value="assault">Assault</option>
+                    <option value="vandalism">Vandalism</option>
+                    <option value="harassment">Harassment</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="incident-date">Incident Date & Time *</label>
+                <input type="datetime-local" id="incident-date" name="incident_date" required>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location *</label>
+                <input type="text" id="location" name="location" placeholder="Enter incident location" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description *</label>
+                <textarea id="description" name="description" rows="5" 
+                          placeholder="Provide detailed description of the incident..." required></textarea>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h3>Additional Information</h3>
+            
+            <div class="form-group">
+                <label for="evidence">Upload Evidence (Optional)</label>
+                <input type="file" id="evidence" name="evidence" multiple 
+                       accept="image/*,video/*,.pdf,.doc,.docx">
+            </div>
+
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="anonymous" name="anonymous">
+                    File anonymously
+                </label>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn-primary">Submit Complaint</button>
+            <button type="button" class="btn-secondary" onclick="loadPage('dashboard.html')">
+                Cancel
+            </button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,41 @@
+<div class="tracking-container">
+    <h2>📋 Track Your Complaint</h2>
+    
+    <div class="track-search">
+        <input type="text" id="case-id-input" placeholder="Enter your Case ID (e.g., IR202511022293BEDD)">
+        <button class="btn-primary" onclick="trackComplaint()">Track</button>
+    </div>
+
+    <div id="tracking-results" class="tracking-results" style="display: none;">
+        <div class="case-header">
+            <h3 id="case-id-display"></h3>
+            <span id="case-status" class="status-badge"></span>
+        </div>
+
+        <div class="case-details">
+            <div class="detail-item">
+                <strong>Crime Type:</strong>
+                <span id="detail-crime-type"></span>
+            </div>
+            <div class="detail-item">
+                <strong>Priority:</strong>
+                <span id="detail-priority"></span>
+            </div>
+            <div class="detail-item">
+                <strong>Assigned Officer:</strong>
+                <span id="detail-officer"></span>
+            </div>
+            <div class="detail-item">
+                <strong>Date Filed:</strong>
+                <span id="detail-date"></span>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <h4>Case Timeline</h4>
+            <div id="case-timeline" class="timeline-steps">
+                <!-- Dynamic timeline -->
+            </div>
+        </div>
+    </div>
+</div>

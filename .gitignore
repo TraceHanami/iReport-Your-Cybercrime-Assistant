@@ -1,4 +1,13 @@
-"venv/" 
-"__pycache__/" 
-"*.db" 
-".env" 
+# Ignore virtual environments
+venv/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore environment variables and secrets
+.env
+
+# Ignore IDE files
+.vscode/
+.idea/

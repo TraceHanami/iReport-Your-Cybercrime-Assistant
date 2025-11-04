@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Volunteer Signup - iReport</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-dark: url('https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=1920&q=80');
+      --text-color: #fff;
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --inner-card-bg: rgba(255, 255, 255, 0.2);
+      --shadow-color: rgba(0, 0, 0, 0.3);
+      --btn-bg: #00c853;
+    }
+
+    body.light-mode {
+      --bg-dark: url('https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=1920&q=80');
+      --text-color: #111;
+      --card-bg: rgba(255, 255, 255, 0.7);
+      --inner-card-bg: rgba(255, 255, 255, 0.8);
+      --shadow-color: rgba(0, 0, 0, 0.1);
+      --btn-bg: #0078d7;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      color: var(--text-color);
+      background: var(--bg-dark) no-repeat center center/cover;
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .bg-fixed {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: var(--bg-dark) no-repeat center center/cover;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+      cursor: pointer;
+      background: transparent;
+      border: 2px solid var(--text-color);
+      color: var(--text-color);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+    }
+    .theme-toggle:hover { background: var(--inner-card-bg); }
+
+    .main-container {
+      background: var(--card-bg);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 32px var(--shadow-color);
+      backdrop-filter: blur(15px);
+      text-align: center;
+      width: 80%;
+      max-width: 600px;
+      z-index: 1;
+    }
+
+    .main-container h1 {
+      font-size: 2rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .main-container p {
+      margin-bottom: 30px;
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .inner-box {
+      background: var(--inner-card-bg);
+      padding: 30px 20px;
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      transition: background 0.3s ease;
+      text-align: left;
+      padding-bottom: 20px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.8);
+      color: #111;
+      box-sizing: border-box;
+    }
+
+    button {
+      padding: 12px 25px;
+      background: var(--btn-bg);
+      border: none;
+      color: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+    button:hover { background: #00a544; }
+
+    .message {
+      margin-top: 15px;
+      text-align: center;
+      font-weight: bold;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body class="dark-mode">
+  <div class="bg-fixed"></div>
+  <div class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-adjust"></i></div>
+
+  <div class="main-container">
+    <h1>Volunteer Signup</h1>
+    <p>Join our cybercrime emergency & volunteer project</p>
+
+    <div class="inner-box">
+      <form id="volunteerForm"> 
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="name" required> 
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        <label for="interest">Area of Interest:</label>
+        <select id="interest" name="interest"> 
+            <option value="web">Web Development</option> 
+            <option value="design">Design</option> 
+            <option value="marketing">Marketing</option> 
+            <option value="security">Cybersecurity</option> 
+        </select> <label for="message">Message:</label> 
+        <textarea id="message" name="message" rows="4" placeholder="Tell us why you want to volunteer..."></textarea> 
+        <button type="submit">Submit</button>
+        <div class="message" id="formMessage"></div> 
+      </form>
+  </div>
+
+  <script>
+    function toggleTheme() { document.body.classList.toggle('light-mode'); document.body.classList.toggle('dark-mode'); }
+
+    const form = document.getElementById('volunteerForm');
+    const formMessage = document.getElementById('formMessage');
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = Object.fromEntries(new FormData(form).entries());
+
+      fetch('https://example.com/volunteer-signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+      .then(res => {
+        if(res.ok) {
+          formMessage.textContent = "Thank you! Your signup has been received.";
+          formMessage.style.color = '#28a745';
+          form.reset();
+        } else {
+          formMessage.textContent = "Oops! Something went wrong. Try again.";
+          formMessage.style.color = 'red';
+        }
+      })
+      .catch(err => {
+        formMessage.textContent = "Network error. Please try again later.";
+        formMessage.style.color = 'red';
+      });
+    });
+  </script>
+</body>
+</html>

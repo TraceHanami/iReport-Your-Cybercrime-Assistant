@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>iReport - Your Cybercrime Assistant</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="../assets/style.css" />
+</head>
+<body>
+  <div class="theme-toggle">
+    <i id="themeIcon" class="fas fa-sun"></i>
+  </div>
+
+  <div class="main-container">
+    <div class="header">
+      <h1>iReport - Your Cybercrime Assistant</h1>
+      <p>Stay safe, stay informed.</p>
+    </div>
+
+    <div class="card-container">
+      <div class="feature-card">
+        <i class="fas fa-file-alt"></i>
+        <p>File Complaint</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <p>Learning Space</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-user-secret"></i>
+        <p>Check Suspect</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-hands-helping"></i>
+        <p>Volunteer</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-lightbulb"></i>
+        <p>Puzzle</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-sos"></i>
+        <p>SOS</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-fish"></i>
+        <p>Check Phishing</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-shield-virus"></i>
+        <p>Check Malware</p>
+      </div>
+      <div class="feature-card">
+        <i class="fas fa-comments"></i>
+        <p>Talk to Us</p>
+      </div>
+    </div>
+
+    <div class="socials">
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-twitter"></i></a>
+      <a href="#"><i class="fab fa-facebook"></i></a>
+    </div>
+  </div>
+
+  <script>
+    // Theme Toggle
+    const toggleBtn = document.querySelector('.theme-toggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+
+    toggleBtn.addEventListener('click', () => {
+      body.classList.toggle('light');
+      if (body.classList.contains('light')) {
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+      } else {
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+      }
+    });
+  </script>
+</body>
+</html>

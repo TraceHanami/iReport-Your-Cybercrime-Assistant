@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Complaints - iReport</title>
+    <link rel="stylesheet" href="../assets/css/main.css">
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/forms.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar container">
+            <a href="dashboard.html" class="logo">iReport</a>
+            <ul class="nav-links">
+                <li><a href="dashboard.html">Dashboard</a></li>
+                <li><a href="file-complaint.html">File Complaint</a></li>
+                <li><a href="my-complaints.html" class="active">My Complaints</a></li>
+                <li><a href="track.html">Track</a></li>
+                <li><a href="#" class="logout-btn">Logout</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1 class="page-title">My Complaints</h1>
+                <button class="btn btn-primary" onclick="fileNewComplaint()">File New Complaint</button>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-number" id="totalComplaints">0</span>
+                    <span class="stat-label">Total Complaints</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="pendingComplaints">0</span>
+                    <span class="stat-label">Pending</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="assignedComplaints">0</span>
+                    <span class="stat-label">Assigned</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-number" id="resolvedComplaints">0</span>
+                    <span class="stat-label">Resolved</span>
+                </div>
+            </div>
+
+            <!-- Filters and Search -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Filter & Search Complaints</h2>
+                </div>
+                <div class="filter-section">
+                    <form id="complaintFilters" class="filter-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="status" class="form-label">Status</label>
+                                <select id="status" name="status" class="form-control">
+                                    <option value="">All Status</option>
+                                    <option value="pending">Pending</option>
+                                    <option value="assigned">Assigned</option>
+                                    <option value="in_progress">In Progress</option>
+                                    <option value="resolved">Resolved</option>
+                                    <option value="closed">Closed</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="priority" class="form-label">Priority</label>
+                                <select id="priority" name="priority" class="form-control">
+                                    <option value="">All Priority</option>
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                    <option value="critical">Critical</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="crime_type" class="form-label">Crime Type</label>
+                                <select id="crime_type" name="crime_type" class="form-control">
+                                    <option value="">All Types</option>
+                                    <option value="theft">Theft</option>
+                                    <option value="assault">Assault</option>
+                                    <option value="fraud">Fraud</option>
+                                    <option value="cyber_crime">Cyber Crime</option>
+                                    <option value="missing_person">Missing Person</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="search-box">
+                        <input type="text" id="searchComplaints" class="form-control search-input" 
+                               placeholder="Search complaints by title, case ID, or description...">
+                        <button class="btn btn-outline search-btn" onclick="searchComplaints()">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complaints List -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Complaints List</h2>
+                    <div class="header-actions">
+                        <button class="btn btn-outline" onclick="refreshComplaints()">Refresh</button>
+                        <button class="btn btn-outline" onclick="exportComplaints()">Export</button>
+                    </div>
+                </div>
+                <div id="complaintsList" class="complaints-list">
+                    <div class="loading-state">Loading complaints...</div>
+                </div>
+                
+                <!-- Pagination -->
+                <div class="pagination" id="pagination">
+                    <!-- Pagination will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <h3>iReport</h3>
+                    <p>Your Complaints History</p>
+                </div>
+                <ul class="footer-links">
+                    <li><a href="#help">Help</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                    <li><a href="#privacy">Privacy</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../assets/js/config.js"></script>
+    <script src="../assets/js/api.js"></script>
+    <script src="../assets/js/utils.js"></script>
+    <script src="../assets/js/auth.js"></script>
+    <script>
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let currentFilters = {};
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!requireAuth()) return;
+
+            loadComplaints();
+            setupEventListeners();
+        });
+
+        function setupEventListeners() {
+            // Filter change listeners
+            const filterSelects = document.querySelectorAll('#complaintFilters select');
+            filterSelects.forEach(select => {
+                select.addEventListener('change', function() {
+                    currentPage = 1;
+                    updateFilters();
+                    loadComplaints();
+                });
+            });
+
+            // Search input listener
+            const searchInput = document.getElementById('searchComplaints');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        currentPage = 1;
+                        updateFilters();
+                        loadComplaints();
+                    }
+                });
+
+                // Debounced search
+                const debouncedSearch = debounce(() => {
+                    currentPage = 1;
+                    updateFilters();
+                    loadComplaints();
+                }, 500);
+
+                searchInput.addEventListener('input', debouncedSearch);
+            }
+        }
+
+        function updateFilters() {
+            const formData = new FormData(document.getElementById('complaintFilters'));
+            currentFilters = {};
+            
+            for (let [key, value] of formData.entries()) {
+                if (value) currentFilters[key] = value;
+            }
+
+            const searchTerm = document.getElementById('searchComplaints').value;
+            if (searchTerm) {
+                currentFilters.search = searchTerm;
+            }
+
+            currentFilters.limit = itemsPerPage;
+            currentFilters.offset = (currentPage - 1) * itemsPerPage;
+        }
+
+        async function loadComplaints() {
+            try {
+                showLoading('Loading complaints...');
+                const response = await apiService.getMyComplaints(currentFilters);
+                
+                if (response.success) {
+                    renderComplaintsList(response.complaints);
+                    updateStats(response);
+                    renderPagination(response.total);
+                }
+            } catch (error) {
+                handleApiError(error);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        function renderComplaintsList(complaints) {
+            const container = document.getElementById('complaintsList');
+            if (!container) return;
+
+            if (complaints && complaints.length > 0) {
+                container.innerHTML = complaints.map(complaint => `
+                    <div class="complaint-item" onclick="viewComplaint('${complaint.case_id}')">
+                        <div class="complaint-header">
+                            <h3 class="complaint-title">${complaint.title}</h3>
+                            <div class="complaint-meta">
+                                <span class="case-id">${complaint.case_id}</span>
+                                <span class="complaint-date">${formatDate(complaint.created_at)}</span>
+                            </div>
+                        </div>
+                        <div class="complaint-body">
+                            <p class="complaint-description">${complaint.description || 'No description provided'}</p>
+                            <div class="complaint-tags">
+                                <span class="status-badge ${complaint.status}">${complaint.status}</span>
+                                <span class="priority-badge ${complaint.priority}">${complaint.priority}</span>
+                                <span class="crime-type">${complaint.crime_type}</span>
+                            </div>
+                        </div>
+                        <div class="complaint-actions">
+                            <button class="btn btn-view" onclick="event.stopPropagation(); viewComplaint('${complaint.case_id}')">
+                                View Details
+                            </button>
+                            <button class="btn btn-track" onclick="event.stopPropagation(); trackComplaint('${complaint.case_id}')">
+                                Track Status
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = `
+                    <div class="no-data">
+                        <h3>No complaints found</h3>
+                        <p>You haven't filed any complaints yet, or no complaints match your filters.</p>
+                        <button class="btn btn-primary mt-2" onclick="fileNewComplaint()">File Your First Complaint</button>
+                    </div>
+                `;
+            }
+        }
+
+        function updateStats(response) {
+            if (response.complaints) {
+                const stats = {
+                    total: response.total || 0,
+                    pending: response.complaints.filter(c => c.status === 'pending').length,
+                    assigned: response.complaints.filter(c => c.status === 'assigned').length,
+                    resolved: response.complaints.filter(c => c.status === 'resolved').length
+                };
+
+                document.getElementById('totalComplaints').textContent = stats.total;
+                document.getElementById('pendingComplaints').textContent = stats.pending;
+                document.getElementById('assignedComplaints').textContent = stats.assigned;
+                document.getElementById('resolvedComplaints').textContent = stats.resolved;
+            }
+        }
+
+        function renderPagination(totalItems) {
+            const pagination = document.getElementById('pagination');
+            if (!pagination) return;
+
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let paginationHTML = '';
+            
+            // Previous button
+            paginationHTML += `
+                <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                    Previous
+                </button>
+            `;
+
+            // Page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    paginationHTML += `
+                        <button onclick="changePage(${i})" class="${i === currentPage ? 'active' : ''}">
+                            ${i}
+                        </button>
+                    `;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    paginationHTML += `<span>...</span>`;
+                }
+            }
+
+            // Next button
+            paginationHTML += `
+                <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                    Next
+                </button>
+            `;
+
+            // Page info
+            paginationHTML += `
+                <div class="pagination-info">
+                    Page ${currentPage} of ${totalPages} • ${totalItems} total complaints
+                </div>
+            `;
+
+            pagination.innerHTML = paginationHTML;
+        }
+
+        function changePage(page) {
+            const totalPages = Math.ceil((currentFilters.total || 0) / itemsPerPage);
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            updateFilters();
+            loadComplaints();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function fileNewComplaint() {
+            window.location.href = 'file-complaint.html';
+        }
+
+        function viewComplaint(caseId) {
+            window.location.href = `view.html?case_id=${caseId}`;
+        }
+
+        function trackComplaint(caseId) {
+            window.location.href = `track.html?case_id=${caseId}`;
+        }
+
+        function refreshComplaints() {
+            loadComplaints();
+        }
+
+        function searchComplaints() {
+            currentPage = 1;
+            updateFilters();
+            loadComplaints();
+        }
+
+        function exportComplaints() {
+            showInfo('Export feature will be available soon!');
+        }
+
+        // Make functions global
+        window.changePage = changePage;
+        window.fileNewComplaint = fileNewComplaint;
+        window.viewComplaint = viewComplaint;
+        window.trackComplaint = trackComplaint;
+        window.refreshComplaints = refreshComplaints;
+        window.searchComplaints = searchComplaints;
+        window.exportComplaints = exportComplaints;
+    </script>
+</body>
+</html>

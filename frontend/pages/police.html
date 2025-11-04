@@ -1,0 +1,40 @@
+<div class="dashboard police-dashboard">
+    <div class="dashboard-header">
+        <h1>👮 Police Dashboard</h1>
+        <div class="officer-info">
+            <span id="officer-name"></span>
+            <span id="officer-badge"></span>
+        </div>
+    </div>
+
+    <div class="police-stats">
+        <div class="stat-card">
+            <h3>Assigned Cases</h3>
+            <p id="assigned-cases">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Cases Resolved</h3>
+            <p id="resolved-cases">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Performance Score</h3>
+            <p id="performance-score">0%</p>
+        </div>
+        <div class="stat-card">
+            <h3>Availability</h3>
+            <button id="availability-toggle" class="btn-toggle">Online</button>
+        </div>
+    </div>
+
+    <div class="case-management">
+        <div class="section-header">
+            <h3>My Cases</h3>
+            <button class="btn-primary" onclick="loadAssignedCases()">
+                Refresh Cases
+            </button>
+        </div>
+        <div id="police-cases-list" class="cases-grid">
+            <!-- Dynamic cases -->
+        </div>
+    </div>
+</div>

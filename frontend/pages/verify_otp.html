@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - iReport</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/forms.css">
+    <style>
+        .hidden { display: none !important; }
+        .otp-input { text-align: center; }
+        .otp-input input { 
+            font-size: 1.5rem; 
+            letter-spacing: 0.5rem; 
+            text-align: center;
+            font-weight: bold;
+        }
+        .resend-otp { margin-top: 1rem; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Verify Account</h1>
+                <p>Enter the 6-digit code sent to your email</p>
+            </div>
+            
+            <form id="verifyOtpForm">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-control" required readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="otp" class="form-label">Verification Code</label>
+                    <div class="otp-input">
+                        <input type="text" id="otp" name="otp" class="form-control" 
+                               maxlength="6" pattern="[0-9]{6}" required 
+                               placeholder="000000">
+                    </div>
+                    <div class="form-text">
+                        Enter the 6-digit code sent to your email
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">Verify Account</button>
+            </form>
+            
+            <div class="auth-footer">
+                <div class="resend-otp">
+                    <p>Didn't receive the code? <a href="#" id="resendOtp">Resend Code</a></p>
+                </div>
+                <p><a href="login.html">Back to Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Verifying...</div>
+    </div>
+
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    
+    <script>
+        // Show loading
+        function showLoading(message = 'Loading...') {
+            const overlay = document.getElementById('loadingOverlay');
+            const text = overlay.querySelector('.loading-text');
+            text.textContent = message;
+            overlay.classList.remove('hidden');
+        }
+
+        // Hide loading
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        // Show error message
+        function showError(message) {
+            alert('Error: ' + message);
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            alert('Success: ' + message);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set email from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email');
+            if (email) {
+                document.getElementById('email').value = decodeURIComponent(email);
+            } else {
+                showError('No email provided. Please register again.');
+                setTimeout(() => {
+                    window.location.href = 'register.html';
+                }, 2000);
+                return;
+            }
+
+            // OTP input formatting
+            const otpInput = document.getElementById('otp');
+            if (otpInput) {
+                otpInput.addEventListener('input', function(e) {
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+            }
+
+            // Resend OTP
+            document.getElementById('resendOtp').addEventListener('click', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                if (!email) {
+                    showError('Email is required');
+                    return;
+                }
+
+                try {
+                    showLoading('Resending verification code...');
+                    // For resend, we need to call register again with the same email
+                    // This will generate a new OTP
+                    const response = await authAPI.register({ 
+                        email: email,
+                        full_name: 'Resend OTP', // Placeholder, backend will ignore for resend
+                        phone: '0000000000', // Placeholder
+                        role: 'public', // Placeholder
+                        password: 'Temp123!' // Placeholder
+                    });
+                    
+                    if (response.message) {
+                        showSuccess('New verification code sent to your email!');
+                    }
+                } catch (error) {
+                    showError(error.message || 'Failed to resend code. Please try registering again.');
+                } finally {
+                    hideLoading();
+                }
+            });
+
+            // Handle OTP verification form submission
+            document.getElementById('verifyOtpForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const otp = document.getElementById('otp').value;
+                
+                if (!email || !otp) {
+                    showError('Email and OTP are required');
+                    return;
+                }
+                
+                if (otp.length !== 6) {
+                    showError('Please enter a valid 6-digit OTP');
+                    return;
+                }
+
+                try {
+                    showLoading('Verifying your account...');
+                    const response = await authAPI.verifyOtp(email, otp);
+                    
+                    if (response.message === 'Registration successful') {
+                        showSuccess('Account verified successfully! Redirecting to login...');
+                        setTimeout(() => {
+                            window.location.href = 'login.html?verified=true';
+                        }, 2000);
+                    } else {
+                        showError(response.error || 'Verification failed');
+                    }
+                    
+                } catch (error) {
+                    showError(error.message || 'Verification failed. Please check the OTP.');
+                } finally {
+                    hideLoading();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

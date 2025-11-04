@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - iReport</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="stylesheet" href="/assets/css/forms.css">
+    <style>
+        .hidden { display: none !important; }
+        .role-fields { margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h1>Create Account</h1>
+                <p>Join iReport to start reporting crimes</p>
+            </div>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="full_name" class="form-label">Full Name *</label>
+                    <input type="text" id="full_name" name="full_name" class="form-control" required 
+                           placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address *</label>
+                    <input type="email" id="email" name="email" class="form-control" required 
+                           placeholder="Enter your email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone" class="form-label">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" required 
+                           placeholder="Enter your 10-digit phone number" pattern="[0-9]{10}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="role" class="form-label">Account Type *</label>
+                    <select id="role" name="role" class="form-control" required>
+                        <option value="">Select account type</option>
+                        <option value="public">Public User</option>
+                        <option value="police">Police Officer</option>
+                        <option value="volunteer">Community Volunteer</option>
+                    </select>
+                </div>
+                
+                <!-- Police Officer Fields -->
+                <div id="policeFields" class="role-fields hidden">
+                    <div class="form-group">
+                        <label for="badge_number" class="form-label">Badge Number *</label>
+                        <input type="text" id="badge_number" name="badge_number" class="form-control" 
+                               placeholder="Enter your badge number">
+                    </div>
+                    <div class="form-group">
+                        <label for="station" class="form-label">Police Station *</label>
+                        <input type="text" id="station" name="station" class="form-control" 
+                               placeholder="Enter your police station">
+                    </div>
+                    <div class="form-group">
+                        <label for="police_state" class="form-label">State *</label>
+                        <input type="text" id="police_state" name="police_state" class="form-control" 
+                               placeholder="Enter your state">
+                    </div>
+                    <div class="form-group">
+                        <label for="police_district" class="form-label">District *</label>
+                        <input type="text" id="police_district" name="police_district" class="form-control" 
+                               placeholder="Enter your district">
+                    </div>
+                </div>
+                
+                <!-- Volunteer Fields -->
+                <div id="volunteerFields" class="role-fields hidden">
+                    <div class="form-group">
+                        <label for="volunteer_state" class="form-label">State *</label>
+                        <input type="text" id="volunteer_state" name="volunteer_state" class="form-control" 
+                               placeholder="Enter your state">
+                    </div>
+                    <div class="form-group">
+                        <label for="volunteer_district" class="form-label">District *</label>
+                        <input type="text" id="volunteer_district" name="volunteer_district" class="form-control" 
+                               placeholder="Enter your district">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password *</label>
+                    <input type="password" id="password" name="password" class="form-control" required 
+                           placeholder="Create a strong password" minlength="8">
+                    <div class="form-text">
+                        Password must be at least 8 characters with uppercase, lowercase, number and special character
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm_password" class="form-label">Confirm Password *</label>
+                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required 
+                           placeholder="Confirm your password">
+                </div>
+                
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" id="terms" name="terms" class="form-check-input" required>
+                        <label for="terms" class="form-check-label">
+                            I agree to the <a href="#" onclick="alert('Terms of Service')">Terms of Service</a> and <a href="#" onclick="alert('Privacy Policy')">Privacy Policy</a>
+                        </label>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Sign in here</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Processing...</div>
+    </div>
+
+    <script src="/assets/js/config.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/utils.js"></script>
+    <script src="/assets/js/auth.js"></script>
+    
+    <script>
+        // Show/hide role-specific fields
+        document.getElementById('role').addEventListener('change', function() {
+            const role = this.value;
+            
+            // Hide all role fields
+            document.getElementById('policeFields').classList.add('hidden');
+            document.getElementById('volunteerFields').classList.add('hidden');
+            
+            // Show relevant fields
+            if (role === 'police') {
+                document.getElementById('policeFields').classList.remove('hidden');
+            } else if (role === 'volunteer') {
+                document.getElementById('volunteerFields').classList.remove('hidden');
+            }
+        });
+
+        // Password validation
+        function validatePassword(password) {
+            const minLength = 8;
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasLowerCase = /[a-z]/.test(password);
+            const hasNumbers = /\d/.test(password);
+            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            
+            return password.length >= minLength && 
+                   hasUpperCase && 
+                   hasLowerCase && 
+                   hasNumbers && 
+                   hasSpecialChar;
+        }
+
+        // Show loading
+        function showLoading(message = 'Loading...') {
+            const overlay = document.getElementById('loadingOverlay');
+            const text = overlay.querySelector('.loading-text');
+            text.textContent = message;
+            overlay.classList.remove('hidden');
+        }
+
+        // Hide loading
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        // Show error message
+        function showError(message) {
+            alert('Error: ' + message);
+        }
+
+        // Show success message
+        function showSuccess(message) {
+            alert('Success: ' + message);
+        }
+
+        // Handle registration form submission
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = {
+                full_name: formData.get('full_name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                role: formData.get('role'),
+                password: formData.get('password'),
+                language: 'en'
+            };
+
+            // Add role-specific fields
+            if (data.role === 'police') {
+                data.badge_number = formData.get('badge_number');
+                data.station = formData.get('station');
+                data.state = formData.get('police_state');
+                data.district = formData.get('police_district');
+            } else if (data.role === 'volunteer') {
+                data.state = formData.get('volunteer_state');
+                data.district = formData.get('volunteer_district');
+            }
+
+            // Validate passwords
+            const password = formData.get('password');
+            const confirmPassword = formData.get('confirm_password');
+            
+            if (password !== confirmPassword) {
+                showError('Passwords do not match');
+                return;
+            }
+            
+            if (!validatePassword(password)) {
+                showError('Password must be at least 8 characters with uppercase, lowercase, number and special character');
+                return;
+            }
+
+            // Validate role-specific fields
+            if (data.role === 'police' && (!data.badge_number || !data.station || !data.state || !data.district)) {
+                showError('Please fill all police officer details');
+                return;
+            }
+            
+            if (data.role === 'volunteer' && (!data.state || !data.district)) {
+                showError('Please fill all volunteer details');
+                return;
+            }
+
+            try {
+                showLoading('Creating your account...');
+                const response = await authAPI.register(data);
+                
+                if (response.message) {
+                    showSuccess('Verification code sent to your email!');
+                    // Redirect to OTP verification page
+                    setTimeout(() => {
+                        window.location.href = `verify_otp.html?email=${encodeURIComponent(data.email)}`;
+                    }, 2000);
+                }
+                
+            } catch (error) {
+                showError(error.message || 'Registration failed');
+            } finally {
+                hideLoading();
+            }
+        });
+    </script>
+</body>
+</html>

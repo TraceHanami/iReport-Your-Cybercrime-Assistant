@@ -1,0 +1,36 @@
+<div class="dashboard public-dashboard">
+    <div class="hero-section">
+        <h1>Report Crimes Anonymously & Safely</h1>
+        <p>Help make your community safer by reporting incidents</p>
+        <div class="cta-buttons">
+            <button class="btn-primary" onclick="loadPage('file-complaint.html')">
+                🚨 File Complaint
+            </button>
+            <button class="btn-secondary" onclick="loadPage('track.html')">
+                📋 Track Complaint
+            </button>
+        </div>
+    </div>
+
+    <div class="quick-stats">
+        <div class="stat-card">
+            <h3>Total Reports</h3>
+            <p id="total-reports">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>My Reports</h3>
+            <p id="my-reports">0</p>
+        </div>
+        <div class="stat-card">
+            <h3>Resolved</h3>
+            <p id="resolved-reports">0</p>
+        </div>
+    </div>
+
+    <div class="recent-activity">
+        <h3>My Recent Complaints</h3>
+        <div id="recent-complaints-list" class="complaints-list">
+            <!-- Dynamic content -->
+        </div>
+    </div>
+</div>

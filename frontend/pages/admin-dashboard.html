@@ -1,0 +1,47 @@
+<div class="dashboard admin-dashboard">
+    <div class="dashboard-header">
+        <h1>⚡ Admin Dashboard</h1>
+        <div class="admin-controls">
+            <button class="btn-primary" onclick="generateSystemReport()">
+                📊 Generate Report
+            </button>
+            <button class="btn-secondary" onclick="loadPage('police_view.html')">
+                👮 Manage Police
+            </button>
+        </div>
+    </div>
+
+    <div class="admin-stats-grid">
+        <div class="stat-card large">
+            <h3>Total Users</h3>
+            <p id="total-users">0</p>
+        </div>
+        <div class="stat-card large">
+            <h3>Total Cases</h3>
+            <p id="total-cases">0</p>
+        </div>
+        <div class="stat-card large">
+            <h3>Active Police</h3>
+            <p id="active-police">0</p>
+        </div>
+        <div class="stat-card large">
+            <h3>Resolution Rate</h3>
+            <p id="resolution-rate">0%</p>
+        </div>
+    </div>
+
+    <div class="admin-sections">
+        <div class="admin-section">
+            <h3>📈 Analytics Overview</h3>
+            <div id="analytics-overview"></div>
+        </div>
+        <div class="admin-section">
+            <h3>🚨 Recent High Priority Cases</h3>
+            <div id="high-priority-cases"></div>
+        </div>
+        <div class="admin-section">
+            <h3>👥 Pending Volunteer Applications</h3>
+            <div id="pending-volunteers"></div>
+        </div>
+    </div>
+</div>
