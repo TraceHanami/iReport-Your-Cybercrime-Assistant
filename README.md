@@ -1,297 +1,379 @@
 🚀 iReport - Intelligent Crime Reporting System
+
 A comprehensive, AI-powered crime reporting and management system with multi-role access, real-time tracking, and advanced analytics.
 
 📋 Project Overview
+
 iReport is a full-stack web application that enables citizens to report crimes, track case progress, and interact with law enforcement through an intuitive interface. The system features AI-powered case classification, automated officer assignment, and comprehensive analytics for law enforcement agencies.
 
 🎯 Features
+
 🔐 Authentication & Security
-Multi-role User System (Admin, Police, Volunteer, Public)
 
-OTP-based Registration & Verification
+❖Multi-role User System (Admin, Police, Volunteer, Public)
 
-JWT Token Authentication
+❖OTP-based Registration & Verification
 
-Role-based Access Control
+❖JWT Token Authentication
 
-Secure Password Reset
+❖Role-based Access Control
+
+❖Secure Password Reset
 
 📝 Complaint Management
-User & Anonymous Complaint Filing
 
-AI-Powered Case Classification
+❖User & Anonymous Complaint Filing
 
-Automated Officer Assignment
+❖AI-Powered Case Classification
 
-Real-time Case Tracking
+❖Automated Officer Assignment
 
-File Upload Support
+❖Real-time Case Tracking
+
+❖File Upload Support
 
 👮‍♂️ Law Enforcement Features
-Police Dashboard & Case Management
 
-Officer Performance Analytics
+❖Police Dashboard & Case Management
 
-Team Performance Tracking
+❖Officer Performance Analytics
 
-Availability Management
+❖Team Performance Tracking
 
-Case Assignment & Reassignment
+❖Availability Management
+
+❖Case Assignment & Reassignment
 
 📊 Advanced Analytics
-Trend Analysis & Predictive Insights
 
-Geospatial Heatmaps
+❖Trend Analysis & Predictive Insights
 
-High-Risk Area Identification
+❖Geospatial Heatmaps
 
-Patrol Route Recommendations
+❖High-Risk Area Identification
 
-Performance Metrics
+❖Patrol Route Recommendations
+
+❖Performance Metrics
 
 🤖 AI & Automation
-Smart Chatbot Assistant
 
-AI Case Classification
+❖Smart Chatbot Assistant
 
-Automated Officer Assignment
+❖AI Case Classification
 
-Priority-based Routing
+❖Automated Officer Assignment
 
-Volunteer Matching
+❖Priority-based Routing
+
+❖Volunteer Matching
 
 📱 Notifications & Communication
-Real-time Notifications
 
-SMS Integration (Fast2SMS)
+❖Real-time Notifications
 
-Email Notifications
+❖SMS Integration (Fast2SMS)
 
-Chat System
+❖Email Notifications
+
+❖Chat System
 
 📄 Reporting
-Analytics Reports
 
-Case Reports (PDF)
+❖Analytics Reports
 
-System Status Reports
+❖Case Reports (PDF)
 
-Automated Report Generation
+❖System Status Reports
+
+❖Automated Report Generation
 
 🏗️ System Architecture
+
 Backend Structure
-text
+
 backend/
-├── auth/              # Authentication & Authorization
-├── complaints/        # Complaint Management
-├── police/           # Police Features
-├── admin/            # Admin Dashboard & Analytics
-├── chatbot/          # AI Chatbot
-├── notifications/    # Notification System
-├── sms/              # SMS Services
-├── reports/          # Report Generation
-└── utils/            # Utility Functions
+
+├── auth/                                  # Authentication & Authorization
+
+├── complaints/                            # Complaint Management
+
+├── police/                                # Police Features
+
+├── admin/                                 # Admin Dashboard & Analytics
+
+├── chatbot/                               # AI Chatbot
+
+├── notifications/                         # Notification System
+
+├── sms/                                   # SMS Services
+
+├── reports/                               # Report Generation
+
+└── utils/                                 # Utility Functions
+
 Frontend Structure
-text
+
 frontend/
+
 ├── assets/
-│   ├── css/          # Stylesheets
-│   └── js/           # JavaScript Modules
-├── pages/            # Application Pages
-└── chatbot/          # Chatbot Interface
+
+│   ├── css/                                # Stylesheets
+
+│   └── js/                                 # JavaScript Modules
+
+├── pages/                                  # Application Pages
+
+└── chatbot/                                # Chatbot Interface
+
 🚀 Installation & Setup
+
 Prerequisites
-Python 3.8+
 
-Node.js 14+
+➤Python 3.8+
 
-SQLite Database
+➤Node.js 14+
+
+➤SQLite Database
 
 Backend Setup
+
 bash
+
 cd backend
 
 # Create virtual environment
+
 python -m venv venv
+
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
+
 pip install -r requirements.txt
 
 # Initialize database
+
 python init_db.py
+
 python seed_roles.py
+
 python seed_data.py
 
 # Start backend server
+
 python app.py
+
 Frontend Setup
+
 bash
+
 cd frontend
 
 # Install dependencies
+
 npm install
 
 # Start development server
+
 npm start
+
 🔧 Configuration
+
 Environment Variables
+
 Create a .env file in the backend directory:
 
 env
+
 SECRET_KEY=your-secret-key
+
 DATABASE_URL=sqlite:///ireport.db
+
 SMS_API_KEY=your-fast2sms-api-key
+
 EMAIL_HOST=smtp.gmail.com
+
 EMAIL_PORT=587
+
 EMAIL_USER=your-email@gmail.com
+
 EMAIL_PASS=your-app-password
+
 API Configuration
+
 Update frontend/assets/js/config.js with your backend URL:
 
 javascript
+
 const API_BASE_URL = 'http://localhost:5000/api';
+
 📊 API Endpoints
+
 Authentication
-POST /api/auth/register - User registration
 
-POST /api/auth/login - User login
+➤POST /api/auth/register - User registration
 
-GET /api/auth/me - Get current user
+➤POST /api/auth/login - User login
 
-POST /api/auth/verify-otp - OTP verification
+➤GET /api/auth/me - Get current user
+
+➤POST /api/auth/verify-otp - OTP verification
 
 Complaints
-POST /api/complaints/file - File complaint
 
-POST /api/complaints/file-anonymous - File anonymous complaint
+➤POST /api/complaints/file - File complaint
 
-GET /api/complaints/my-complaints - Get user complaints
+➤POST /api/complaints/file-anonymous - File anonymous complaint
+
+➤GET /api/complaints/my-complaints - Get user complaints
 
 Tracking
-GET /api/track/status/{case_id} - Track case status
 
-GET /api/track/details/{case_id} - Get case details
+➤GET /api/track/status/{case_id} - Track case status
+
+➤GET /api/track/details/{case_id} - Get case details
 
 Admin
-GET /api/admin/dashboard - Admin dashboard
 
-GET /api/admin/cases - All cases
+➤GET /api/admin/dashboard - Admin dashboard
 
-GET /api/admin/users - All users
+➤GET /api/admin/cases - All cases
 
-POST /api/admin/assign-case - Assign case to officer
+➤GET /api/admin/users - All users
+
+➤POST /api/admin/assign-case - Assign case to officer
 
 Police
-GET /api/police/dashboard - Police dashboard
 
-GET /api/police/cases - Police cases
+➤GET /api/police/dashboard - Police dashboard
 
-PUT /api/police/availability - Update availability
+➤GET /api/police/cases - Police cases
+
+➤PUT /api/police/availability - Update availability
 
 Analytics
-GET /api/analytics/trends - Trend analysis
 
-GET /api/analytics/heatmap - Geospatial heatmap
+➤GET /api/analytics/trends - Trend analysis
 
-GET /api/analytics/predictive-insights - Predictive analytics
+➤GET /api/analytics/heatmap - Geospatial heatmap
+
+➤GET /api/analytics/predictive-insights - Predictive analytics
 
 👥 User Roles
+
 🎯 Public User
-Register and file complaints
 
-Track case progress
+✦Register and file complaints
 
-Use chatbot assistance
+✦Track case progress
 
-File anonymous reports
+✦Use chatbot assistance
+
+✦File anonymous reports
 
 🛡️ Police Officer
-Manage assigned cases
 
-Update case status
+✦Manage assigned cases
 
-View performance metrics
+✦Update case status
 
-Set availability status
+✦View performance metrics
+
+✦Set availability status
 
 🤝 Volunteer
-Handle low-priority cases
 
-Community engagement
+✦Handle low-priority cases
 
-Support law enforcement
+✦Community engagement
+
+✦Support law enforcement
 
 👑 Administrator
-System management
 
-User management
+✦System management
 
-Analytics and reporting
+✦User management
 
-Case assignment oversight
+✦Analytics and reporting
+
+✦Case assignment oversight
 
 🤖 AI Features
+
 Case Classification
-Rule-based classification for crime type detection
 
-Priority assignment based on severity
+✦Rule-based classification for crime type detection
 
-Automated routing to appropriate personnel
+✦Priority assignment based on severity
+
+✦Automated routing to appropriate personnel
 
 Smart Assignment
-Officer matching based on location, workload, and expertise
 
-Volunteer assignment for low-priority cases
+✦Officer matching based on location, workload, and expertise
 
-Fallback mechanisms for unassignable cases
+✦Volunteer assignment for low-priority cases
+
+✦Fallback mechanisms for unassignable cases
 
 Chatbot Assistant
-Natural language processing
 
-Session management
+✦Natural language processing
 
-Context-aware responses
+✦Session management
+
+✦Context-aware responses
 
 📱 Frontend Pages
+
 Core Pages
-index.html - Landing page
 
-login.html - User authentication
+◆index.html - Landing page
 
-register.html - User registration
+◆login.html - User authentication
 
-dashboard.html - User dashboard
+◆register.html - User registration
+
+◆dashboard.html - User dashboard
 
 Complaint Management
-file-complaint.html - File new complaint
 
-my-complaints.html - View user complaints
+◆file-complaint.html - File new complaint
 
-track.html - Case tracking
+◆my-complaints.html - View user complaints
 
-view.html - Case details
+◆track.html - Case tracking
+
+◆view.html - Case details
 
 Role-specific Pages
-admin-dashboard.html - Admin interface
 
-police.html - Police dashboard
+◆admin-dashboard.html - Admin interface
 
-volunteer.html - Volunteer interface
+◆police.html - Police dashboard
+
+◆volunteer.html - Volunteer interface
 
 Additional Features
-awareness.html - Crime awareness
 
-learning.html - Educational content
+◆awareness.html - Crime awareness
 
-puzzle.html - Interactive elements
+◆learning.html - Educational content
+
+◆puzzle.html - Interactive elements
 
 🧪 Testing
+
 Run comprehensive backend tests:
 
 bash
+
 cd backend/tests
+
 python test_backend.py
+
 Test Coverage
 ✅ Health Endpoints
 
@@ -319,76 +401,88 @@ Test Coverage
 
 ✅ Performance
 
+
 🔒 Security Features
-Input validation and sanitization
 
-SQL injection prevention
+▼Input validation and sanitization
 
-XSS protection
+▼SQL injection prevention
 
-CSRF protection
+▼XSS protection
 
-Secure file upload
+▼CSRF protection
 
-Session management
+▼Secure file upload
 
-Role-based access control
+▼Session management
+
+▼Role-based access control
 
 📈 Performance
-Response Time: ~2.02s per request (average)
 
-Concurrent Users: Support for multiple roles
+▼Response Time: ~2.02s per request (average)
 
-Database Optimization: Efficient queries and indexing
+▼Concurrent Users: Support for multiple roles
 
-File Handling: Secure upload and storage
+▼Database Optimization: Efficient queries and indexing
+
+▼File Handling: Secure upload and storage
 
 🚨 Emergency Features
-Anonymous reporting for sensitive cases
 
-Priority escalation for urgent matters
+▼Anonymous reporting for sensitive cases
 
-Real-time notifications for law enforcement
+▼Priority escalation for urgent matters
 
-SMS alerts for critical updates
+▼Real-time notifications for law enforcement
+
+▼SMS alerts for critical updates
 
 🔮 Future Enhancements
-Mobile application
 
-Voice-based reporting
+✱Mobile application
 
-Advanced ML models
+✱Voice-based reporting
 
-Multi-language support
+✱Advanced ML models
 
-Integration with government databases
+✱Multi-language support
 
-Blockchain for evidence tracking
+✱Integration with government databases
 
-IoT device integration
+✱Blockchain for evidence tracking
+
+✱IoT device integration
 
 🤝 Contributing
-Fork the repository
 
-Create a feature branch
+➲Fork the repository
 
-Commit your changes
+➲Create a feature branch
 
-Push to the branch
+➲Commit your changes
 
-Create a Pull Request
+➲Push to the branch
+
+➲Create a Pull Request
 
 📄 License
+
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 🆘 Support
-For technical support or questions:
 
-Check the documentation
+➲For technical support or questions:
 
-Open an issue on GitHub
+➲Check the documentation
 
-Contact the development team
+➲Open an issue on GitHub
+
+➲Contact the development team
 
 🚀 Built with modern web technologies to make communities safer through technology.
 
+DOI number : 10.5281/zenodo.17500893
+
+Journal name : IJSRET
+https://ijsret.com/2025/11/01/ireport-a-cybercrime-assistant/
