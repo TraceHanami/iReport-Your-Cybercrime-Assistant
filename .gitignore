@@ -1,13 +1,20 @@
-# Ignore virtual environments
+# Python virtual environment
 venv/
 
-# Ignore Python cache files
+# Node modules
+node_modules/
+
+# Python cache files
 __pycache__/
 *.pyc
 
-# Ignore environment variables and secrets
+# Environment variables
 .env
 
-# Ignore IDE files
+# IDE and editor folders
 .vscode/
 .idea/
+
+# OS-generated files
+.DS_Store
+Thumbs.db
