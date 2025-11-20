@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - iReport Cyber Crime Portal</title>
+    <title>Police Dashboard - iReport Cyber Crime Portal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -24,6 +24,8 @@
             --women-crime-color: #e91e63;
             --financial-fraud-color: #ff9800;
             --other-crime-color: #2196f3;
+            --police-blue: #1a237e;
+            --police-light-blue: #283593;
         }
 
         .dark-theme {
@@ -38,6 +40,8 @@
             --header-bg: #000000;
             --footer-bg: #000000;
             --shadow: 0 4px 6px rgba(255,255,255,0.1);
+            --police-blue: #283593;
+            --police-light-blue: #303f9f;
         }
 
         * {
@@ -145,13 +149,13 @@
             transform: translateY(-2px);
         }
 
-        .btn-report {
-            background: #ff3b30;
+        .btn-police {
+            background: var(--police-blue);
             color: white;
         }
 
-        .btn-report:hover {
-            background: #d32f2f;
+        .btn-police:hover {
+            background: var(--police-light-blue);
         }
 
         .theme-toggle {
@@ -169,7 +173,7 @@
 
         /* Main Navigation */
         .main-nav {
-            background-color: var(--primary-color);
+            background-color: var(--police-blue);
             padding: 1rem 0;
             border-bottom: 1px solid var(--secondary-color);
         }
@@ -190,7 +194,7 @@
         }
 
         .main-nav ul li a {
-            color: var(--text-color);
+            color: white;
             text-decoration: none;
             font-weight: 500;
             padding: 0.5rem 0;
@@ -199,7 +203,7 @@
 
         .main-nav ul li a:hover {
             opacity: 0.8;
-            border-bottom: 2px solid var(--text-color);
+            border-bottom: 2px solid white;
         }
 
         /* Dashboard Layout */
@@ -235,7 +239,7 @@
 
         .sidebar-menu a:hover, .sidebar-menu a.active {
             background: var(--secondary-color);
-            border-right: 3px solid var(--accent-color);
+            border-right: 3px solid var(--police-blue);
         }
 
         .sidebar-menu i {
@@ -260,6 +264,37 @@
         .dashboard-title {
             font-size: 1.8rem;
             color: var(--text-color);
+        }
+
+        .officer-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--card-bg);
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .officer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--police-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .officer-details h4 {
+            margin-bottom: 0.2rem;
+        }
+
+        .officer-details p {
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         .dashboard-stats {
@@ -442,14 +477,19 @@
             font-weight: 500;
         }
 
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
+        .status-new {
+            background: #e3f2fd;
+            color: #1565c0;
         }
 
         .status-investigating {
-            background: #d1ecf1;
-            color: #0c5460;
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
         }
 
         .status-resolved {
@@ -470,6 +510,34 @@
         .priority-low {
             color: #4caf50;
             font-weight: 600;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-primary {
+            background: var(--police-blue);
+            color: white;
+        }
+
+        .badge-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        .badge-danger {
+            background: #f44336;
+            color: white;
         }
 
         /* Footer */
@@ -563,6 +631,12 @@
             .dashboard-tables {
                 grid-template-columns: 1fr;
             }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
         }
     </style>
 </head>
@@ -620,16 +694,16 @@
                 </div>
                 <div class="logo-text">
                     <span class="ministry">Your Cyber Crime Assistant Portal</span>
-                    <span class="center-name">iReport - Admin Dashboard</span>
+                    <span class="center-name">iReport - Police Dashboard</span>
                 </div>
             </div>
 
             <div class="actions">
                 <div class="links">
                     <a href="index.html">Back to Portal</a>
-                    <a href="#" id="profile-link">Admin Profile</a>
+                    <a href="#" id="profile-link">My Profile</a>
                 </div>
-                <button class="btn btn-report" onclick="window.open('complaint.html')">🚨 Quick Report</button>
+                <button class="btn btn-police" onclick="window.open('complaint.html')">🚨 New Case</button>
                 <button class="theme-toggle" id="themeToggle">
                     <i class="fas fa-moon"></i>
                 </button>
@@ -642,11 +716,11 @@
         <div class="container">
             <ul>
                 <li><a href="#" class="active">Dashboard</a></li>
-                <li><a href="#">Cases</a></li>
+                <li><a href="#">My Cases</a></li>
+                <li><a href="#">Investigations</a></li>
+                <li><a href="#">Evidence</a></li>
                 <li><a href="#">Reports</a></li>
-                <li><a href="#">Analytics</a></li>
-                <li><a href="#">Users</a></li>
-                <li><a href="#">Settings</a></li>
+                <li><a href="#">Team</a></li>
             </ul>
         </div>
     </div>
@@ -657,24 +731,28 @@
         <div class="sidebar">
             <ul class="sidebar-menu">
                 <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="#"><i class="fas fa-exclamation-circle"></i> Pending Cases</a></li>
-                <li><a href="#"><i class="fas fa-search"></i> Investigations</a></li>
-                <li><a href="#"><i class="fas fa-check-circle"></i> Resolved Cases</a></li>
-                <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
-                <li><a href="#"><i class="fas fa-users"></i> User Management</a></li>
-                <li><a href="#"><i class="fas fa-file-alt"></i> Reports</a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-                <li><a href="#"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+                <li><a href="#"><i class="fas fa-exclamation-circle"></i> New Cases</a></li>
+                <li><a href="#"><i class="fas fa-search"></i> My Investigations</a></li>
+                <li><a href="#"><i class="fas fa-tasks"></i> Assigned Cases</a></li>
+                <li><a href="#"><i class="fas fa-check-circle"></i> Closed Cases</a></li>
+                <li><a href="#"><i class="fas fa-file-alt"></i> Case Reports</a></li>
+                <li><a href="#"><i class="fas fa-user-shield"></i> Suspect Database</a></li>
+                <li><a href="#"><i class="fas fa-print"></i> Generate FIR</a></li>
+                <li><a href="#"><i class="fas fa-calendar-alt"></i> Court Dates</a></li>
+                <li><a href="#"><i class="fas fa-chart-line"></i> Performance</a></li>
             </ul>
         </div>
 
         <!-- Dashboard Content -->
         <div class="dashboard-content">
             <div class="dashboard-header">
-                <h1 class="dashboard-title">Admin Dashboard</h1>
-                <div class="dashboard-actions">
-                    <button class="btn"><i class="fas fa-download"></i> Export Data</button>
-                    <button class="btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <h1 class="dashboard-title">Police Dashboard</h1>
+                <div class="officer-info">
+                    <div class="officer-avatar">RS</div>
+                    <div class="officer-details">
+                        <h4>Inspector Rajesh Sharma</h4>
+                        <p>Cyber Crime Unit | ID: PC-7824</p>
+                    </div>
                 </div>
             </div>
 
@@ -682,53 +760,53 @@
             <div class="dashboard-stats">
                 <div class="stat-card">
                     <div class="stat-card-header">
-                        <div class="stat-card-title">Total Cases</div>
+                        <div class="stat-card-title">My Active Cases</div>
                         <div class="stat-card-icon" style="background: #2196f3;">
-                            <i class="fas fa-exclamation-circle"></i>
+                            <i class="fas fa-folder-open"></i>
                         </div>
                     </div>
-                    <div class="stat-card-value">1,247</div>
+                    <div class="stat-card-value">18</div>
                     <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 12% from last month
+                        <i class="fas fa-arrow-up"></i> 3 new this week
                     </div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-card-header">
-                        <div class="stat-card-title">Pending Cases</div>
-                        <div class="stat-card-icon" style="background: #ff9800;">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card-value">342</div>
-                    <div class="stat-card-change negative">
-                        <i class="fas fa-arrow-up"></i> 5% from last month
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Resolved Cases</div>
+                        <div class="stat-card-title">Cases Solved</div>
                         <div class="stat-card-icon" style="background: #4caf50;">
                             <i class="fas fa-check-circle"></i>
                         </div>
                     </div>
-                    <div class="stat-card-value">785</div>
+                    <div class="stat-card-value">42</div>
                     <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 8% from last month
+                        <i class="fas fa-arrow-up"></i> 5 this month
                     </div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-card-header">
-                        <div class="stat-card-title">Active Users</div>
-                        <div class="stat-card-icon" style="background: #9c27b0;">
-                            <i class="fas fa-users"></i>
+                        <div class="stat-card-title">Pending Actions</div>
+                        <div class="stat-card-icon" style="background: #ff9800;">
+                            <i class="fas fa-clock"></i>
                         </div>
                     </div>
-                    <div class="stat-card-value">5,892</div>
+                    <div class="stat-card-value">7</div>
+                    <div class="stat-card-change negative">
+                        <i class="fas fa-arrow-up"></i> 2 urgent
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-title">Success Rate</div>
+                        <div class="stat-card-icon" style="background: #9c27b0;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">87%</div>
                     <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 15% from last month
+                        <i class="fas fa-arrow-up"></i> 5% from last quarter
                     </div>
                 </div>
             </div>
@@ -736,27 +814,27 @@
             <!-- Charts Section -->
             <div class="dashboard-charts">
                 <div class="chart-container">
-                    <h3 class="chart-title">Cases by Category</h3>
-                    <canvas id="casesByCategoryChart"></canvas>
+                    <h3 class="chart-title">My Case Types Distribution</h3>
+                    <canvas id="caseTypesChart"></canvas>
                 </div>
 
                 <div class="chart-container">
-                    <h3 class="chart-title">Case Status Distribution</h3>
-                    <canvas id="caseStatusChart"></canvas>
+                    <h3 class="chart-title">Monthly Performance</h3>
+                    <canvas id="performanceChart"></canvas>
                 </div>
             </div>
 
             <!-- Recent Activity -->
             <div class="recent-activity">
-                <h3 class="chart-title">Recent Activity</h3>
+                <h3 class="chart-title">Recent Activity & Alerts</h3>
                 <ul class="activity-list">
                     <li class="activity-item">
                         <div class="activity-icon" style="background: #2196f3;">
                             <i class="fas fa-plus"></i>
                         </div>
                         <div class="activity-content">
-                            <div class="activity-title">New case reported - Financial Fraud</div>
-                            <div class="activity-time">10 minutes ago</div>
+                            <div class="activity-title">New case assigned - Financial Fraud (CR-2023-0891)</div>
+                            <div class="activity-time">2 hours ago | <span class="priority-high">High Priority</span></div>
                         </div>
                     </li>
                     <li class="activity-item">
@@ -764,35 +842,35 @@
                             <i class="fas fa-check"></i>
                         </div>
                         <div class="activity-content">
-                            <div class="activity-title">Case #CR-2023-0452 resolved</div>
-                            <div class="activity-time">1 hour ago</div>
+                            <div class="activity-title">Case #CR-2023-0782 resolved successfully</div>
+                            <div class="activity-time">1 day ago | <span class="badge badge-success">Closed</span></div>
                         </div>
                     </li>
                     <li class="activity-item">
                         <div class="activity-icon" style="background: #ff9800;">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">New admin user registered</div>
-                            <div class="activity-time">2 hours ago</div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #f44336;">
                             <i class="fas fa-exclamation-triangle"></i>
                         </div>
                         <div class="activity-content">
-                            <div class="activity-title">High priority case assigned - Identity Theft</div>
-                            <div class="activity-time">3 hours ago</div>
+                            <div class="activity-title">Evidence review required for case #CR-2023-0854</div>
+                            <div class="activity-time">1 day ago | <span class="badge badge-warning">Pending</span></div>
                         </div>
                     </li>
                     <li class="activity-item">
                         <div class="activity-icon" style="background: #9c27b0;">
-                            <i class="fas fa-chart-line"></i>
+                            <i class="fas fa-gavel"></i>
                         </div>
                         <div class="activity-content">
-                            <div class="activity-title">Monthly report generated</div>
-                            <div class="activity-time">5 hours ago</div>
+                            <div class="activity-title">Court hearing scheduled for case #CR-2023-0721</div>
+                            <div class="activity-time">2 days ago | <span class="badge badge-primary">Nov 25, 2023</span></div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background: #f44336;">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Suspect interrogation scheduled for tomorrow</div>
+                            <div class="activity-time">3 days ago | <span class="badge badge-danger">Urgent</span></div>
                         </div>
                     </li>
                 </ul>
@@ -802,8 +880,8 @@
             <div class="dashboard-tables">
                 <div class="table-container">
                     <div class="table-header">
-                        <h3 class="table-title">Recent Cases</h3>
-                        <a href="#" class="btn">View All</a>
+                        <h3 class="table-title">My Active Cases</h3>
+                        <a href="#" class="btn btn-police">View All</a>
                     </div>
                     <table>
                         <thead>
@@ -812,44 +890,44 @@
                                 <th>Type</th>
                                 <th>Priority</th>
                                 <th>Status</th>
-                                <th>Date</th>
+                                <th>Assigned Date</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>CR-2023-0789</td>
-                                <td>Phishing</td>
+                                <td>CR-2023-0891</td>
+                                <td>Financial Fraud</td>
                                 <td class="priority-high">High</td>
-                                <td><span class="status status-investigating">Investigating</span></td>
+                                <td><span class="status status-new">New</span></td>
                                 <td>2023-11-15</td>
                             </tr>
                             <tr>
-                                <td>CR-2023-0788</td>
-                                <td>Financial Fraud</td>
+                                <td>CR-2023-0885</td>
+                                <td>Identity Theft</td>
                                 <td class="priority-high">High</td>
-                                <td><span class="status status-pending">Pending</span></td>
-                                <td>2023-11-14</td>
+                                <td><span class="status status-investigating">Investigating</span></td>
+                                <td>2023-11-12</td>
                             </tr>
                             <tr>
-                                <td>CR-2023-0787</td>
-                                <td>Identity Theft</td>
+                                <td>CR-2023-0879</td>
+                                <td>Phishing</td>
                                 <td class="priority-medium">Medium</td>
                                 <td><span class="status status-investigating">Investigating</span></td>
-                                <td>2023-11-14</td>
+                                <td>2023-11-10</td>
                             </tr>
                             <tr>
-                                <td>CR-2023-0786</td>
+                                <td>CR-2023-0872</td>
                                 <td>Social Media Harassment</td>
                                 <td class="priority-medium">Medium</td>
-                                <td><span class="status status-resolved">Resolved</span></td>
-                                <td>2023-11-13</td>
+                                <td><span class="status status-pending">Evidence Review</span></td>
+                                <td>2023-11-08</td>
                             </tr>
                             <tr>
-                                <td>CR-2023-0785</td>
+                                <td>CR-2023-0865</td>
                                 <td>Online Shopping Fraud</td>
                                 <td class="priority-low">Low</td>
-                                <td><span class="status status-resolved">Resolved</span></td>
-                                <td>2023-11-12</td>
+                                <td><span class="status status-pending">Awaiting Info</span></td>
+                                <td>2023-11-05</td>
                             </tr>
                         </tbody>
                     </table>
@@ -857,48 +935,48 @@
 
                 <div class="table-container">
                     <div class="table-header">
-                        <h3 class="table-title">Top Investigators</h3>
-                        <a href="#" class="btn">View All</a>
+                        <h3 class="table-title">Upcoming Tasks</h3>
+                        <a href="#" class="btn btn-police">View Calendar</a>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Department</th>
-                                <th>Active Cases</th>
-                                <th>Success Rate</th>
+                                <th>Task</th>
+                                <th>Case ID</th>
+                                <th>Due Date</th>
+                                <th>Priority</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Rajesh Kumar</td>
-                                <td>Financial Crimes</td>
-                                <td>12</td>
-                                <td>92%</td>
+                                <td>Suspect Interrogation</td>
+                                <td>CR-2023-0885</td>
+                                <td>2023-11-17</td>
+                                <td class="priority-high">High</td>
                             </tr>
                             <tr>
-                                <td>Priya Sharma</td>
-                                <td>Cyber Harassment</td>
-                                <td>8</td>
-                                <td>88%</td>
+                                <td>Evidence Analysis Report</td>
+                                <td>CR-2023-0879</td>
+                                <td>2023-11-18</td>
+                                <td class="priority-medium">Medium</td>
                             </tr>
                             <tr>
-                                <td>Anil Patel</td>
-                                <td>Identity Theft</td>
-                                <td>10</td>
-                                <td>85%</td>
+                                <td>Witness Statement Recording</td>
+                                <td>CR-2023-0872</td>
+                                <td>2023-11-19</td>
+                                <td class="priority-medium">Medium</td>
                             </tr>
                             <tr>
-                                <td>Sunita Reddy</td>
-                                <td>Online Fraud</td>
-                                <td>7</td>
-                                <td>90%</td>
+                                <td>FIR Submission</td>
+                                <td>CR-2023-0891</td>
+                                <td>2023-11-20</td>
+                                <td class="priority-high">High</td>
                             </tr>
                             <tr>
-                                <td>Vikram Singh</td>
-                                <td>Data Breach</td>
-                                <td>9</td>
-                                <td>87%</td>
+                                <td>Court Preparation</td>
+                                <td>CR-2023-0721</td>
+                                <td>2023-11-24</td>
+                                <td class="priority-high">High</td>
                             </tr>
                         </tbody>
                     </table>
@@ -915,28 +993,29 @@
                     <h3>Quick Links</h3>
                     <ul>
                         <li><a href="index.html">Main Portal</a></li>
-                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="#">Police Dashboard</a></li>
                         <li><a href="#">Case Management</a></li>
-                        <li><a href="#">Reports</a></li>
+                        <li><a href="#">Resources</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h3>Resources</h3>
+                    <h3>Police Resources</h3>
                     <ul>
-                        <li><a href="#">Admin Guide</a></li>
-                        <li><a href="#">API Documentation</a></li>
-                        <li><a href="#">Security Protocols</a></li>
-                        <li><a href="#">Legal Framework</a></li>
+                        <li><a href="#">FIR Templates</a></li>
+                        <li><a href="#">Legal Guidelines</a></li>
+                        <li><a href="#">Investigation Protocols</a></li>
+                        <li><a href="#">Forensic Tools</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h3>Contact Admin</h3>
+                    <h3>Support</h3>
                     <ul>
                         <li>Helpline: 1930</li>
-                        <li>Email: admin@cybercrime.gov.in</li>
-                        <li>Emergency: 24/7 Support</li>
+                        <li>IT Support: support@cybercrime.gov.in</li>
+                        <li>Emergency: 24/7 Hotline</li>
+                        <li>Technical Assistance</li>
                     </ul>
                 </div>
                 
@@ -944,16 +1023,16 @@
                     <h3>System Info</h3>
                     <ul>
                         <li>Version: 2.4.1</li>
-                        <li>Last Updated: 2023-11-15</li>
-                        <li>Server Status: Online</li>
-                        <li>Users Online: 142</li>
+                        <li>Last Login: 2023-11-15 14:30</li>
+                        <li>Session: Active</li>
+                        <li>Department: Cyber Crime Unit</li>
                     </ul>
                 </div>
             </div>
             
             <div class="copyright">
                 <p>&copy; 2023 iReport - Your Cyber Crime Assistant Portal Coordination Centre. All rights reserved.</p>
-                <p>Admin Dashboard - Restricted Access</p>
+                <p>Police Dashboard - Restricted Access | Logged in as: Inspector Rajesh Sharma</p>
             </div>
         </div>
     </footer>
@@ -990,15 +1069,14 @@
 
         // Charts Initialization
         document.addEventListener('DOMContentLoaded', function() {
-            // Cases by Category Chart
-            const casesByCategoryCtx = document.getElementById('casesByCategoryChart').getContext('2d');
-            const casesByCategoryChart = new Chart(casesByCategoryCtx, {
-                type: 'bar',
+            // Case Types Distribution Chart
+            const caseTypesCtx = document.getElementById('caseTypesChart').getContext('2d');
+            const caseTypesChart = new Chart(caseTypesCtx, {
+                type: 'doughnut',
                 data: {
-                    labels: ['Phishing', 'Financial Fraud', 'Identity Theft', 'Social Media', 'Online Shopping', 'Ransomware'],
+                    labels: ['Financial Fraud', 'Phishing', 'Identity Theft', 'Social Media', 'Online Shopping', 'Others'],
                     datasets: [{
-                        label: 'Number of Cases',
-                        data: [320, 280, 195, 175, 150, 127],
+                        data: [35, 25, 15, 12, 8, 5],
                         backgroundColor: [
                             '#ff3b30',
                             '#ff9800',
@@ -1022,7 +1100,47 @@
                     responsive: true,
                     plugins: {
                         legend: {
-                            display: false
+                            position: 'right',
+                            labels: {
+                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Monthly Performance Chart
+            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+            const performanceChart = new Chart(performanceCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+                    datasets: [{
+                        label: 'Cases Solved',
+                        data: [3, 5, 2, 4, 6, 5, 7, 8, 6, 5, 4],
+                        borderColor: '#4caf50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }, {
+                        label: 'New Cases',
+                        data: [5, 7, 6, 8, 5, 6, 9, 7, 8, 6, 5],
+                        borderColor: '#2196f3',
+                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            labels: {
+                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
+                            }
                         }
                     },
                     scales: {
@@ -1047,45 +1165,11 @@
                 }
             });
 
-            // Case Status Distribution Chart
-            const caseStatusCtx = document.getElementById('caseStatusChart').getContext('2d');
-            const caseStatusChart = new Chart(caseStatusCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Pending', 'Investigating', 'Resolved'],
-                    datasets: [{
-                        data: [342, 120, 785],
-                        backgroundColor: [
-                            '#ff9800',
-                            '#2196f3',
-                            '#4caf50'
-                        ],
-                        borderColor: [
-                            '#ff9800',
-                            '#2196f3',
-                            '#4caf50'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
-                            }
-                        }
-                    }
-                }
-            });
-
             // Update charts when theme changes
             themeToggle.addEventListener('click', function() {
                 setTimeout(function() {
-                    casesByCategoryChart.update();
-                    caseStatusChart.update();
+                    caseTypesChart.update();
+                    performanceChart.update();
                 }, 100);
             });
         });

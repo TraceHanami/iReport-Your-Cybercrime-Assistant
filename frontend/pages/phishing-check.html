@@ -1,0 +1,1363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Detection Tool - iReport</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #333333;
+            --accent-color: #ffffff;
+            --light-color: #f5f5f5;
+            --dark-color: #121212;
+            --text-color: #ffffff;
+            --bg-color: #000000;
+            --card-bg: #1a1a1a;
+            --header-bg: #000000;
+            --footer-bg: #000000;
+            --shadow: 0 4px 6px rgba(255,255,255,0.1);
+            --transition: all 0.3s ease;
+            --safe-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #F44336;
+            --info-color: #2196F3;
+        }
+
+        .light-theme {
+            --primary-color: #ffffff;
+            --secondary-color: #f0f0f0;
+            --accent-color: #000000;
+            --light-color: #ffffff;
+            --dark-color: #f5f5f5;
+            --text-color: #000000;
+            --bg-color: #ffffff;
+            --card-bg: #f9f9f9;
+            --header-bg: #ffffff;
+            --footer-bg: #ffffff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--header-bg);
+            color: var(--text-color);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 60px;
+            margin-right: 15px;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .logo-text .ministry {
+            font-size: 0.9rem;
+            font-weight: normal;
+            display: block;
+        }
+
+        .logo-text .center-name {
+            font-size: 1.4rem;
+            display: block;
+            margin-top: 5px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+            padding: 0.5rem 0;
+        }
+
+        nav ul li a:hover {
+            opacity: 0.8;
+            border-bottom: 2px solid var(--text-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: var(--transition);
+            padding: 8px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 3rem 0;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .page-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .page-header p {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            border-bottom: 2px solid var(--secondary-color);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 1rem 2rem;
+            cursor: pointer;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab.active {
+            border-bottom: 3px solid var(--text-color);
+            font-weight: bold;
+        }
+
+        .tab:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Checker Cards */
+        .checker-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+            margin-bottom: 2rem;
+        }
+
+        .checker-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .checker-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            background: var(--primary-color);
+            color: var(--text-color);
+        }
+
+        .checker-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .checker-description {
+            margin-bottom: 1.5rem;
+            opacity: 0.8;
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        textarea.form-control {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--text-color);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        .light-theme .form-control:focus {
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            margin: 0.5rem;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary {
+            background: var(--info-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0b7dda;
+        }
+
+        .btn-block {
+            display: block;
+            width: 100%;
+        }
+
+        /* Results Section */
+        .results-section {
+            margin-top: 2rem;
+            display: none;
+        }
+
+        .result-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+            margin-bottom: 2rem;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .result-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .result-icon.safe {
+            background: var(--safe-color);
+        }
+
+        .result-icon.warning {
+            background: var(--warning-color);
+        }
+
+        .result-icon.danger {
+            background: var(--danger-color);
+        }
+
+        .result-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .result-description {
+            margin-bottom: 1.5rem;
+        }
+
+        .result-details {
+            background: var(--primary-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .result-details h4 {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .result-list {
+            list-style: none;
+        }
+
+        .result-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .result-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--text-color);
+        }
+
+        .result-list li.safe:before {
+            color: var(--safe-color);
+        }
+
+        .result-list li.warning:before {
+            color: var(--warning-color);
+        }
+
+        .result-list li.danger:before {
+            color: var(--danger-color);
+        }
+
+        /* Phishing Indicators */
+        .indicators-section {
+            margin-top: 3rem;
+        }
+
+        .indicators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .indicator-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+            transition: var(--transition);
+        }
+
+        .indicator-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .indicator-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .indicator-icon.danger {
+            background: var(--danger-color);
+        }
+
+        .indicator-icon.warning {
+            background: var(--warning-color);
+        }
+
+        .indicator-icon.info {
+            background: var(--info-color);
+        }
+
+        .indicator-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .indicator-description {
+            opacity: 0.8;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            color: var(--text-color);
+            padding: 3rem 0 1rem;
+            transition: var(--transition);
+            margin-top: 3rem;
+            border-radius: 10px 10px 0 0;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--info-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            nav ul li {
+                margin: 0.5rem;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab {
+                text-align: center;
+            }
+            
+            .indicators-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        
+                    <svg width="50" height="50" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+    <!-- Shield Base with Indian Colors -->
+    <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="#FF9933" stroke="#000080" stroke-width="1.5"/>
+    
+    <!-- White Middle Section -->
+    <path d="M30 8 C38 8 45 12 48 18 L30 52 L12 18 C15 12 22 8 30 8 Z" fill="#FFFFFF"/>
+    
+    <!-- Ashoka Chakra -->
+    <circle cx="30" cy="30" r="8" fill="#000080" stroke="#FFFFFF" stroke-width="0.5"/>
+    
+    <!-- 24 Spokes (Simplified) -->
+    <g stroke="#FFFFFF" stroke-width="0.8">
+        <!-- Main Cross -->
+        <line x1="30" y1="22" x2="30" y2="38"/>
+        <line x1="22" y1="30" x2="38" y2="30"/>
+        
+        <!-- Diagonal Spokes -->
+        <line x1="25" y1="25" x2="35" y2="35"/>
+        <line x1="35" y1="25" x2="25" y2="35"/>
+        
+        <!-- Additional Spokes -->
+        <line x1="27" y1="23" x2="33" y2="37"/>
+        <line x1="33" y1="23" x2="27" y2="37"/>
+        <line x1="23" y1="27" x2="37" y2="33"/>
+        <line x1="37" y1="27" x2="23" y2="33"/>
+    </g>
+    
+    <!-- Cyber Security Elements -->
+    <!-- Digital Lock -->
+    <rect x="26" y="42" width="8" height="6" fill="#000080" stroke="#FFFFFF" stroke-width="0.5" rx="1"/>
+    <circle cx="30" cy="44" r="1" fill="#FFFFFF"/>
+    <rect x="28" y="45" width="4" height="2" fill="#FFFFFF" rx="0.5"/>
+    
+    <!-- Binary Code Pattern -->
+    <text x="18" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">101</text>
+    <text x="40" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">010</text>
+    <text x="15" y="48" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">110</text>
+    
+    <!-- Shield Border -->
+    <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="none" stroke="#000080" stroke-width="1.5"/>
+    
+    <!-- Cyber Circuit Lines -->
+    <path d="M15 12 L20 12 L20 15 L25 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
+    <path d="M45 12 L40 12 L40 15 L35 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
+</svg>
+                    </div>
+                    <div class="logo-text">
+                        <span class="ministry">MINISTRY OF HOME AFFAIRS</span>
+                        <span class="center-name">iReport - Phishing Detection</span>
+                    </div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="complaint.html">File Complaint</a></li>
+                        <li><a href="malware-check.html" class="active">Malware Check</a></li>
+                        <li><a href="complaint.html">File Complaint</a></li>
+                        </ul>
+                </nav>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-sun"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <h1>Phishing Detection Tool</h1>
+                <p>Check URLs, emails, and messages for potential phishing threats. Stay safe online with our advanced detection system.</p>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs">
+                <div class="tab active" data-tab="url">Check URL</div>
+                <div class="tab" data-tab="email">Check Email</div>
+                <div class="tab" data-tab="message">Check Message</div>
+            </div>
+
+            <!-- URL Checker -->
+            <div class="tab-content active" id="url-tab">
+                <div class="checker-card">
+                    <div class="checker-header">
+                        <div class="checker-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div class="checker-title">URL Checker</div>
+                    </div>
+                    <div class="checker-description">
+                        Enter a suspicious URL to check if it's a phishing website. Our system will analyze the URL structure, domain reputation, and other indicators.
+                    </div>
+                    <form id="url-form">
+                        <div class="form-group">
+                            <label for="url-input">Enter URL to Check</label>
+                            <input type="url" id="url-input" class="form-control" placeholder="https://example.com" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-search"></i> Check URL
+                        </button>
+                    </form>
+                </div>
+
+                <!-- URL Results -->
+                <div class="results-section" id="url-results">
+                    <div class="result-card">
+                        <div class="result-header">
+                            <div class="result-icon safe">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <div class="result-title">URL Analysis Complete</div>
+                        </div>
+                        <div class="result-description" id="url-result-description">
+                            The URL appears to be safe based on our analysis.
+                        </div>
+                        <div class="result-details">
+                            <h4>Analysis Details</h4>
+                            <ul class="result-list" id="url-analysis-details">
+                                <!-- Will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Checker -->
+            <div class="tab-content" id="email-tab">
+                <div class="checker-card">
+                    <div class="checker-header">
+                        <div class="checker-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="checker-title">Email Checker</div>
+                    </div>
+                    <div class="checker-description">
+                        Paste the content of a suspicious email to check for phishing indicators. Our system will analyze the email content, sender information, and links.
+                    </div>
+                    <form id="email-form">
+                        <div class="form-group">
+                            <label for="email-sender">Sender Email Address</label>
+                            <input type="email" id="email-sender" class="form-control" placeholder="sender@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="email-subject">Email Subject</label>
+                            <input type="text" id="email-subject" class="form-control" placeholder="Email Subject">
+                        </div>
+                        <div class="form-group">
+                            <label for="email-content">Email Content</label>
+                            <textarea id="email-content" class="form-control" placeholder="Paste the email content here..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-search"></i> Check Email
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Email Results -->
+                <div class="results-section" id="email-results">
+                    <div class="result-card">
+                        <div class="result-header">
+                            <div class="result-icon warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="result-title">Email Analysis Complete</div>
+                        </div>
+                        <div class="result-description" id="email-result-description">
+                            This email shows some suspicious characteristics.
+                        </div>
+                        <div class="result-details">
+                            <h4>Analysis Details</h4>
+                            <ul class="result-list" id="email-analysis-details">
+                                <!-- Will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Message Checker -->
+            <div class="tab-content" id="message-tab">
+                <div class="checker-card">
+                    <div class="checker-header">
+                        <div class="checker-icon">
+                            <i class="fas fa-comment-alt"></i>
+                        </div>
+                        <div class="checker-title">Message Checker</div>
+                    </div>
+                    <div class="checker-description">
+                        Check suspicious text messages (SMS) or social media messages for phishing attempts. Our system will analyze the content for common phishing patterns.
+                    </div>
+                    <form id="message-form">
+                        <div class="form-group">
+                            <label for="message-sender">Sender (Phone Number or Username)</label>
+                            <input type="text" id="message-sender" class="form-control" placeholder="Sender information">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-content">Message Content</label>
+                            <textarea id="message-content" class="form-control" placeholder="Paste the message content here..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">
+                            <i class="fas fa-search"></i> Check Message
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Message Results -->
+                <div class="results-section" id="message-results">
+                    <div class="result-card">
+                        <div class="result-header">
+                            <div class="result-icon danger">
+                                <i class="fas fa-skull-crossbones"></i>
+                            </div>
+                            <div class="result-title">Message Analysis Complete</div>
+                        </div>
+                        <div class="result-description" id="message-result-description">
+                            This message appears to be a phishing attempt.
+                        </div>
+                        <div class="result-details">
+                            <h4>Analysis Details</h4>
+                            <ul class="result-list" id="message-analysis-details">
+                                <!-- Will be populated by JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phishing Indicators -->
+            <div class="indicators-section">
+                <h2 style="text-align: center; margin-bottom: 2rem;">Common Phishing Indicators</h2>
+                <div class="indicators-grid">
+                    <div class="indicator-card">
+                        <div class="indicator-icon danger">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="indicator-title">Suspicious URLs</div>
+                        <div class="indicator-description">
+                            URLs that don't match the claimed organization, use IP addresses instead of domain names, or have misspellings of legitimate domains.
+                        </div>
+                    </div>
+                    <div class="indicator-card">
+                        <div class="indicator-icon warning">
+                            <i class="fas fa-user-secret"></i>
+                        </div>
+                        <div class="indicator-title">Urgent Requests</div>
+                        <div class="indicator-description">
+                            Messages creating a sense of urgency, threatening consequences if you don't act immediately, or offering too-good-to-be-true deals.
+                        </div>
+                    </div>
+                    <div class="indicator-card">
+                        <div class="indicator-icon info">
+                            <i class="fas fa-envelope-open-text"></i>
+                        </div>
+                        <div class="indicator-title">Spoofed Sender Information</div>
+                        <div class="indicator-description">
+                            Emails that appear to be from legitimate organizations but have slight variations in the sender's email address or display name.
+                        </div>
+                    </div>
+                    <div class="indicator-card">
+                        <div class="indicator-icon danger">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <div class="indicator-title">Requests for Credentials</div>
+                        <div class="indicator-description">
+                            Messages asking you to provide passwords, PINs, or other sensitive information, often with a link to a fake login page.
+                        </div>
+                    </div>
+                    <div class="indicator-card">
+                        <div class="indicator-icon warning">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="indicator-title">Suspicious Attachments</div>
+                        <div class="indicator-description">
+                            Unexpected attachments, especially with unusual file extensions like .exe, .scr, or .zip that may contain malware.
+                        </div>
+                    </div>
+                    <div class="indicator-card">
+                        <div class="indicator-icon info">
+                            <i class="fas fa-language"></i>
+                        </div>
+                        <div class="indicator-title">Poor Grammar & Spelling</div>
+                        <div class="indicator-description">
+                            Messages with obvious grammatical errors, spelling mistakes, or awkward phrasing that professional organizations would avoid.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="phishing-check.html">Phishing Check</a></li>
+                        <li><a href="complaint.html">File Complaint</a></li>
+                        <li><a href="helpline.html">SOS</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Cyber Security Tips</a></li>
+                        <li><a href="#">Latest Alerts</a></li>
+                        <li><a href="#">Educational Materials</a></li>
+                        <li><a href="#">Legal Framework</a></li>
+                        <li><a href="#">Statistics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li>Helpline: 1930</li>
+                        <li>Email: support@cybercrime.gov.in</li>
+                        <li>Address: Indian Cyber Crime Coordination Centre, New Delhi</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 iReport - Indian Cyber Crime Coordination Centre. All rights reserved.</p>
+                <p>An initiative of the Ministry of Home Affairs, Government of India.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or default to dark
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        
+        // Apply the saved theme on page load
+        if (currentTheme === 'light') {
+            document.body.classList.add('light-theme');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            
+            if (document.body.classList.contains('light-theme')) {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        });
+
+        // Tab Switching Functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+                
+                // Hide all results sections
+                document.querySelectorAll('.results-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+            });
+        });
+
+        // URL Checker Functionality
+        document.getElementById('url-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const urlInput = document.getElementById('url-input').value;
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+            submitBtn.disabled = true;
+            
+            // Simulate analysis (in a real app, this would be an API call)
+            setTimeout(() => {
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                // Show results
+                const resultsSection = document.getElementById('url-results');
+                resultsSection.style.display = 'block';
+                
+                // Analyze URL
+                const analysis = analyzeURL(urlInput);
+                
+                // Update results
+                document.getElementById('url-result-description').textContent = analysis.description;
+                
+                const detailsList = document.getElementById('url-analysis-details');
+                detailsList.innerHTML = '';
+                
+                analysis.details.forEach(detail => {
+                    const li = document.createElement('li');
+                    li.textContent = detail.text;
+                    li.className = detail.type;
+                    detailsList.appendChild(li);
+                });
+                
+                // Update result icon and title based on risk level
+                const resultIcon = resultsSection.querySelector('.result-icon');
+                const resultTitle = resultsSection.querySelector('.result-title');
+                
+                resultIcon.className = 'result-icon ' + analysis.riskLevel;
+                resultIcon.innerHTML = analysis.riskLevel === 'safe' ? 
+                    '<i class="fas fa-shield-alt"></i>' : 
+                    analysis.riskLevel === 'warning' ? 
+                    '<i class="fas fa-exclamation-triangle"></i>' : 
+                    '<i class="fas fa-skull-crossbones"></i>';
+                    
+                resultTitle.textContent = analysis.title;
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        });
+
+        // Email Checker Functionality
+        document.getElementById('email-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const emailContent = document.getElementById('email-content').value;
+            const emailSender = document.getElementById('email-sender').value;
+            const emailSubject = document.getElementById('email-subject').value;
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+            submitBtn.disabled = true;
+            
+            // Simulate analysis (in a real app, this would be an API call)
+            setTimeout(() => {
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                // Show results
+                const resultsSection = document.getElementById('email-results');
+                resultsSection.style.display = 'block';
+                
+                // Analyze email
+                const analysis = analyzeEmail(emailContent, emailSender, emailSubject);
+                
+                // Update results
+                document.getElementById('email-result-description').textContent = analysis.description;
+                
+                const detailsList = document.getElementById('email-analysis-details');
+                detailsList.innerHTML = '';
+                
+                analysis.details.forEach(detail => {
+                    const li = document.createElement('li');
+                    li.textContent = detail.text;
+                    li.className = detail.type;
+                    detailsList.appendChild(li);
+                });
+                
+                // Update result icon and title based on risk level
+                const resultIcon = resultsSection.querySelector('.result-icon');
+                const resultTitle = resultsSection.querySelector('.result-title');
+                
+                resultIcon.className = 'result-icon ' + analysis.riskLevel;
+                resultIcon.innerHTML = analysis.riskLevel === 'safe' ? 
+                    '<i class="fas fa-shield-alt"></i>' : 
+                    analysis.riskLevel === 'warning' ? 
+                    '<i class="fas fa-exclamation-triangle"></i>' : 
+                    '<i class="fas fa-skull-crossbones"></i>';
+                    
+                resultTitle.textContent = analysis.title;
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        });
+
+        // Message Checker Functionality
+        document.getElementById('message-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const messageContent = document.getElementById('message-content').value;
+            const messageSender = document.getElementById('message-sender').value;
+            
+            // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+            submitBtn.disabled = true;
+            
+            // Simulate analysis (in a real app, this would be an API call)
+            setTimeout(() => {
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                // Show results
+                const resultsSection = document.getElementById('message-results');
+                resultsSection.style.display = 'block';
+                
+                // Analyze message
+                const analysis = analyzeMessage(messageContent, messageSender);
+                
+                // Update results
+                document.getElementById('message-result-description').textContent = analysis.description;
+                
+                const detailsList = document.getElementById('message-analysis-details');
+                detailsList.innerHTML = '';
+                
+                analysis.details.forEach(detail => {
+                    const li = document.createElement('li');
+                    li.textContent = detail.text;
+                    li.className = detail.type;
+                    detailsList.appendChild(li);
+                });
+                
+                // Update result icon and title based on risk level
+                const resultIcon = resultsSection.querySelector('.result-icon');
+                const resultTitle = resultsSection.querySelector('.result-title');
+                
+                resultIcon.className = 'result-icon ' + analysis.riskLevel;
+                resultIcon.innerHTML = analysis.riskLevel === 'safe' ? 
+                    '<i class="fas fa-shield-alt"></i>' : 
+                    analysis.riskLevel === 'warning' ? 
+                    '<i class="fas fa-exclamation-triangle"></i>' : 
+                    '<i class="fas fa-skull-crossbones"></i>';
+                    
+                resultTitle.textContent = analysis.title;
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        });
+
+        // Analysis Functions (Simulated)
+        function analyzeURL(url) {
+            // This is a simplified simulation - in a real app, this would connect to a backend service
+            const suspiciousPatterns = [
+                { pattern: /http:\/\//, weight: 1, description: "Uses HTTP instead of HTTPS" },
+                { pattern: /\[\.\]/, weight: 2, description: "Uses bracket notation to hide domain" },
+                { pattern: /@/, weight: 2, description: "Contains @ symbol (possible deception)" },
+                { pattern: /\.(tk|ml|ga|cf)/, weight: 1, description: "Uses free domain extension" },
+                { pattern: /login/, weight: 1, description: "Contains 'login' in URL" },
+                { pattern: /bank/, weight: 1, description: "Contains 'bank' in URL" },
+                { pattern: /paypal/, weight: 2, description: "Mimics PayPal" },
+                { pattern: /amazon/, weight: 2, description: "Mimics Amazon" },
+                { pattern: /facebook/, weight: 2, description: "Mimics Facebook" },
+                { pattern: /\.exe$/, weight: 3, description: "Links to executable file" },
+                { pattern: /bit\.ly|goo\.gl|tinyurl/, weight: 1, description: "Uses URL shortener" }
+            ];
+            
+            let riskScore = 0;
+            const details = [];
+            
+            // Check for suspicious patterns
+            suspiciousPatterns.forEach(pattern => {
+                if (pattern.pattern.test(url.toLowerCase())) {
+                    riskScore += pattern.weight;
+                    details.push({
+                        text: pattern.description,
+                        type: pattern.weight >= 2 ? 'warning' : 'info'
+                    });
+                }
+            });
+            
+            // Check URL length (long URLs can be suspicious)
+            if (url.length > 75) {
+                riskScore += 1;
+                details.push({
+                    text: "Unusually long URL",
+                    type: 'warning'
+                });
+            }
+            
+            // Check for IP address instead of domain
+            const ipPattern = /\b(?:\d{1,3}\.){3}\d{1,3}\b/;
+            if (ipPattern.test(url)) {
+                riskScore += 2;
+                details.push({
+                    text: "Uses IP address instead of domain name",
+                    type: 'danger'
+                });
+            }
+            
+            // Determine risk level
+            let riskLevel, description, title;
+            if (riskScore >= 5) {
+                riskLevel = 'danger';
+                description = 'This URL shows strong indicators of being a phishing website. Do not enter any personal information.';
+                title = 'High Risk - Potential Phishing URL';
+            } else if (riskScore >= 2) {
+                riskLevel = 'warning';
+                description = 'This URL shows some suspicious characteristics. Proceed with caution.';
+                title = 'Medium Risk - Suspicious URL';
+            } else {
+                riskLevel = 'safe';
+                description = 'This URL appears to be safe based on our analysis.';
+                title = 'Low Risk - URL Appears Safe';
+            }
+            
+            return {
+                riskLevel,
+                description,
+                title,
+                details
+            };
+        }
+
+        function analyzeEmail(content, sender, subject) {
+            let riskScore = 0;
+            const details = [];
+            
+            // Check sender
+            if (sender) {
+                const suspiciousSenders = [
+                    /support@.*\.tk/,
+                    /noreply@.*\.ml/,
+                    /security@.*\.ga/,
+                    /service@.*\.cf/
+                ];
+                
+                suspiciousSenders.forEach(pattern => {
+                    if (pattern.test(sender.toLowerCase())) {
+                        riskScore += 2;
+                        details.push({
+                            text: "Suspicious sender domain",
+                            type: 'danger'
+                        });
+                    }
+                });
+                
+                // Check for mismatched display names
+                if (sender.includes('@') && !sender.toLowerCase().includes(subject.toLowerCase().split(' ')[0])) {
+                    riskScore += 1;
+                    details.push({
+                        text: "Sender email doesn't match claimed organization",
+                        type: 'warning'
+                    });
+                }
+            }
+            
+            // Check subject for urgency
+            const urgentWords = ['urgent', 'immediate', 'action required', 'account suspended', 'security alert'];
+            urgentWords.forEach(word => {
+                if (subject.toLowerCase().includes(word)) {
+                    riskScore += 1;
+                    details.push({
+                        text: "Uses urgent language in subject",
+                        type: 'warning'
+                    });
+                }
+            });
+            
+            // Check content for phishing indicators
+            const phishingIndicators = [
+                { pattern: /click here/, weight: 1, description: "Uses 'click here' language" },
+                { pattern: /verify your account/, weight: 2, description: "Asks to verify account" },
+                { pattern: /password.*expired/, weight: 2, description: "Claims password has expired" },
+                { pattern: /suspended/, weight: 2, description: "Threatens account suspension" },
+                { pattern: /limited time/, weight: 1, description: "Creates false urgency" },
+                { pattern: /dear customer/, weight: 1, description: "Uses generic greeting" },
+                { pattern: /unusual activity/, weight: 2, description: "Claims unusual activity" },
+                { pattern: /log in now/, weight: 1, description: "Urges immediate login" }
+            ];
+            
+            phishingIndicators.forEach(indicator => {
+                if (indicator.pattern.test(content.toLowerCase())) {
+                    riskScore += indicator.weight;
+                    details.push({
+                        text: indicator.description,
+                        type: indicator.weight >= 2 ? 'warning' : 'info'
+                    });
+                }
+            });
+            
+            // Check for grammar and spelling issues (simplified)
+            const grammarIssues = content.split(' ').filter(word => 
+                word.length > 0 && 
+                word[0] === word[0].toLowerCase() && 
+                word !== 'i' && 
+                !['a', 'an', 'the', 'and', 'but', 'or'].includes(word.toLowerCase())
+            ).length > 3;
+            
+            if (grammarIssues) {
+                riskScore += 1;
+                details.push({
+                    text: "Contains grammar or formatting issues",
+                    type: 'warning'
+                });
+            }
+            
+            // Determine risk level
+            let riskLevel, description, title;
+            if (riskScore >= 5) {
+                riskLevel = 'danger';
+                description = 'This email shows strong indicators of being a phishing attempt. Do not click any links or provide any information.';
+                title = 'High Risk - Potential Phishing Email';
+            } else if (riskScore >= 2) {
+                riskLevel = 'warning';
+                description = 'This email shows some suspicious characteristics. Verify the sender before taking any action.';
+                title = 'Medium Risk - Suspicious Email';
+            } else {
+                riskLevel = 'safe';
+                description = 'This email appears to be legitimate based on our analysis.';
+                title = 'Low Risk - Email Appears Safe';
+            }
+            
+            return {
+                riskLevel,
+                description,
+                title,
+                details
+            };
+        }
+
+        function analyzeMessage(content, sender) {
+            let riskScore = 0;
+            const details = [];
+            
+            // Check for common SMS phishing patterns
+            const smsPhishingPatterns = [
+                { pattern: /your account/, weight: 1, description: "References your account" },
+                { pattern: /suspended/, weight: 2, description: "Threatens account suspension" },
+                { pattern: /click here/, weight: 1, description: "Uses 'click here' language" },
+                { pattern: /limited time/, weight: 1, description: "Creates false urgency" },
+                { pattern: /winner/, weight: 2, description: "Claims you've won something" },
+                { pattern: /prize/, weight: 2, description: "Mentions a prize" },
+                { pattern: /urgent/, weight: 1, description: "Uses urgent language" },
+                { pattern: /verify/, weight: 2, description: "Asks to verify information" },
+                { pattern: /OTP/, weight: 2, description: "Requests OTP or verification code" },
+                { pattern: /http/, weight: 1, description: "Contains a URL" },
+                { pattern: /bit\.ly|goo\.gl|tinyurl/, weight: 2, description: "Uses URL shortener" }
+            ];
+            
+            smsPhishingPatterns.forEach(pattern => {
+                if (pattern.pattern.test(content.toLowerCase())) {
+                    riskScore += pattern.weight;
+                    details.push({
+                        text: pattern.description,
+                        type: pattern.weight >= 2 ? 'warning' : 'info'
+                    });
+                }
+            });
+            
+            // Check sender if available
+            if (sender) {
+                // In a real app, this would check against known spam numbers
+                if (sender.length < 5 || sender.length > 15) {
+                    riskScore += 1;
+                    details.push({
+                        text: "Suspicious sender format",
+                        type: 'warning'
+                    });
+                }
+            }
+            
+            // Determine risk level
+            let riskLevel, description, title;
+            if (riskScore >= 5) {
+                riskLevel = 'danger';
+                description = 'This message shows strong indicators of being a phishing attempt. Do not click any links or provide any information.';
+                title = 'High Risk - Potential Phishing Message';
+            } else if (riskScore >= 2) {
+                riskLevel = 'warning';
+                description = 'This message shows some suspicious characteristics. Be cautious and verify the source.';
+                title = 'Medium Risk - Suspicious Message';
+            } else {
+                riskLevel = 'safe';
+                description = 'This message appears to be legitimate based on our analysis.';
+                title = 'Low Risk - Message Appears Safe';
+            }
+            
+            return {
+                riskLevel,
+                description,
+                title,
+                details
+            };
+        }
+    </script>
+</body>
+</html>

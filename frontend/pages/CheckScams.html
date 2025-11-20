@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ScamWatch India - Stop Scams Online</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ffffff;
+            --secondary-color: #f0f0f0;
+            --accent-color: #000000;
+            --light-color: #ffffff;
+            --dark-color: #f5f5f5;
+            --text-color: #000000;
+            --bg-color: #ffffff;
+            --card-bg: #f9f9f9;
+            --header-bg: #ffffff;
+            --footer-bg: #ffffff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+            --scamwatch-color: #ff3b30;
+            --cyber-blue: #1a73e8;
+            --cyber-green: #00c853;
+        }
+
+        .dark-theme {
+            --primary-color: #000000;
+            --secondary-color: #333333;
+            --accent-color: #ffffff;
+            --light-color: #f5f5f5;
+            --dark-color: #121212;
+            --text-color: #ffffff;
+            --bg-color: #000000;
+            --card-bg: #1a1a1a;
+            --header-bg: #000000;
+            --footer-bg: #000000;
+            --shadow: 0 4px 6px rgba(255,255,255,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        /* Header Top Styles */
+        .header-top {
+            background-color: var(--header-bg);
+            color: var(--text-color);
+            padding: 0.8rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .header-top .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .logo-text .ministry {
+            font-size: 0.9rem;
+            font-weight: normal;
+            display: block;
+        }
+
+        .logo-text .center-name {
+            font-size: 1.4rem;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .links a:hover {
+            opacity: 0.8;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-report {
+            background: var(--scamwatch-color);
+            color: white;
+        }
+
+        .btn-report:hover {
+            background: #d32f2f;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: var(--transition);
+            padding: 8px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+        }
+
+        /* Main Navigation */
+        .main-nav {
+            background-color: var(--primary-color);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .main-nav .container {
+            display: flex;
+            justify-content: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .main-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .main-nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: opacity 0.3s;
+        }
+
+        .main-nav ul li a:hover {
+            opacity: 0.8;
+            border-bottom: 2px solid var(--text-color);
+        }
+
+        /* Header Image Section */
+        .header-image-section {
+            padding: 2rem 0;
+        }
+
+        .header-image-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .header-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .header-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+        }
+
+        .header-image-overlay h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .header-image-overlay p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        /* ScamWatch Section */
+        .scamwatch-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 4rem 0;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .dark-theme .scamwatch-section {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .scamwatch-content {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 2rem;
+        }
+
+        .scam-report-box, .scam-alert-box {
+            background: var(--card-bg);
+            border: 1px solid var(--secondary-color);
+            border-radius: 14px;
+            padding: 25px;
+            width: 400px;
+            max-width: 90%;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .scam-report-box:hover, .scam-alert-box:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 24px rgba(0,196,255,0.3);
+        }
+
+        .scam-report-box h3, .scam-alert-box h3 {
+            color: var(--cyber-blue);
+            font-size: 22px;
+            margin-bottom: 10px;
+        }
+
+        .scam-report-box p, .scam-alert-box p {
+            color: var(--text-color);
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .scam-alert-box .form-control {
+            background: var(--primary-color);
+            border: 1px solid var(--secondary-color);
+            color: var(--text-color);
+            padding: 10px;
+            width: 100%;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+
+        /* Scam Tips Section */
+        .scam-tips {
+            margin-top: 60px;
+            text-align: center;
+        }
+
+        .scam-tips h3 {
+            color: var(--cyber-blue);
+            font-size: 24px;
+            margin-bottom: 24px;
+        }
+
+        .scam-tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+
+        .scam-tip {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 20px;
+            border: 1px solid var(--secondary-color);
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+
+        .scam-tip:hover {
+            box-shadow: 0 0 24px rgba(0,196,255,0.25);
+            transform: translateY(-4px);
+        }
+
+        .scam-tip i {
+            font-size: 30px;
+            color: var(--cyber-blue);
+            margin-bottom: 10px;
+        }
+
+        .scam-tip h4 {
+            color: var(--scamwatch-color);
+            margin: 6px 0;
+        }
+
+        .scam-tip p {
+            color: var(--text-color);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Indian Scams Section */
+        .indian-scams-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 4rem 0;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .dark-theme .indian-scams-section {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .scam-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .scam-type {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 25px;
+            border: 1px solid var(--secondary-color);
+            transition: 0.3s;
+        }
+
+        .scam-type:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 204, 0, 0.2);
+        }
+
+        .scam-type h3 {
+            color: var(--scamwatch-color);
+            font-size: 22px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .scam-type h3 i {
+            font-size: 24px;
+        }
+
+        .scam-type p {
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .scam-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--scamwatch-color);
+        }
+
+        /* Statistics Section */
+        .statistics-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 4rem 0;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .dark-theme .statistics-section {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .stat-item {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 25px;
+            border: 1px solid var(--secondary-color);
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 196, 255, 0.2);
+        }
+
+        .stat-number {
+            font-size: 42px;
+            font-weight: bold;
+            color: var(--cyber-blue);
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: var(--text-color);
+            font-size: 16px;
+        }
+
+        /* Resources Section */
+        .resources-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 4rem 0;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .dark-theme .resources-section {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .resource-card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 25px;
+            border: 1px solid var(--secondary-color);
+            transition: 0.3s;
+            text-align: center;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 196, 255, 0.2);
+        }
+
+        .resource-card i {
+            font-size: 40px;
+            color: var(--cyber-blue);
+            margin-bottom: 15px;
+        }
+
+        .resource-card h3 {
+            color: var(--scamwatch-color);
+            margin-bottom: 15px;
+        }
+
+        .resource-card p {
+            color: var(--text-color);
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        /* Content Sections */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-color);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            color: var(--text-color);
+            padding: 3rem 0 1rem;
+            transition: var(--transition);
+            margin-top: 3rem;
+            border-radius: 10px 10px 0 0;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--scamwatch-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-top .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .actions {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .links {
+                margin-bottom: 1rem;
+            }
+            
+            .main-nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .header-image-overlay h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header-image-overlay p {
+                font-size: 1rem;
+            }
+            
+            .scamwatch-content {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Top -->
+    <div class="header-top">
+        <div class="container">
+            <div class="logo-group">
+                <div class="logo">
+                    <svg width="50" height="50" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Shield Base -->
+                        <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="#ff3b30" stroke="#000" stroke-width="1.5"/>
+                        
+                        <!-- Inner Shield -->
+                        <path d="M30 8 C38 8 45 12 48 18 L30 52 L12 18 C15 12 22 8 30 8 Z" fill="#fff"/>
+                        
+                        <!-- Shield Icon -->
+                        <circle cx="30" cy="30" r="8" fill="#ff3b30" stroke="#fff" stroke-width="0.5"/>
+                        
+                        <!-- Security Elements -->
+                        <rect x="26" y="42" width="8" height="6" fill="#000" stroke="#fff" stroke-width="0.5" rx="1"/>
+                        <circle cx="30" cy="44" r="1" fill="#fff"/>
+                        <rect x="28" y="45" width="4" height="2" fill="#fff" rx="0.5"/>
+                        
+                        <!-- Binary Code Pattern -->
+                        <text x="18" y="18" font-size="2.5" fill="#000" font-family="monospace" opacity="0.7">101</text>
+                        <text x="40" y="18" font-size="2.5" fill="#000" font-family="monospace" opacity="0.7">010</text>
+                        <text x="15" y="48" font-size="2.5" fill="#000" font-family="monospace" opacity="0.7">110</text>
+                        
+                        <!-- Shield Border -->
+                        <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="none" stroke="#000" stroke-width="1.5"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="ministry">Your Digital Safety Partner</span>
+                    <span class="center-name">ScamWatch India</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <div class="links">
+                    <a href="#about">About Us</a>
+                    <a href="#" onclick="window.location.href='Index.html'">Home</a>
+                    <a href="#" onclick="window.location.href='Dashboard.html'">Dashboard</a>
+                </div>
+                <button class="btn">🔍 Search</button>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Image Section -->
+    <section class="header-image-section">
+        <div class="container">
+            <div class="header-image-container">
+                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                     alt="Cyber Security Header" class="header-image">
+                <div class="header-image-overlay">
+                    <h1>ScamWatch India</h1>
+                    <p>Protecting Indians from online scams and cyber frauds</p>
+                  
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ScamWatch Section -->
+    <section class="scamwatch-section">
+        <div class="container">
+            <h2 class="section-title">Stop. Think. Report.</h2>
+            
+            <div class="scamwatch-content">
+                <!-- Report Scam -->
+                <div class="scam-report-box">
+                    <h3>Report a Scam</h3>
+                    <p>If you've been targeted by a scam or have information about fraudulent activities, report it immediately.</p>
+                    <p>Your report helps us track scammers and protect others from becoming victims.</p>
+                    <div style="margin-top: 2rem;">
+                        <h4>Before you report</h4>
+                        <ul style="margin-left: 1.5rem; margin-top: 1rem; color: var(--text-color);">
+                            <li>If you or someone else is in immediate danger, call <b>112</b></li>
+                            <li>If you've been the victim of a cybercrime, you can make a police report</li>
+                            <li>Act fast if you've had your personal or financial information stolen</li>
+                            <li>Contact your bank or credit card provider immediately</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Scam Alerts -->
+                <div class="scam-alert-box">
+                    <h3>Get Scam Alerts</h3>
+                    <p>Stay informed about the latest scams targeting Indians. Get real-time alerts on new threats.</p>
+                    <div class="form-group">
+                        <input type="email" class="form-control" placeholder="Enter your email address">
+                    </div>
+                    <button class="btn">Subscribe to Alerts</button>
+
+                    <div style="margin-top: 2rem;">
+                        <h4>Popular scam types in India</h4>
+                        <ul style="margin-left: 1.5rem; margin-top: 1rem; color: var(--text-color);">
+                            <li>UPI Payment Scams</li>
+                            <li>KYC Update Scams</li>
+                            <li>Investment Scams</li>
+                            <li>Job Offer Scams</li>
+                            <li>SIM Swap Scams</li>
+                            <li>Online Shopping Scams</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scam Tips -->
+            <div class="scam-tips">
+                <h3>Essential Tips to Avoid Scams</h3>
+                <div class="scam-tips-grid">
+                    <div class="scam-tip">
+                        <i class="fas fa-lock"></i>
+                        <h4>Secure Your Accounts</h4>
+                        <p>Use strong, unique passwords and enable two-factor authentication</p>
+                    </div>
+                    <div class="scam-tip">
+                        <i class="fas fa-envelope"></i>
+                        <h4>Verify Communications</h4>
+                        <p>Check the sender's details before responding to emails or messages</p>
+                    </div>
+                    <div class="scam-tip">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <h4>Be Cautious with Payments</h4>
+                        <p>Never transfer money to unknown persons or unverified accounts</p>
+                    </div>
+                    <div class="scam-tip">
+                        <i class="fas fa-user-shield"></i>
+                        <h4>Protect Personal Info</h4>
+                        <p>Don't share sensitive information like passwords or banking details</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Indian Scams Section -->
+    <section class="indian-scams-section">
+        <div class="container">
+            <h2 class="section-title">Common Scams in India</h2>
+            <div class="scam-types">
+                <div class="scam-type">
+                    <h3><i class="fas fa-mobile-alt"></i> UPI Payment Scams</h3>
+                    <p>Scammers send fake UPI payment requests or create QR codes that steal money when scanned. They often pose as legitimate businesses or service providers.</p>
+                    <p><strong>Warning signs:</strong> Unsolicited payment requests, pressure to pay immediately, fake customer care numbers.</p>
+                    <div class="scam-stats">
+                        <span>Most common scam</span>
+                        <span>Youth targeted</span>
+                    </div>
+                </div>
+                
+                <div class="scam-type">
+                    <h3><i class="fas fa-id-card"></i> KYC Update Scams</h3>
+                    <p>Scammers call or message claiming your KYC needs updating, then trick you into sharing OTPs or installing remote access apps to steal banking information.</p>
+                    <p><strong>Warning signs:</strong> Calls from unknown numbers, threats of account suspension, requests for OTP.</p>
+                    <div class="scam-stats">
+                        <span>Widespread</span>
+                        <span>All age groups</span>
+                    </div>
+                </div>
+                
+                <div class="scam-type">
+                    <h3><i class="fas fa-chart-line"></i> Investment Scams</h3>
+                    <p>Fake investment schemes promising high returns through stock trading, cryptocurrency, or real estate. Often use fake celebrity endorsements.</p>
+                    <p><strong>Warning signs:</strong> Guaranteed high returns, pressure to invest quickly, fake testimonials.</p>
+                    <div class="scam-stats">
+                        <span>High financial loss</span>
+                        <span>Middle-aged targeted</span>
+                    </div>
+                </div>
+                
+                <div class="scam-type">
+                    <h3><i class="fas fa-briefcase"></i> Job Offer Scams</h3>
+                    <p>Fake job offers from reputed companies asking for advance fees for processing, training, or documentation. Often target students and job seekers.</p>
+                    <p><strong>Warning signs:</strong> Unsolicited job offers, requests for advance payment, vague job descriptions.</p>
+                    <div class="scam-stats">
+                        <span>Students targeted</span>
+                        <span>Urban areas</span>
+                    </div>
+                </div>
+                
+                <div class="scam-type">
+                    <h3><i class="fas fa-sim-card"></i> SIM Swap Scams</h3>
+                    <p>Scammers duplicate your SIM card to bypass two-factor authentication and gain access to your bank accounts and digital wallets.</p>
+                    <p><strong>Warning signs:</strong> Sudden loss of network, unauthorized bank transactions, SIM registration issues.</p>
+                    <div class="scam-stats">
+                        <span>Sophisticated</span>
+                        <span>High net worth targets</span>
+                    </div>
+                </div>
+                
+                <div class="scam-type">
+                    <h3><i class="fas fa-truck"></i> Courier Scams</h3>
+                    <p>Scammers posing as courier company officials claim illegal items were found in your package and demand money to avoid legal action.</p>
+                    <p><strong>Warning signs:</strong> Calls about unknown packages, threats of police action, demands for immediate payment.</p>
+                    <div class="scam-stats">
+                        <span>Psychological pressure</span>
+                        <span>Elderly targeted</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="statistics-section">
+        <div class="container">
+            <h2 class="section-title">Scam Statistics in India</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number">₹3,100Cr</div>
+                    <div class="stat-label">Total reported losses in 2023</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">15.6L</div>
+                    <div class="stat-label">Cyber crime complaints in 2023</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">47%</div>
+                    <div class="stat-label">Online fraud cases increase</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">₹12,000</div>
+                    <div class="stat-label">Average loss per UPI scam</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">65%</div>
+                    <div class="stat-label">Scams via mobile phones</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">18-45</div>
+                    <div class="stat-label">Most affected age group</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources Section -->
+    <section class="resources-section">
+        <div class="container">
+            <h2 class="section-title">Helpful Resources</h2>
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <i class="fas fa-book"></i>
+                    <h3>Scam Prevention Guide</h3>
+                    <p>Download our comprehensive guide to protecting yourself from scams in India.</p>
+                    <a href="#" class="btn">Download</a>
+                </div>
+                
+                <div class="resource-card">
+                    <i class="fas fa-phone-alt"></i>
+                    <h3>Cyber Crime Helpline</h3>
+                    <p>National Cyber Crime Reporting Portal - Report cyber crimes and get assistance.</p>
+                    <a href="https://cybercrime.gov.in" class="btn">Visit Website</a>
+                </div>
+                
+                <div class="resource-card">
+                    <i class="fas fa-gavel"></i>
+                    <h3>RBI Guidelines</h3>
+                    <p>Reserve Bank of India - Guidelines for safe digital transactions and fraud prevention.</p>
+                    <a href="https://www.rbi.org.in" class="btn">Visit Website</a>
+                </div>
+                
+                <div class="resource-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Cert-In</h3>
+                    <p>Indian Computer Emergency Response Team - National agency for cyber security.</p>
+                    <a href="https://www.cert-in.org.in" class="btn">Visit Website</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#report">Report Scam</a></li>
+                        <li><a href="#alerts">Scam Alerts</a></li>
+                        <li><a href="#statistics">Statistics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Scam Prevention Tips</a></li>
+                        <li><a href="#">Latest Alerts</a></li>
+                        <li><a href="#">Educational Materials</a></li>
+                        <li><a href="#">Legal Framework</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Emergency Contacts</h3>
+                    <ul>
+                        <li>Cyber Crime Helpline: 1930</li>
+                        <li>Police: 112</li>
+                        <li>Women Helpline: 181</li>
+                        <li>Email: support@scamwatch.gov.in</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 ScamWatch India. All rights reserved.</p>
+                <p>An initiative to protect Indian citizens from online scams and cyber frauds.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or default to light
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply the saved theme on page load
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Report scam button functionality
+        document.querySelectorAll('.btn-report').forEach(button => {
+            button.addEventListener('click', function() {
+                alert('Redirecting to scam reporting form...\n\nIn a real implementation, this would open a complaint form.');
+                // In real implementation: window.open('complaint-form.html', '_blank');
+            });
+        });
+
+        // Email subscription functionality
+        document.querySelector('.scam-alert-box .btn').addEventListener('click', function() {
+            const email = document.querySelector('.scam-alert-box .form-control').value;
+            if (email && email.includes('@')) {
+                alert('Thank you for subscribing to ScamWatch alerts!\n\nYou will receive updates on the latest scams.');
+                document.querySelector('.scam-alert-box .form-control').value = '';
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        });
+    </script>
+</body>
+</html>

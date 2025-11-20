@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iReport - Person Suspect Analysis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #000000;
+            --secondary-color: #333333;
+            --accent-color: #ffffff;
+            --light-color: #f5f5f5;
+            --dark-color: #121212;
+            --text-color: #ffffff;
+            --bg-color: #000000;
+            --card-bg: #1a1a1a;
+            --header-bg: #000000;
+            --footer-bg: #000000;
+            --shadow: 0 4px 6px rgba(255,255,255,0.1);
+            --transition: all 0.3s ease;
+            --safe-color: #4CAF50;
+            --warning-color: #FF9800;
+            --danger-color: #F44336;
+            --info-color: #2196F3;
+            --captcha-bg: #2a2a2a;
+        }
+
+        .light-theme {
+            --primary-color: #ffffff;
+            --secondary-color: #f0f0f0;
+            --accent-color: #000000;
+            --light-color: #ffffff;
+            --dark-color: #f5f5f5;
+            --text-color: #000000;
+            --bg-color: #ffffff;
+            --card-bg: #f9f9f9;
+            --header-bg: #ffffff;
+            --footer-bg: #ffffff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --captcha-bg: #e0e0e0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+            min-height: 100vh;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--header-bg);
+            color: var(--text-color);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 60px;
+            margin-right: 15px;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .logo-text .ministry {
+            font-size: 0.9rem;
+            font-weight: normal;
+            display: block;
+        }
+
+        .logo-text .center-name {
+            font-size: 1.4rem;
+            display: block;
+            margin-top: 5px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+            padding: 0.5rem 0;
+        }
+
+        nav ul li a:hover {
+            opacity: 0.8;
+            border-bottom: 2px solid var(--text-color);
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: var(--transition);
+            padding: 8px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+        }
+
+        /* Main Content */
+        .main-content {
+            padding: 3rem 0;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+        }
+
+        .page-title h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .page-title p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Analysis Tool */
+        .analysis-tool {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            border: 1px solid var(--secondary-color);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h3 {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--text-color);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        .light-theme .form-control:focus {
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        /* Enhanced CAPTCHA Section */
+        .captcha-section {
+            background: var(--captcha-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .captcha-code {
+            font-family: 'Courier New', monospace;
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 5px;
+            padding: 0.5rem 1rem;
+            background: var(--card-bg);
+            border-radius: 4px;
+            border: 1px solid var(--secondary-color);
+            user-select: none;
+            color: #ffffff;
+            background: linear-gradient(45deg, #1a1a1a, #333333);
+        }
+
+        .captcha-refresh {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .captcha-refresh:hover {
+            transform: rotate(90deg);
+        }
+
+        .captcha-input {
+            width: 200px;
+            margin: 0 auto;
+        }
+
+        /* Human Verification Table */
+        .human-verification {
+            margin: 1.5rem 0;
+        }
+
+        .human-verification table {
+            margin: 0 auto;
+            border-collapse: collapse;
+        }
+
+        .human-verification td {
+            border: 1px solid var(--secondary-color);
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background 0.2s;
+            text-align: center;
+        }
+
+        .human-verification td:hover {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        .human-verification td.selected {
+            background-color: var(--info-color);
+            color: white;
+        }
+
+        /* Submit Button */
+        .submit-section {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 1.1rem;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            background: #666;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-primary {
+            background: var(--info-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0b7dda;
+        }
+
+        /* Analysis Results */
+        .analysis-results {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .risk-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .risk-indicator.safe {
+            background: rgba(76, 175, 80, 0.1);
+            border: 2px solid var(--safe-color);
+        }
+
+        .risk-indicator.warning {
+            background: rgba(255, 152, 0, 0.1);
+            border: 2px solid var(--warning-color);
+        }
+
+        .risk-indicator.danger {
+            background: rgba(244, 67, 54, 0.1);
+            border: 2px solid var(--danger-color);
+        }
+
+        .risk-icon {
+            font-size: 3rem;
+            margin-right: 1rem;
+        }
+
+        .risk-text h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .result-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+        }
+
+        .result-card h3 {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px dashed var(--secondary-color);
+        }
+
+        .info-label {
+            font-weight: 500;
+        }
+
+        .info-value {
+            text-align: right;
+        }
+
+        .threat-list {
+            list-style: none;
+        }
+
+        .threat-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .threat-item.safe {
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .threat-item.warning {
+            background: rgba(255, 152, 0, 0.05);
+        }
+
+        .threat-item.danger {
+            background: rgba(244, 67, 54, 0.05);
+        }
+
+        .threat-icon {
+            margin-right: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        .threat-item.safe .threat-icon {
+            color: var(--safe-color);
+        }
+
+        .threat-item.warning .threat-icon {
+            color: var(--warning-color);
+        }
+
+        .threat-item.danger .threat-icon {
+            color: var(--danger-color);
+        }
+
+        .recommendations {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+            margin-top: 2rem;
+        }
+
+        .recommendations h3 {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .recommendation-list {
+            list-style: none;
+        }
+
+        .recommendation-list li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .recommendation-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-color);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            color: var(--text-color);
+            padding: 3rem 0 1rem;
+            transition: var(--transition);
+            margin-top: 3rem;
+            border-radius: 10px 10px 0 0;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--info-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+            
+            nav ul li {
+                margin: 0.5rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .captcha-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <svg width="50" height="50" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Shield Base with Indian Colors -->
+                            <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="#FF9933" stroke="#000080" stroke-width="1.5"/>
+                            
+                            <!-- White Middle Section -->
+                            <path d="M30 8 C38 8 45 12 48 18 L30 52 L12 18 C15 12 22 8 30 8 Z" fill="#FFFFFF"/>
+                            
+                            <!-- Ashoka Chakra -->
+                            <circle cx="30" cy="30" r="8" fill="#000080" stroke="#FFFFFF" stroke-width="0.5"/>
+                            
+                            <!-- 24 Spokes (Simplified) -->
+                            <g stroke="#FFFFFF" stroke-width="0.8">
+                                <!-- Main Cross -->
+                                <line x1="30" y1="22" x2="30" y2="38"/>
+                                <line x1="22" y1="30" x2="38" y2="30"/>
+                                
+                                <!-- Diagonal Spokes -->
+                                <line x1="25" y1="25" x2="35" y2="35"/>
+                                <line x1="35" y1="25" x2="25" y2="35"/>
+                                
+                                <!-- Additional Spokes -->
+                                <line x1="27" y1="23" x2="33" y2="37"/>
+                                <line x1="33" y1="23" x2="27" y2="37"/>
+                                <line x1="23" y1="27" x2="37" y2="33"/>
+                                <line x1="37" y1="27" x2="23" y2="33"/>
+                            </g>
+                            
+                            <!-- Cyber Security Elements -->
+                            <!-- Digital Lock -->
+                            <rect x="26" y="42" width="8" height="6" fill="#000080" stroke="#FFFFFF" stroke-width="0.5" rx="1"/>
+                            <circle cx="30" cy="44" r="1" fill="#FFFFFF"/>
+                            <rect x="28" y="45" width="4" height="2" fill="#FFFFFF" rx="0.5"/>
+                            
+                            <!-- Binary Code Pattern -->
+                            <text x="18" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">101</text>
+                            <text x="40" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">010</text>
+                            <text x="15" y="48" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">110</text>
+                            
+                            <!-- Shield Border -->
+                            <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="none" stroke="#000080" stroke-width="1.5"/>
+                            
+                            <!-- Cyber Circuit Lines -->
+                            <path d="M15 12 L20 12 L20 15 L25 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
+                            <path d="M45 12 L40 12 L40 15 L35 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
+                        </svg>
+                    </div>
+                    <div class="logo-text">
+                        <span class="ministry">MINISTRY OF HOME AFFAIRS</span>
+                        <span class="center-name">iReport - Person Suspect Analysis</span>
+                    </div>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="malware-check.html">Malware Check</a></li>
+                        <li><a href="phishing-check.html">Phishing Check</a></li>
+                        <li><a href="#" class="active">Suspect Analysis</a></li>
+                    </ul>
+                </nav>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-sun"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <section class="main-content">
+        <div class="container">
+            <div class="page-title">
+                <h1>Person Suspect Analysis</h1>
+                <p>Verify if a person has suspicious activities or connections based on available information</p>
+            </div>
+
+            <div class="analysis-tool">
+                <form id="suspect-form">
+                    <div class="form-section">
+                        <h3>Personal Information</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="full-name">Full Name</label>
+                                <input type="text" id="full-name" class="form-control" placeholder="Enter full name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="age">Age</label>
+                                <input type="number" id="age" class="form-control" placeholder="Enter age" min="18" max="100" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Phone Number</label>
+                                <input type="tel" id="phone" class="form-control" placeholder="Enter phone number" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" class="form-control" placeholder="Enter email address">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <input type="text" id="address" class="form-control" placeholder="Enter full address" required>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Identification Details</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="id-type">ID Type</label>
+                                <select id="id-type" class="form-control" required>
+                                    <option value="">Select ID Type</option>
+                                    <option value="aadhaar">Aadhaar Card</option>
+                                    <option value="pan">PAN Card</option>
+                                    <option value="voter">Voter ID</option>
+                                    <option value="driving">Driving License</option>
+                                    <option value="passport">Passport</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="id-number">ID Number</label>
+                                <input type="text" id="id-number" class="form-control" placeholder="Enter ID number" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Suspicion Details</h3>
+                        <div class="form-group">
+                            <label for="suspicion-reason">Reason for Suspicion</label>
+                            <select id="suspicion-reason" class="form-control" required>
+                                <option value="">Select reason</option>
+                                <option value="financial">Financial Fraud</option>
+                                <option value="cyber">Cyber Crime</option>
+                                <option value="harassment">Harassment</option>
+                                <option value="identity">Identity Theft</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="suspicion-details">Details of Suspicion</label>
+                            <textarea id="suspicion-details" class="form-control" rows="4" placeholder="Provide details about why you suspect this person" required></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced CAPTCHA Section -->
+                    <div class="captcha-section">
+                        <h3>Human Verification</h3>
+                        <p>Please verify that you are human by entering the code below</p>
+                        <div class="captcha-container">
+                            <div class="captcha-code" id="captcha-code">A1B2C3</div>
+                            <button type="button" class="captcha-refresh" id="captcha-refresh">
+                                <i class="fas fa-sync-alt"></i>
+                            </button>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="captcha-input" class="form-control captcha-input" placeholder="Enter CAPTCHA code" required>
+                        </div>
+                        
+                        <div class="human-verification">
+                            <p>Select the correct option:</p>
+                            <table>
+                                <tr>
+                                    <td onclick="selectOption(this)">I'm human</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="submit-section">
+                        <button type="submit" class="btn btn-primary" id="submit-btn" disabled>Analyze Suspect</button>
+                    </div>
+                </form>
+
+                <div class="analysis-results" id="analysis-results">
+                    <div class="risk-indicator" id="risk-indicator">
+                        <div class="risk-icon" id="risk-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="risk-text">
+                            <h3 id="risk-title">Analysis Complete</h3>
+                            <p id="risk-description">Detailed analysis of the person is shown below</p>
+                        </div>
+                    </div>
+
+                    <div class="results-grid">
+                        <div class="result-card">
+                            <h3>Personal Details</h3>
+                            <div class="info-item">
+                                <span class="info-label">Name:</span>
+                                <span class="info-value" id="result-name">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Age:</span>
+                                <span class="info-value" id="result-age">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Phone:</span>
+                                <span class="info-value" id="result-phone">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Email:</span>
+                                <span class="info-value" id="result-email">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Address:</span>
+                                <span class="info-value" id="result-address">-</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card">
+                            <h3>Identification Details</h3>
+                            <div class="info-item">
+                                <span class="info-label">ID Type:</span>
+                                <span class="info-value" id="result-id-type">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">ID Number:</span>
+                                <span class="info-value" id="result-id-number">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">ID Verification:</span>
+                                <span class="info-value" id="result-id-verification">-</span>
+                            </div>
+                        </div>
+
+                        <div class="result-card">
+                            <h3>Threat Assessment</h3>
+                            <ul class="threat-list">
+                                <li class="threat-item" id="threat-financial">
+                                    <span class="threat-icon"><i class="fas fa-money-bill-wave"></i></span>
+                                    <span class="threat-text">Financial Fraud Risk</span>
+                                </li>
+                                <li class="threat-item" id="threat-cyber">
+                                    <span class="threat-icon"><i class="fas fa-laptop-code"></i></span>
+                                    <span class="threat-text">Cyber Crime Involvement</span>
+                                </li>
+                                <li class="threat-item" id="threat-identity">
+                                    <span class="threat-icon"><i class="fas fa-id-card"></i></span>
+                                    <span class="threat-text">Identity Theft Risk</span>
+                                </li>
+                                <li class="threat-item" id="threat-harassment">
+                                    <span class="threat-icon"><i class="fas fa-exclamation-triangle"></i></span>
+                                    <span class="threat-text">Harassment Reports</span>
+                                </li>
+                                <li class="threat-item" id="threat-overall">
+                                    <span class="threat-icon"><i class="fas fa-user-secret"></i></span>
+                                    <span class="threat-text">Overall Suspicion Level</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="result-card">
+                            <h3>Analysis Details</h3>
+                            <div class="info-item">
+                                <span class="info-label">Suspicion Reason:</span>
+                                <span class="info-value" id="result-reason">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Database Matches:</span>
+                                <span class="info-value" id="result-matches">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Previous Reports:</span>
+                                <span class="info-value" id="result-reports">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Analysis Date:</span>
+                                <span class="info-value" id="result-date">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Case ID:</span>
+                                <span class="info-value" id="result-case-id">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recommendations">
+                        <h3>Recommendations</h3>
+                        <ul class="recommendation-list" id="recommendations">
+                            <li>Based on the analysis, recommendations will appear here</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="malware-check.html">Malware Check</a></li>
+                        <li><a href="phishing-check.html">Phishing Check</a></li>
+                        <li><a href="#">Suspect Analysis</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Cyber Security Tips</a></li>
+                        <li><a href="#">Latest Alerts</a></li>
+                        <li><a href="#">Educational Materials</a></li>
+                        <li><a href="#">Legal Framework</a></li>
+                        <li><a href="#">Statistics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li>Helpline: 1930</li>
+                        <li>Email: support@cybercrime.gov.in</li>
+                        <li>Address: Indian Cyber Crime Coordination Centre, New Delhi</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 iReport - Indian Cyber Crime Coordination Centre. All rights reserved.</p>
+                <p>An initiative of the Ministry of Home Affairs, Government of India.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or default to dark
+        const currentTheme = localStorage.getItem('theme') || 'dark';
+        
+        // Apply the saved theme on page load
+        if (currentTheme === 'light') {
+            document.body.classList.add('light-theme');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            
+            if (document.body.classList.contains('light-theme')) {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            } else {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            }
+        });
+
+        // Enhanced CAPTCHA Functionality
+        const captchaCode = document.getElementById('captcha-code');
+        const captchaRefresh = document.getElementById('captcha-refresh');
+        const captchaInput = document.getElementById('captcha-input');
+        const submitBtn = document.getElementById('submit-btn');
+        let selectedOption = null;
+        
+        function generateCaptcha() {
+            const letters = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+            let captcha = "";
+            for (let i = 0; i < 6; i++) {
+                captcha += letters.charAt(Math.floor(Math.random() * letters.length));
+            }
+            captchaCode.textContent = captcha;
+        }
+        
+        function selectOption(cell) {
+            document.querySelectorAll('.human-verification td').forEach(td => td.classList.remove('selected'));
+            cell.classList.add('selected');
+            selectedOption = cell.textContent;
+            updateSubmitButtonState();
+        }
+        
+        function updateSubmitButtonState() {
+            const name = document.getElementById('full-name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const address = document.getElementById('address').value.trim();
+            const idType = document.getElementById('id-type').value;
+            const idNumber = document.getElementById('id-number').value.trim();
+            const suspicionReason = document.getElementById('suspicion-reason').value;
+            const suspicionDetails = document.getElementById('suspicion-details').value.trim();
+            
+            if (name && phone && address && idType && idNumber && suspicionReason && suspicionDetails && selectedOption) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+        
+        // Add event listeners to form fields
+        document.querySelectorAll('#suspect-form input, #suspect-form select, #suspect-form textarea').forEach(element => {
+            element.addEventListener('input', updateSubmitButtonState);
+        });
+        
+        captchaRefresh.addEventListener('click', generateCaptcha);
+        
+        // Generate initial CAPTCHA
+        generateCaptcha();
+        
+        // Form Submission
+        document.getElementById('suspect-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate CAPTCHA
+            if (captchaInput.value.toUpperCase() !== captchaCode.textContent) {
+                alert('CAPTCHA verification failed. Please try again.');
+                generateCaptcha();
+                captchaInput.value = '';
+                return;
+            }
+            
+            // Validate human verification
+            if (selectedOption !== "I'm human") {
+                alert('You must select "I\'m human" to proceed.');
+                return;
+            }
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Analyzing...';
+            
+            // Simulate analysis process
+            setTimeout(() => {
+                // Get form data
+                const formData = {
+                    name: document.getElementById('full-name').value,
+                    age: document.getElementById('age').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                    address: document.getElementById('address').value,
+                    idType: document.getElementById('id-type').value,
+                    idNumber: document.getElementById('id-number').value,
+                    suspicionReason: document.getElementById('suspicion-reason').value,
+                    suspicionDetails: document.getElementById('suspicion-details').value
+                };
+                
+                // Generate analysis results
+                const analysisResults = generateAnalysisResults(formData);
+                
+                // Update UI with results
+                updateAnalysisResults(analysisResults, formData);
+                
+                // Show results section
+                document.getElementById('analysis-results').style.display = 'block';
+                
+                // Reset button
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Analyze Suspect';
+                
+                // Scroll to results
+                document.getElementById('analysis-results').scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        });
+        
+        function generateAnalysisResults(formData) {
+            // Generate mock analysis based on form data
+            const riskScore = calculateRiskScore(formData);
+            const riskLevel = riskScore < 3 ? 'safe' : (riskScore < 7 ? 'warning' : 'danger');
+            
+            return {
+                riskLevel: riskLevel,
+                riskScore: riskScore,
+                idVerification: Math.random() > 0.3 ? 'Verified' : 'Not Verified',
+                databaseMatches: Math.floor(Math.random() * 5),
+                previousReports: Math.floor(Math.random() * 3),
+                threats: {
+                    financial: Math.random() > 0.7 ? 'danger' : (Math.random() > 0.4 ? 'warning' : 'safe'),
+                    cyber: Math.random() > 0.8 ? 'danger' : (Math.random() > 0.5 ? 'warning' : 'safe'),
+                    identity: Math.random() > 0.6 ? 'danger' : (Math.random() > 0.3 ? 'warning' : 'safe'),
+                    harassment: Math.random() > 0.9 ? 'danger' : (Math.random() > 0.6 ? 'warning' : 'safe'),
+                    overall: riskLevel
+                },
+                caseId: 'SC' + Date.now().toString().slice(-6)
+            };
+        }
+        
+        function calculateRiskScore(formData) {
+            let score = 0;
+            
+            // Age factor (younger people might have higher risk in some scenarios)
+            if (formData.age < 25) score += 1;
+            
+            // Suspicion reason factor
+            if (formData.suspicionReason === 'financial') score += 2;
+            if (formData.suspicionReason === 'cyber') score += 3;
+            if (formData.suspicionReason === 'identity') score += 2;
+            
+            // Random factor
+            score += Math.floor(Math.random() * 4);
+            
+            return Math.min(score, 10);
+        }
+        
+        function updateAnalysisResults(results, formData) {
+            // Update risk indicator
+            const riskIndicator = document.getElementById('risk-indicator');
+            const riskIcon = document.getElementById('risk-icon');
+            const riskTitle = document.getElementById('risk-title');
+            const riskDescription = document.getElementById('risk-description');
+            
+            riskIndicator.className = `risk-indicator ${results.riskLevel}`;
+            
+            if (results.riskLevel === 'safe') {
+                riskIcon.innerHTML = '<i class="fas fa-shield-alt"></i>';
+                riskTitle.textContent = 'Low Risk - Person Appears Safe';
+                riskDescription.textContent = 'No significant suspicious activities detected';
+            } else if (results.riskLevel === 'warning') {
+                riskIcon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                riskTitle.textContent = 'Medium Risk - Exercise Caution';
+                riskDescription.textContent = 'Some potential concerns detected';
+            } else {
+                riskIcon.innerHTML = '<i class="fas fa-skull-crossbones"></i>';
+                riskTitle.textContent = 'High Risk - Suspicious Activity Detected';
+                riskDescription.textContent = 'Multiple concerning factors identified';
+            }
+            
+            // Update personal details
+            document.getElementById('result-name').textContent = formData.name;
+            document.getElementById('result-age').textContent = formData.age;
+            document.getElementById('result-phone').textContent = formData.phone;
+            document.getElementById('result-email').textContent = formData.email || 'Not provided';
+            document.getElementById('result-address').textContent = formData.address;
+            
+            // Update identification details
+            document.getElementById('result-id-type').textContent = formatIdType(formData.idType);
+            document.getElementById('result-id-number').textContent = formData.idNumber;
+            document.getElementById('result-id-verification').textContent = results.idVerification;
+            
+            // Update threat assessment
+            updateThreatItem('threat-financial', results.threats.financial, 'Financial Fraud Risk');
+            updateThreatItem('threat-cyber', results.threats.cyber, 'Cyber Crime Involvement');
+            updateThreatItem('threat-identity', results.threats.identity, 'Identity Theft Risk');
+            updateThreatItem('threat-harassment', results.threats.harassment, 'Harassment Reports');
+            updateThreatItem('threat-overall', results.threats.overall, 'Overall Suspicion Level');
+            
+            // Update analysis details
+            document.getElementById('result-reason').textContent = formatSuspicionReason(formData.suspicionReason);
+            document.getElementById('result-matches').textContent = results.databaseMatches;
+            document.getElementById('result-reports').textContent = results.previousReports;
+            document.getElementById('result-date').textContent = new Date().toLocaleDateString();
+            document.getElementById('result-case-id').textContent = results.caseId;
+            
+            // Update recommendations
+            const recommendationsList = document.getElementById('recommendations');
+            recommendationsList.innerHTML = '';
+            
+            const recommendations = getRecommendations(results.riskLevel, results.databaseMatches, results.previousReports);
+            recommendations.forEach(rec => {
+                const li = document.createElement('li');
+                li.textContent = rec;
+                recommendationsList.appendChild(li);
+            });
+        }
+        
+        function updateThreatItem(elementId, status, text) {
+            const element = document.getElementById(elementId);
+            element.className = `threat-item ${status}`;
+            element.querySelector('.threat-text').textContent = text;
+        }
+        
+        function formatIdType(idType) {
+            const idTypes = {
+                'aadhaar': 'Aadhaar Card',
+                'pan': 'PAN Card',
+                'voter': 'Voter ID',
+                'driving': 'Driving License',
+                'passport': 'Passport'
+            };
+            return idTypes[idType] || idType;
+        }
+        
+        function formatSuspicionReason(reason) {
+            const reasons = {
+                'financial': 'Financial Fraud',
+                'cyber': 'Cyber Crime',
+                'harassment': 'Harassment',
+                'identity': 'Identity Theft',
+                'other': 'Other'
+            };
+            return reasons[reason] || reason;
+        }
+        
+        function getRecommendations(riskLevel, matches, reports) {
+            const baseRecommendations = [
+                'Monitor the situation and gather more information if needed',
+                'Verify the provided identification documents through official channels',
+                'Maintain records of all interactions and findings'
+            ];
+            
+            if (riskLevel === 'warning') {
+                return [
+                    ...baseRecommendations,
+                    'Exercise caution when interacting with this person',
+                    'Consider reporting to local authorities if suspicious activities continue',
+                    'Avoid sharing sensitive personal or financial information'
+                ];
+            } else if (riskLevel === 'danger') {
+                return [
+                    ...baseRecommendations,
+                    'Immediately report to cyber crime authorities',
+                    'Do not engage further with this person',
+                    'Secure your personal and financial information',
+                    'Consider filing a formal complaint with local police'
+                ];
+            }
+            
+            return [
+                ...baseRecommendations,
+                'No immediate action required based on current information',
+                'Continue normal interactions with standard precautions'
+            ];
+        }
+    </script>
+</body>
+</html>

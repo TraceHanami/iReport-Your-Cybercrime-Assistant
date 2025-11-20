@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cyber Crime Complaint Form - iReport</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    /* All CSS remains exactly the same */
+    :root {
+      --primary-color: #ffffff;
+      --secondary-color: #f0f0f0;
+      --accent-color: #000000;
+      --light-color: #ffffff;
+      --dark-color: #f5f5f5;
+      --text-color: #000000;
+      --bg-color: #ffffff;
+      --card-bg: #f9f9f9;
+      --header-bg: #ffffff;
+      --footer-bg: #ffffff;
+      --shadow: 0 4px 6px rgba(0,0,0,0.1);
+      --transition: all 0.3s ease;
+      --cyber-blue: #1a73e8;
+      --cyber-green: #00c853;
+      --scamwatch-color: #ff3b30;
+      --women-crime-color: #e91e63;
+      --financial-fraud-color: #ff9800;
+      --other-crime-color: #2196f3;
+    }
+
+    .dark-theme {
+      --primary-color: #121212;
+      --secondary-color: #1e1e1e;
+      --accent-color: #ffffff;
+      --light-color: #f5f5f5;
+      --dark-color: #121212;
+      --text-color: #ffffff;
+      --bg-color: #000000;
+      --card-bg: #1a1a1a;
+      --header-bg: #000000;
+      --footer-bg: #000000;
+      --shadow: 0 4px 6px rgba(255,255,255,0.1);
+      --cyber-blue: #1a73e8;
+      --cyber-green: #00ffaa;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+      background: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      transition: var(--transition);
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--secondary-color);
+    }
+    
+    .logo-group {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo {
+      height: 50px;
+      margin-right: 15px;
+    }
+    
+    .logo-text {
+      font-size: 1.2rem;
+      font-weight: bold;
+      line-height: 1.2;
+    }
+    
+    .logo-text .ministry {
+      font-size: 0.9rem;
+      font-weight: normal;
+      display: block;
+    }
+    
+    .logo-text .center-name {
+      font-size: 1.4rem;
+      display: block;
+      margin-top: 5px;
+    }
+    
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: 50%;
+      background-color: var(--secondary-color);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+    }
+    
+    .theme-toggle:hover {
+      background-color: var(--accent-color);
+      color: var(--bg-color);
+      transform: rotate(15deg);
+    }
+    
+    .main-container {
+      display: flex;
+      gap: 30px;
+      max-width: 1400px;
+      margin: 0 auto;
+      align-items: flex-start;
+    }
+    
+    .instructions-container {
+      flex: 1;
+      background: var(--card-bg);
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      padding: 25px;
+      border: 1px solid var(--secondary-color);
+      height: fit-content;
+      position: sticky;
+      top: 20px;
+      transition: var(--transition);
+    }
+    
+    .instructions-container h3 {
+      color: var(--cyber-blue);
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      border-bottom: 2px solid var(--cyber-blue);
+      padding-bottom: 10px;
+      transition: var(--transition);
+    }
+    
+    .instructions-section {
+      margin-bottom: 25px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--secondary-color);
+    }
+    
+    .instructions-section:last-child {
+      border-bottom: none;
+    }
+    
+    .instructions-section h4 {
+      color: var(--cyber-blue);
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+    }
+    
+    .instructions-section p {
+      margin-bottom: 10px;
+    }
+    
+    .instructions-section ul, .instructions-section ol {
+      padding-left: 20px;
+      margin-bottom: 15px;
+    }
+    
+    .instructions-section li {
+      margin-bottom: 8px;
+    }
+    
+    .instructions-section .highlight {
+      background-color: rgba(255, 59, 48, 0.1);
+      padding: 10px;
+      border-radius: 8px;
+      border-left: 4px solid var(--scamwatch-color);
+      margin: 10px 0;
+    }
+    
+    .instructions-section .helpline {
+      background-color: rgba(33, 150, 243, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid var(--cyber-blue);
+      margin: 15px 0;
+      text-align: center;
+    }
+    
+    .instructions-section .helpline strong {
+      display: block;
+      font-size: 1.3rem;
+      margin-bottom: 5px;
+    }
+    
+    .form-container {
+      flex: 1.5;
+    }
+    
+    .container {
+      padding: 30px;
+      background: var(--card-bg);
+      border-radius: 15px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--secondary-color);
+      transition: var(--transition);
+    }
+    
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, var(--cyber-blue), var(--cyber-green));
+    }
+    
+    h2 { 
+      text-align: center; 
+      color: var(--text-color); 
+      margin-bottom: 10px;
+      font-size: 28px;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: var(--text-color);
+      margin-bottom: 20px;
+      font-size: 16px;
+      opacity: 0.8;
+    }
+    
+    .notice { 
+      text-align:center; 
+      font-size:14px;
+      color: var(--scamwatch-color);
+      margin-bottom:20px;
+      padding: 10px;
+      background: rgba(255, 0, 0, 0.1);
+      border-radius: 8px;
+      border-left: 4px solid var(--scamwatch-color);
+    }
+    
+    .progress-container {
+      width: 100%;
+      background: var(--secondary-color);
+      border-radius: 10px;
+      margin-bottom: 25px;
+      height: 10px;
+      position: relative;
+    }
+    
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(to right, var(--cyber-blue), var(--cyber-green));
+      border-radius: 10px;
+      width: 33.33%;
+      transition: width 0.5s ease;
+    }
+    
+    .progress-steps {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 5px;
+      font-size: 12px;
+      color: var(--text-color);
+    }
+    
+    .tabs { 
+      display: flex; 
+      justify-content: space-around; 
+      border-bottom: 2px solid var(--secondary-color); 
+      margin-bottom: 20px; 
+      background: var(--secondary-color);
+      border-radius: 8px 8px 0 0;
+    }
+    
+    .tab { 
+      padding: 12px 20px; 
+      cursor: pointer; 
+      color: var(--text-color);
+      flex: 1;
+      text-align: center;
+      transition: var(--transition);
+      border-bottom: 3px solid transparent;
+    }
+    
+    .tab.active { 
+      border-bottom: 3px solid var(--cyber-blue); 
+      font-weight: bold; 
+      color: var(--cyber-blue);
+      background: var(--primary-color);
+    }
+    
+    .tab:hover {
+      background: var(--primary-color);
+    }
+    
+    .form-step { 
+      display: none; 
+      animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .form-step.active { 
+      display: block; 
+    }
+    
+    .form-section {
+      background: var(--primary-color);
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border-left: 4px solid var(--cyber-blue);
+      transition: var(--transition);
+    }
+    
+    .form-section h4 {
+      margin-bottom: 15px;
+      color: var(--text-color);
+      display: flex;
+      align-items: center;
+    }
+    
+    .form-section h4 i {
+      margin-right: 10px;
+      color: var(--cyber-blue);
+    }
+    
+    label { 
+      font-weight: 600; 
+      display: block; 
+      margin: 12px 0 6px; 
+      color: var(--text-color);
+    }
+    
+    .required::after {
+      content: " *";
+      color: var(--scamwatch-color);
+    }
+    
+    input, select, textarea, button { 
+      width: 100%; 
+      padding: 12px; 
+      margin-bottom: 15px; 
+      border-radius: 8px; 
+      border: 1px solid var(--secondary-color); 
+      font-size: 15px; 
+      transition: var(--transition);
+      background: var(--primary-color);
+      color: var(--text-color);
+    }
+    
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--cyber-blue);
+      box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.2);
+    }
+    
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+    
+    .form-row > div {
+      flex: 1;
+    }
+    
+    button { 
+      background: var(--cyber-blue); 
+      color: white; 
+      border: none; 
+      cursor: pointer; 
+      font-weight: 600;
+      padding: 14px;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    button:hover { 
+      background: #0d47a1; 
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .btn-secondary {
+      background: #6c757d;
+    }
+    
+    .btn-secondary:hover {
+      background: #5a6268;
+    }
+    
+    .btn-success {
+      background: #28a745;
+    }
+    
+    .btn-success:hover {
+      background: #218838;
+    }
+    
+    .btn-danger {
+      background: var(--scamwatch-color);
+    }
+    
+    .btn-danger:hover {
+      background: #d32f2f;
+    }
+    
+    .button-group {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .button-group button {
+      flex: 1;
+    }
+    
+    .top-controls {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .lang-select {
+      background: var(--primary-color);
+      padding: 8px 12px;
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+    
+    .lang-select select {
+      width: auto;
+      padding: 5px;
+      margin: 0;
+      border: 1px solid var(--secondary-color);
+      background: var(--primary-color);
+      color: var(--text-color);
+    }
+    
+    .blue-box { 
+      border: 2px solid var(--cyber-blue); 
+      border-radius: 8px; 
+      padding: 15px; 
+      background: var(--secondary-color);
+      margin-bottom: 15px;
+    }
+    
+    #download-btn { 
+      display:none; 
+      margin-top:10px; 
+      background:#28a745; 
+    }
+    
+    #download-btn:hover { 
+      background:#1e7e34; 
+    }
+    
+    .stars { 
+      display:flex; 
+      gap:5px; 
+      font-size:24px; 
+      cursor:pointer; 
+      margin: 10px 0;
+    }
+    
+    .stars span { 
+      color:#ddd; 
+      transition: var(--transition);
+    }
+    
+    .stars span:hover {
+      transform: scale(1.2);
+    }
+    
+    .stars span.active { 
+      color:gold; 
+    }
+    
+    #preview { 
+      border: 2px solid var(--cyber-blue); 
+      padding: 20px; 
+      border-radius: 10px; 
+      background: var(--primary-color); 
+      max-height: 500px; 
+      overflow: auto;
+      margin-bottom: 20px;
+    }
+    
+    #preview table { 
+      width:100%; 
+      border-collapse: collapse; 
+    }
+    
+    #preview th, #preview td { 
+      border:1px solid var(--cyber-blue); 
+      padding: 10px; 
+      text-align:left; 
+    }
+    
+    #preview th { 
+      background: var(--secondary-color); 
+      color: var(--text-color);
+    }
+    
+    .file-upload {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+      width: 100%;
+    }
+    
+    .file-upload input[type=file] {
+      position: absolute;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+    
+    .file-upload-label {
+      display: block;
+      padding: 12px;
+      background: var(--primary-color);
+      border: 2px dashed var(--secondary-color);
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    
+    .file-upload-label:hover {
+      background: var(--secondary-color);
+      border-color: var(--cyber-blue);
+    }
+    
+    .file-preview {
+      margin-top: 10px;
+      padding: 10px;
+      background: var(--primary-color);
+      border-radius: 8px;
+      border: 1px solid var(--secondary-color);
+    }
+    
+    .file-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px;
+      background: var(--secondary-color);
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+    
+    .file-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .remove-file {
+      color: var(--scamwatch-color);
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .priority-indicator {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    
+    .priority-high {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    
+    .priority-medium {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .priority-low {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+    
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-align: center;
+      border-left: 4px solid #28a745;
+    }
+    
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      text-align: center;
+      border-left: 4px solid #dc3545;
+    }
+    
+    .connection-status {
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    .connection-connected {
+      background: #d4edda;
+      color: #155724;
+      border-left: 4px solid #28a745;
+    }
+    
+    .connection-disconnected {
+      background: #f8d7da;
+      color: #721c24;
+      border-left: 4px solid #dc3545;
+    }
+    
+    .connection-checking {
+      background: #fff3cd;
+      color: #856404;
+      border-left: 4px solid #ffc107;
+    }
+    
+    .tooltip {
+      position: relative;
+      display: inline-block;
+      margin-left: 5px;
+      color: #6c757d;
+    }
+    
+    .tooltip .tooltiptext {
+      visibility: hidden;
+      width: 200px;
+      background-color: #333;
+      color: #fff;
+      text-align: center;
+      border-radius: 6px;
+      padding: 5px;
+      position: absolute;
+      z-index: 1;
+      bottom: 125%;
+      left: 50%;
+      margin-left: -100px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 12px;
+    }
+    
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    .recording-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: var(--scamwatch-color);
+      border-radius: 50%;
+      margin-right: 5px;
+      animation: pulse 1.5s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+    
+    .auth-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .auth-buttons button {
+      flex: 1;
+    }
+    
+    .anonymous-note {
+      background: #fff3cd;
+      color: #856404;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #ffc107;
+    }
+    
+    .user-info {
+      background: #d1ecf1;
+      color: #0c5460;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #17a2b8;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    
+    .anonymous-field {
+      background-color: #f8f9fa !important;
+      border: 2px dashed #6c757d !important;
+      color: #6c757d !important;
+      font-style: italic;
+    }
+    
+    .field-hint {
+      font-size: 12px;
+      color: #6c757d;
+      margin-top: -10px;
+      margin-bottom: 10px;
+      font-style: italic;
+    }
+    
+    .validation-errors {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 4px solid #dc3545;
+    }
+    
+    .validation-errors h4 {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .validation-errors ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    
+    .validation-errors li {
+      margin-bottom: 5px;
+    }
+    
+    .character-counter {
+      font-size: 12px;
+      margin-top: -10px;
+      margin-bottom: 15px;
+    }
+    
+    @media (max-width: 1024px) {
+      .main-container {
+        flex-direction: column;
+      }
+      
+      .instructions-container {
+        position: static;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+      
+      .tabs {
+        flex-direction: column;
+      }
+      
+      .tab {
+        padding: 10px;
+      }
+      
+      .top-controls {
+        flex-direction: column;
+        align-items: flex-end;
+      }
+      
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+      
+      .logo-group {
+        margin-bottom: 15px;
+      }
+      
+      .auth-buttons {
+        flex-direction: column;
+      }
+      
+      .user-info {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="header">
+  <div class="logo-group">
+    <div class="logo">
+      <svg width="50" height="50" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+        <!-- Shield Base with Indian Colors -->
+        <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="#FF9933" stroke="#000080" stroke-width="1.5"/>
+        
+        <!-- White Middle Section -->
+        <path d="M30 8 C38 8 45 12 48 18 L30 52 L12 18 C15 12 22 8 30 8 Z" fill="#FFFFFF"/>
+        
+        <!-- Ashoka Chakra -->
+        <circle cx="30" cy="30" r="8" fill="#000080" stroke="#FFFFFF" stroke-width="0.5"/>
+        
+        <!-- 24 Spokes (Simplified) -->
+        <g stroke="#FFFFFF" stroke-width="0.8">
+          <!-- Main Cross -->
+          <line x1="30" y1="22" x2="30" y2="38"/>
+          <line x1="22" y1="30" x2="38" y2="30"/>
+          
+          <!-- Diagonal Spokes -->
+          <line x1="25" y1="25" x2="35" y2="35"/>
+          <line x1="35" y1="25" x2="25" y2="35"/>
+          
+          <!-- Additional Spokes -->
+          <line x1="27" y1="23" x2="33" y2="37"/>
+          <line x1="33" y1="23" x2="27" y2="37"/>
+          <line x1="23" y1="27" x2="37" y2="33"/>
+          <line x1="37" y1="27" x2="23" y2="33"/>
+        </g>
+        
+        <!-- Cyber Security Elements -->
+        <!-- Digital Lock -->
+        <rect x="26" y="42" width="8" height="6" fill="#000080" stroke="#FFFFFF" stroke-width="0.5" rx="1"/>
+        <circle cx="30" cy="44" r="1" fill="#FFFFFF"/>
+        <rect x="28" y="45" width="4" height="2" fill="#FFFFFF" rx="0.5"/>
+        
+        <!-- Binary Code Pattern -->
+        <text x="18" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">101</text>
+        <text x="40" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">010</text>
+        <text x="15" y="48" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">110</text>
+        
+        <!-- Shield Border -->
+        <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="none" stroke="#000080" stroke-width="1.5"/>
+        
+        <!-- Cyber Circuit Lines -->
+        <path d="M15 12 L20 12 L20 15 L25 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
+        <path d="M45 12 L40 12 L40 15 L35 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <span class="ministry">Your Cyber Crime Assistant Portal</span>
+      <span class="center-name">iReport - Complaint Form</span>
+    </div>
+  </div>
+  
+  <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+    <i class="fas fa-moon"></i>
+  </button>
+</div>
+
+<div class="main-container">
+  <!-- Left Side - Instructions -->
+  <div class="instructions-container">
+    <h3>Important Instructions</h3>
+    
+    <div class="instructions-section">
+      <h4>About the Portal</h4>
+      <p>This portal is an initiative of Government of India to facilitate victims/complainants to report cyber crime complaints online. This portal caters to complaints pertaining to cyber crimes only with special focus on cyber crimes against women and children.</p>
+      <p>Complaints reported on this portal are dealt by law enforcement agencies/ police based on the information available in the complaints. It is imperative to provide correct and accurate details while filing complaint for prompt action.</p>
+      
+      <div class="helpline">
+        <strong>Emergency Contacts</strong>
+        <p>National Police Helpline: <strong>112</strong></p>
+        <p>National Women Helpline: <strong>181</strong></p>
+        <p>Cyber Crime Helpline: <strong>1930</strong></p>
+      </div>
+      
+      <p class="highlight">Please contact local police in case of an emergency or for reporting crimes other than cyber crimes.</p>
+    </div>
+    
+    <div class="instructions-section">
+      <h4>Terms and Conditions</h4>
+      <p>Prior to filing a complaint with this portal, we would request you to read the below information regarding terms and conditions. Should you have queries prior to filing your complaint, view <strong>Frequently Asked Questions FAQ</strong></p>
+      
+      <ul>
+        <li>The information I've provided on this form is correct to the best of my knowledge.</li>
+        <li>I acknowledge that providing false information could make me liable to penal actions under Indian Laws.</li>
+        <li>I understand that action on the complaints reported on this portal shall be taken by concerned authorities as per Indian Laws.</li>
+        <li>The complaint information you submit to this site is encrypted via secure socket layer (SSL) encryption.</li>
+      </ul>
+      
+      <p>Please see the <strong>Privacy Policy</strong> for further information.</p>
+      <p>We thank you for your cooperation.</p>
+    </div>
+    
+    <div class="instructions-section">
+      <h4>Checklist for Complainant</h4>
+      <p>Please keep this information ready before filing your complaint:</p>
+      
+      <h5>Mandatory Information</h5>
+      <ol>
+        <li>Incident Date and Time.</li>
+        <li>Incident details (minimum 200 characters) without any special characters (#$@^*~'~|!).</li>
+        <li>Soft copy of any national ID (Voter ID, Driving license, Passport, PAN Card, Aadhaar Card) of complainant in .jpeg, .jpg, .png format (file size should not more than 5 MB).</li>
+        <li>In case of financial fraud, please keep following information ready:
+          <ul>
+            <li>Name of the Bank/ Wallet/Merchant</li>
+            <li>12-digit Transaction id/UTR No.</li>
+            <li>Date of transaction</li>
+            <li>Fraud amount</li>
+          </ul>
+        </li>
+        <li>Soft copy of all the relevant evidences related to the cyber crime (not more than 10 MB each)</li>
+      </ol>
+      
+      <h5>Optional/Desirable Information:</h5>
+      <ol>
+        <li>Suspected website URLs/ Social Media handles (wherever applicable)</li>
+        <li>Suspect Details (if available)
+          <ul>
+            <li>Mobile No</li>
+            <li>Email id</li>
+            <li>Bank Account No</li>
+            <li>Address</li>
+            <li>Soft copy of photograph of suspect in .jpeg, .jpg, .png format (not more than 5 MB)</li>
+            <li>Any other document through which suspect can be identified.</li>
+          </ul>
+        </li>
+      </ol>
+    </div>
+  </div>
+  
+  <!-- Right Side - Complaint Form -->
+  <div class="form-container">
+    <div class="top-controls">
+      <div class="lang-select">
+        <select id="language" onchange="loadTranslations()">
+          <option value="en">English</option>
+          <option value="hi">हिन्दी (Hindi)</option>
+          <option value="ta">தமிழ் (Tamil)</option>
+          <option value="te">తెలుగు (Telugu)</option>
+          <option value="bn">বাংলা (Bengali)</option>
+          <option value="mr">मराठी (Marathi)</option>
+          <option value="gu">ગુજરાતી (Gujarati)</option>
+          <option value="ml">മലയാളം (Malayalam)</option>
+          <option value="kn">ಕನ್ನಡ (Kannada)</option>
+          <option value="pa">ਪੰਜਾਬੀ (Punjabi)</option>
+          <option value="or">ଓଡ଼ିଆ (Odia)</option>
+          <option value="ur">اردو (Urdu)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="container">
+      <h2>🛡 Cyber Crime Complaint Form</h2>
+      <p class="subtitle">Government of India - National Cyber Crime Reporting Portal</p>
+      
+      <!-- Connection Status -->
+      <div id="connection-status" class="connection-status connection-checking">
+        <i class="fas fa-sync fa-spin"></i> Checking backend connection...
+      </div>
+      
+      <p class="notice" data-key="notice">⚠️ Please provide accurate information. False complaints may lead to legal action under Indian Penal Code.</p>
+      
+      <!-- Authentication Status -->
+      <div id="user-info" class="user-info" style="display:none;">
+        <div>
+          <strong><i class="fas fa-user-check"></i> Logged in as: <span id="user-name">User</span></strong>
+          <p>Your complaint will be linked to your account for tracking and updates.</p>
+        </div>
+        <button class="btn-secondary" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+      
+      <!-- Authentication Options -->
+      <div class="auth-buttons" id="auth-buttons">
+        <button class="btn-success" onclick="setUserMode('authenticated')">
+          <i class="fas fa-user-check"></i> File as Registered User
+        </button>
+        <button class="btn-secondary" onclick="setUserMode('anonymous')">
+          <i class="fas fa-user-secret"></i> File Anonymously
+        </button>
+      </div>
+      
+      <div id="anonymous-note" class="anonymous-note" style="display:none;">
+        <strong><i class="fas fa-info-circle"></i> Anonymous Complaint Note:</strong>
+        <p>You are filing this complaint anonymously. Your personal information will be auto-filled with anonymous values to protect your identity. Please note that:</p>
+        <ul>
+          <li>You will not be able to track the status of your complaint</li>
+          <li>Authorities cannot contact you for additional information</li>
+          <li>Some features like case updates and notifications will not be available</li>
+          <li>Your personal details are protected and replaced with anonymous identifiers</li>
+        </ul>
+      </div>
+      
+      <div id="validation-errors" style="display: none;"></div>
+      
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <div class="progress-steps">
+        <span data-key="step1Title">Complaint Details</span>
+        <span data-key="step2Title">Suspect Information</span>
+        <span data-key="step3Title">Review & Submit</span>
+      </div>
+      
+      <div class="tabs">
+        <div class="tab active" id="tab1" data-key="tab1" onclick="goStep(1)">Step 1</div>
+        <div class="tab" id="tab2" data-key="tab2" onclick="goStep(2)">Step 2</div>
+        <div class="tab" id="tab3" data-key="tab3" onclick="goStep(3)">Step 3</div>
+      </div>
+      
+      <!-- Step 1 -->
+      <div class="form-step active" id="step1">
+        <div class="form-section">
+          <h4><i class="fas fa-user"></i> <span data-key="personalInfo">Personal Information</span></h4>
+          <p class="field-hint" id="anonymous-hint" style="display: none;">
+            <i class="fas fa-info-circle"></i> Your personal information is protected with anonymous values
+          </p>
+          
+          <div class="form-row">
+            <div>
+              <label for="complainant-name" class="required" data-key="name">Full Name</label>
+              <input type="text" id="complainant-name" placeholder="Enter your full name">
+              <div class="field-hint">Full legal name as per government ID</div>
+            </div>
+            <div>
+              <label for="complainant-id" class="required" data-key="id">ID Number</label>
+              <input type="text" id="complainant-id" placeholder="Aadhaar / PAN / Ration Number">
+              <div class="field-hint">12-digit Aadhaar or 10-digit PAN number</div>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div>
+              <label for="complainant-email" class="required" data-key="email">Email Address</label>
+              <input type="email" id="complainant-email" placeholder="Your email address">
+              <div class="field-hint">Active email for communication</div>
+            </div>
+            <div>
+              <label for="complainant-phone" class="required" data-key="phone">Phone Number</label>
+              <input type="tel" id="complainant-phone" placeholder="Your contact number">
+              <div class="field-hint">10-digit mobile number</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-section">
+          <h4><i class="fas fa-map-marker-alt"></i> <span data-key="locationInfo">Location Information</span></h4>
+          
+          <div class="form-row">
+            <div>
+              <label for="state" class="required" data-key="state">State</label>
+              <input type="text" id="state" placeholder="Your state">
+            </div>
+            <div>
+              <label for="district" class="required" data-key="district">District</label>
+              <input type="text" id="district" placeholder="Your district">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div>
+              <label for="village" data-key="village">Village/Town</label>
+              <input type="text" id="village" placeholder="Village / Town">
+            </div>
+            <div>
+              <label for="pincode" class="required" data-key="pincode">PIN Code</label>
+              <input type="text" id="pincode" placeholder="6-digit PIN code">
+            </div>
+          </div>
+          
+          <label for="landmark" data-key="landmark">Landmark</label>
+          <input type="text" id="landmark" placeholder="Nearby landmark">
+        </div>
+        
+        <div class="form-section">
+          <h4><i class="fas fa-exclamation-circle"></i> <span data-key="incidentInfo">Incident Information</span></h4>
+          
+          <label for="category" class="required" data-key="category">Category</label>
+          <select id="category">
+            <option value="">Select Category</option>
+            <option value="financial-fraud">Financial Fraud</option>
+            <option value="social-media">Social Media Crime</option>
+            <option value="cyber-bullying">Cyber Bullying</option>
+            <option value="online-harassment">Online Harassment</option>
+            <option value="data-theft">Data Theft</option>
+            <option value="hacking">Hacking</option>
+            <option value="phishing">Phishing</option>
+            <option value="other">Other</option>
+          </select>
+          
+          <div class="form-row">
+            <div>
+              <label for="date" class="required" data-key="date">Date of Incident</label>
+              <input type="date" id="date">
+            </div>
+            <div>
+              <label for="time" class="required" data-key="time">Time of Incident</label>
+              <input type="time" id="time">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div>
+              <label for="money" data-key="money">Amount Involved (₹)</label>
+              <input type="number" id="money" placeholder="Amount in ₹" min="0">
+            </div>
+            <div>
+              <label for="injury" data-key="injury">Injury</label>
+              <select id="injury">
+                <option value="none">No Injury</option>
+                <option value="minor">Minor</option>
+                <option value="serious">Serious</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div>
+              <label for="missing" data-key="missing">Missing Person/Property</label>
+              <select id="missing">
+                <option value="none">None</option>
+                <option value="person">Person</option>
+                <option value="property">Property</option>
+              </select>
+            </div>
+            <div>
+              <label for="severity" data-key="severity">Severity Level</label>
+              <select id="severity">
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+            </div>
+          </div>
+          
+          <label for="imei" data-key="imei">IMEI Number</label>
+          <input type="text" id="imei" placeholder="15-digit IMEI number">
+          
+          <label for="sim-number" data-key="sim">SIM Number</label>
+          <input type="text" id="sim-number" placeholder="SIM number">
+        </div>
+        
+        <div class="form-section">
+          <h4><i class="fas fa-file-alt"></i> <span data-key="incidentDetails">Incident Details</span></h4>
+          
+          <label for="details" class="required" data-key="details">Incident Description</label>
+          <textarea id="details" rows="5" placeholder="Provide detailed description of the incident (minimum 200 characters required)..."></textarea>
+          <div id="character-counter" class="character-counter">0 characters (minimum 200 required)</div>
+          
+          <div class="button-group">
+            <button id="mic-button"><i class="fas fa-microphone"></i> <span id="mic-text" data-key="startRecording">Start Recording</span></button>
+            <button type="button" onclick="clearText()"><i class="fas fa-eraser"></i> <span data-key="clearText">Clear Text</span></button>
+          </div>
+          
+          <div class="file-upload">
+            <label class="file-upload-label">
+              <i class="fas fa-cloud-upload-alt"></i> <span data-key="uploadDocuments">Upload Supporting Documents (Max 5 files, 10MB each)</span>
+              <input type="file" id="supporting-docs" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" onchange="handleFileUpload(this)">
+            </label>
+          </div>
+          <div id="file-preview" class="file-preview"></div>
+        </div>
+        
+        <div class="form-section">
+          <h4><i class="fas fa-shield-alt"></i> <span data-key="policeInfo">Police Information</span></h4>
+          
+          <label for="police-complaint" data-key="policeComplaint">Already Filed Police Complaint?</label>
+          <select id="police-complaint" onchange="toggleFIRFields()">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+          
+          <div id="fir-section" style="display:none;">
+            <label for="fir-number" data-key="firNumber">FIR Number</label>
+            <input type="text" id="fir-number" placeholder="FIR number if available">
+            
+            <label for="fir-file" data-key="firFile">Upload FIR Copy</label>
+            <div class="file-upload">
+              <label class="file-upload-label">
+                <i class="fas fa-file-pdf"></i> <span data-key="uploadFIR">Upload FIR Copy</span>
+                <input type="file" id="fir-file" accept=".pdf,.jpg,.jpeg,.png">
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <div class="button-group">
+          <button class="btn-secondary" onclick="resetForm()"><i class="fas fa-redo"></i> <span data-key="resetForm">Reset Form</span></button>
+          <button onclick="validateStep1()"><i class="fas fa-arrow-right"></i> <span data-key="nextStep">Next Step</span></button>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="form-step" id="step2">
+        <div class="form-section">
+          <h4><i class="fas fa-user-secret"></i> <span data-key="suspectInfo">Suspect Information</span></h4>
+          
+          <div class="form-row">
+            <div>
+              <label for="suspect-name" data-key="suspectName">Suspect Name</label>
+              <input type="text" id="suspect-name" placeholder="If known">
+            </div>
+            <div>
+              <label for="suspect-alias" data-key="suspectAlias">Alias/Nickname</label>
+              <input type="text" id="suspect-alias" placeholder="If any">
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <div>
+              <label for="suspect-email" data-key="suspectEmail">Suspect Email</label>
+              <input type="email" id="suspect-email" placeholder="Suspect's email">
+            </div>
+            <div>
+              <label for="suspect-phone" data-key="suspectPhone">Suspect Phone</label>
+              <input type="tel" id="suspect-phone" placeholder="Suspect's phone number">
+            </div>
+          </div>
+          
+          <label for="suspect-address" data-key="suspectAddress">Suspect Address</label>
+          <input type="text" id="suspect-address" placeholder="If known">
+          
+          <label for="suspect-relationship" data-key="suspectRelationship">Relationship to Suspect</label>
+          <select id="suspect-relationship">
+            <option value="unknown">Unknown</option>
+            <option value="acquaintance">Acquaintance</option>
+            <option value="friend">Friend</option>
+            <option value="family">Family Member</option>
+            <option value="colleague">Colleague</option>
+            <option value="business">Business Associate</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        
+        <div class="form-section">
+          <h4><i class="fas fa-link"></i> <span data-key="digitalEvidence">Digital Evidence</span></h4>
+          
+          <label for="suspect-website" data-key="suspectWebsite">Website/URL Involved</label>
+          <input type="url" id="suspect-website" placeholder="Website or URL related to incident">
+          
+          <label for="suspect-social" data-key="suspectSocial">Social Media Profiles</label>
+          <input type="text" id="suspect-social" placeholder="Facebook, Instagram, Twitter, etc.">
+          
+          <label for="transaction-id" data-key="transactionId">Transaction ID (if financial fraud)</label>
+          <input type="text" id="transaction-id" placeholder="Bank/UPI transaction ID">
+          
+          <div class="file-upload">
+            <label class="file-upload-label">
+              <i class="fas fa-file-upload"></i> <span data-key="uploadEvidence">Upload Evidence (Screenshots, Documents, etc.)</span>
+              <input type="file" id="suspect-file" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.mp4,.avi" onchange="previewFile()">
+            </label>
+          </div>
+          <div id="evidence-preview" class="file-preview"></div>
+        </div>
+        
+        <div class="button-group">
+          <button class="btn-secondary" onclick="goStep(1)"><i class="fas fa-arrow-left"></i> <span data-key="previous">Previous</span></button>
+          <button onclick="validateStep2()"><i class="fas fa-arrow-right"></i> <span data-key="nextStep">Next Step</span></button>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="form-step" id="step3">
+        <div class="form-section">
+          <h4><i class="fas fa-eye"></i> <span data-key="reviewComplaint">Review Your Complaint</span></h4>
+          
+          <div id="preview"></div>
+          
+          <div class="blue-box">
+            <p><strong data-key="estimatedPriority">Estimated Priority:</strong> <span id="priority-estimate">Calculating...</span></p>
+            <p><strong data-key="expectedResponse">Expected Response Time:</strong> <span id="response-time">Calculating...</span></p>
+            <p><strong data-key="referenceNumber">Reference Number:</strong> <span id="reference-number">Will be generated after submission</span></p>
+          </div>
+        </div>
+        
+        <div class="form-section">
+          <h4><i class="fas fa-star"></i> <span data-key="feedback">Feedback</span></h4>
+          
+          <label data-key="rateExperience">Rate your experience with this form:</label>
+          <div class="stars" id="stars">
+            <span onclick="rate(1)">★</span>
+            <span onclick="rate(2)">★</span>
+            <span onclick="rate(3)">★</span>
+            <span onclick="rate(4)">★</span>
+            <span onclick="rate(5)">★</span>
+          </div>
+          
+          <label for="feedback-comments" data-key="additionalComments">Additional Comments (Optional)</label>
+          <textarea id="feedback-comments" rows="3" placeholder="Any suggestions to improve this service?"></textarea>
+        </div>
+        
+        <div class="button-group">
+          <button class="btn-secondary" onclick="goStep(2)"><i class="fas fa-arrow-left"></i> <span data-key="previous">Previous</span></button>
+          <button class="btn-success" type="button" onclick="generatePDF()"><i class="fas fa-file-pdf"></i> <span data-key="downloadReport">Download Report</span></button>
+          <button class="btn-danger" type="button" onclick="submitComplaint()" id="submit-btn">
+            <i class="fas fa-paper-plane"></i> <span data-key="submitComplaint">Submit Complaint</span>
+          </button>
+        </div>
+        
+        <div id="submission-message" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Global variables
+let currentStep = 1;
+let rating = 0;
+let isRecording = false;
+let recognition = null;
+let uploadedFiles = [];
+let uploadedEvidence = [];
+
+// Backend API configuration
+const API_BASE_URL = 'http://localhost:5000/api';
+let currentUserMode = null;
+let userToken = null;
+let currentUser = null;
+let backendConnected = false;
+
+// Test backend connection on page load
+async function testBackendConnection() {
+    const statusElement = document.getElementById('connection-status');
+    
+    try {
+        statusElement.innerHTML = '<i class="fas fa-sync fa-spin"></i> Checking backend connection...';
+        statusElement.className = 'connection-status connection-checking';
+        
+        const response = await fetch(`${API_BASE_URL}/health`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            backendConnected = true;
+            statusElement.innerHTML = `<i class="fas fa-check-circle"></i> Backend connected: ${data.message || 'Server is running'}`;
+            statusElement.className = 'connection-status connection-connected';
+        } else {
+            throw new Error(`HTTP ${response.status}`);
+        }
+    } catch (error) {
+        backendConnected = false;
+        statusElement.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Backend connection failed: ${error.message}`;
+        statusElement.className = 'connection-status connection-disconnected';
+        console.error('Backend connection test failed:', error);
+    }
+}
+
+// Setup theme toggle
+function setupThemeToggle() {
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // Check for saved theme preference or default to light
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    // Apply the saved theme on page load
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+    }
+    
+    // Toggle theme when button is clicked
+    themeToggle.addEventListener('click', function() {
+        document.body.classList.toggle('dark-theme');
+        
+        if (document.body.classList.contains('dark-theme')) {
+            localStorage.setItem('theme', 'dark');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        } else {
+            localStorage.setItem('theme', 'light');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+    });
+}
+
+// Check if user is authenticated
+async function checkUserAuthentication() {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            showAuthenticationOptions();
+            return;
+        }
+
+        const response = await fetch(`${API_BASE_URL}/auth/me`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (response.ok) {
+            const userData = await response.json();
+            userToken = token;
+            currentUser = userData.user;
+            currentUserMode = 'authenticated';
+            showAuthenticatedView();
+        } else {
+            // Token is invalid, clear it
+            localStorage.removeItem('token');
+            showAuthenticationOptions();
+        }
+    } catch (error) {
+        console.error('Error checking authentication:', error);
+        showAuthenticationOptions();
+    }
+}
+
+function showAuthenticatedView() {
+    document.getElementById('auth-buttons').style.display = 'none';
+    document.getElementById('anonymous-note').style.display = 'none';
+    document.getElementById('user-info').style.display = 'flex';
+    document.getElementById('user-name').textContent = currentUser.name || currentUser.email;
+    removeAnonymousData();
+}
+
+function showAuthenticationOptions() {
+    document.getElementById('auth-buttons').style.display = 'flex';
+    document.getElementById('anonymous-note').style.display = 'none';
+    document.getElementById('user-info').style.display = 'none';
+    currentUserMode = null;
+    userToken = null;
+    currentUser = null;
+    removeAnonymousData();
+}
+
+// Set user mode (authenticated or anonymous) - CORRECTED VERSION
+function setUserMode(mode) {
+    currentUserMode = mode;
+    
+    if (mode === 'authenticated') {
+        // Check if user is already logged in
+        const token = localStorage.getItem('token');
+        if (token) {
+            // User is already logged in, verify token and set authenticated mode
+            verifyTokenAndSetMode(token);
+        } else {
+            // If not logged in, show message and allow them to proceed as authenticated user
+            document.getElementById('auth-buttons').style.display = 'none';
+            document.getElementById('anonymous-note').style.display = 'none';
+            document.getElementById('user-info').style.display = 'none';
+            removeAnonymousData();
+            
+            // Show info message
+            alert('You are filing as a registered user. Please fill in your personal details. Your complaint will be recorded with your information for tracking purposes.');
+        }
+    } else {
+        // Show anonymous mode
+        document.getElementById('auth-buttons').style.display = 'none';
+        document.getElementById('anonymous-note').style.display = 'block';
+        document.getElementById('user-info').style.display = 'none';
+        applyAnonymousData();
+    }
+}
+
+// Verify token and set authenticated mode
+async function verifyTokenAndSetMode(token) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/auth/me`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (response.ok) {
+            const userData = await response.json();
+            userToken = token;
+            currentUser = userData.user;
+            currentUserMode = 'authenticated';
+            showAuthenticatedView();
+        } else {
+            // Token is invalid, clear it and show auth options
+            localStorage.removeItem('token');
+            showAuthenticationOptions();
+        }
+    } catch (error) {
+        console.error('Error verifying token:', error);
+        showAuthenticationOptions();
+    }
+}
+
+// Apply anonymous data to form fields
+function applyAnonymousData() {
+    const fields = [
+        'complainant-name', 'complainant-id', 'complainant-email', 
+        'complainant-phone'
+    ];
+    
+    fields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        field.value = 'Anonymous';
+        field.classList.add('anonymous-field');
+        field.readOnly = true;
+    });
+    
+    document.getElementById('anonymous-hint').style.display = 'block';
+}
+
+// Remove anonymous data from form fields
+function removeAnonymousData() {
+    const fields = [
+        'complainant-name', 'complainant-id', 'complainant-email', 
+        'complainant-phone', 
+    ];
+    
+    fields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        field.classList.remove('anonymous-field');
+        field.readOnly = false;
+        if (field.value === 'Anonymous') {
+            field.value = '';
+        }
+    });
+    
+    document.getElementById('anonymous-hint').style.display = 'none';
+}
+
+// Logout function
+function logout() {
+    localStorage.removeItem('token');
+    showAuthenticationOptions();
+    alert('You have been logged out successfully.');
+}
+
+// Navigation functions
+function goStep(step) {
+    // Check if user has selected a mode
+    if (step > 1 && !currentUserMode) {
+        alert("Please select how you want to file the complaint (as registered user or anonymously) before proceeding.");
+        return;
+    }
+    
+    document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('step' + step).classList.add('active');
+    document.getElementById('tab' + step).classList.add('active');
+    currentStep = step;
+    updateProgressBar();
+    
+    if (step === 3) {
+        generatePreview();
+        calculatePriority();
+    }
+}
+
+function updateProgressBar() {
+    const progress = (currentStep / 3) * 100;
+    document.getElementById('progress-bar').style.width = `${progress}%`;
+}
+
+// Setup character counter for incident details
+function setupCharacterCounter() {
+    const detailsTextarea = document.getElementById('details');
+    const charCounter = document.getElementById('character-counter');
+    
+    detailsTextarea.addEventListener('input', function() {
+        const length = this.value.length;
+        charCounter.textContent = `${length} characters (minimum 200 required)`;
+        
+        if (length < 200) {
+            charCounter.style.color = '#dc3545';
+        } else if (length >= 200 && length < 500) {
+            charCounter.style.color = '#ffc107';
+        } else {
+            charCounter.style.color = '#28a745';
+        }
+    });
+}
+
+// Form validation functions
+function validateStep1() {
+    const errors = validateAllFields();
+    if (errors.length > 0) {
+        showValidationErrors(errors);
+        return;
+    }
+    
+    // Hide any previous validation errors
+    document.getElementById('validation-errors').style.display = 'none';
+    goStep(2);
+}
+
+function validateStep2() {
+    goStep(3);
+}
+
+function validateAllFields() {
+    const errors = [];
+    
+    // Personal Information validation based on user mode
+    if (currentUserMode === 'authenticated') {
+        // For authenticated users, personal info is required
+        if (!validateName()) errors.push("Full Name must be at least 3 characters");
+        if (!validateID()) errors.push("ID Number must be at least 10 characters");
+        if (!validateEmail()) errors.push("Valid email address is required");
+        if (!validatePhone()) errors.push("Valid 10-digit phone number is required");
+    }
+    // For anonymous users, personal info is optional - no validation needed
+    
+    // Location Information (required for both modes)
+    if (!document.getElementById("state").value.trim()) errors.push("State is required");
+    if (!document.getElementById("district").value.trim()) errors.push("District is required");
+    if (!validatePincode()) errors.push("Valid 6-digit PIN code is required");
+    
+    // Incident Information (required for both modes)
+    if (!document.getElementById("category").value) errors.push("Category is required");
+    if (!document.getElementById("date").value) errors.push("Incident date is required");
+    if (!document.getElementById("time").value) errors.push("Incident time is required");
+    
+    // Incident Details (required for both modes)
+    const details = document.getElementById("details").value;
+    if (!details.trim()) {
+        errors.push("Incident details are required");
+    } else if (details.length < 200) {
+        errors.push("Incident details must be at least 200 characters");
+    }
+    
+    return errors;
+}
+
+function showValidationErrors(errors) {
+    const errorHtml = `
+        <div class="validation-errors">
+            <h4><i class="fas fa-exclamation-triangle"></i> Please correct the following errors:</h4>
+            <ul>
+                ${errors.map(error => `<li>${error}</li>`).join('')}
+            </ul>
+        </div>
+    `;
+    
+    const errorContainer = document.getElementById('validation-errors');
+    errorContainer.innerHTML = errorHtml;
+    errorContainer.style.display = 'block';
+    
+    // Scroll to errors
+    errorContainer.scrollIntoView({ behavior: 'smooth' });
+}
+
+function validateName() {
+    const name = document.getElementById('complainant-name');
+    if (name.value.trim().length < 3) {
+        name.style.borderColor = '#dc3545';
+        return false;
+    } else {
+        name.style.borderColor = '#28a745';
+        return true;
+    }
+}
+
+function validateID() {
+    const id = document.getElementById('complainant-id');
+    if (id.value.trim().length < 10) {
+        id.style.borderColor = '#dc3545';
+        return false;
+    } else {
+        id.style.borderColor = '#28a745';
+        return true;
+    }
+}
+
+function validateEmail() {
+    const email = document.getElementById('complainant-email');
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value)) {
+        email.style.borderColor = '#dc3545';
+        return false;
+    } else {
+        email.style.borderColor = '#28a745';
+        return true;
+    }
+}
+
+function validatePhone() {
+    const phone = document.getElementById('complainant-phone');
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (!phoneRegex.test(phone.value)) {
+        phone.style.borderColor = '#dc3545';
+        return false;
+    } else {
+        phone.style.borderColor = '#28a745';
+        return true;
+    }
+}
+
+function validatePincode() {
+    const pincode = document.getElementById('pincode');
+    const pincodeRegex = /^\d{6}$/;
+    if (!pincodeRegex.test(pincode.value)) {
+        pincode.style.borderColor = '#dc3545';
+        return false;
+    } else {
+        pincode.style.borderColor = '#28a745';
+        return true;
+    }
+}
+
+// File handling functions
+function handleFileUpload(input) {
+    const files = Array.from(input.files);
+    const maxFiles = 5;
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    
+    if (files.length + uploadedFiles.length > maxFiles) {
+        alert(`You can only upload up to ${maxFiles} files total`);
+        input.value = '';
+        return;
+    }
+    
+    files.forEach((file, index) => {
+        if (file.size > maxSize) {
+            alert(`File "${file.name}" is too large. Maximum size is 10MB`);
+            return;
+        }
+        
+        uploadedFiles.push({
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            file: file
+        });
+    });
+    
+    updateFilePreview('file-preview', uploadedFiles, 'supporting-docs');
+    input.value = '';
+}
+
+function previewFile() {
+    const input = document.getElementById('suspect-file');
+    const files = Array.from(input.files);
+    const maxFiles = 5;
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    
+    if (files.length + uploadedEvidence.length > maxFiles) {
+        alert(`You can only upload up to ${maxFiles} files.`);
+        input.value = '';
+        return;
+    }
+    
+    for (const file of files) {
+        if (file.size > maxSize) {
+            alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+            continue;
+        }
+        
+        uploadedEvidence.push({
+            name: file.name,
+            size: file.size,
+            type: file.type,
+            file: file
+        });
+    }
+    
+    updateFilePreview('evidence-preview', uploadedEvidence, 'suspect-file');
+    input.value = '';
+}
+
+function updateFilePreview(containerId, files, inputId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = '';
+    
+    if (files.length === 0) {
+        container.innerHTML = '<p>No files selected</p>';
+        return;
+    }
+    
+    files.forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        
+        const fileSize = (file.size / 1024 / 1024).toFixed(2);
+        
+        fileItem.innerHTML = `
+            <div>
+                <strong>${file.name}</strong> (${fileSize} MB)
+            </div>
+            <div class="remove-file" onclick="removeFile(${index}, '${containerId}', '${inputId}')">
+                <i class="fas fa-times"></i>
+            </div>
+        `;
+        
+        container.appendChild(fileItem);
+    });
+}
+
+function removeFile(index, containerId, inputId) {
+    if (containerId === 'file-preview') {
+        uploadedFiles.splice(index, 1);
+        updateFilePreview(containerId, uploadedFiles, inputId);
+    } else {
+        uploadedEvidence.splice(index, 1);
+        updateFilePreview(containerId, uploadedEvidence, inputId);
+    }
+}
+
+// Toggle FIR fields
+function toggleFIRFields() { 
+    const sel = document.getElementById('police-complaint').value; 
+    document.getElementById('fir-section').style.display = (sel === 'yes') ? 'block' : 'none'; 
+}
+
+// Generate preview
+function generatePreview() {
+    const data = {
+        "Complaint Type": currentUserMode === 'authenticated' ? 'Registered User' : 'Anonymous',
+        "Complainant Name": document.getElementById("complainant-name").value,
+        "ID Number": document.getElementById("complainant-id").value,
+        "Email": document.getElementById("complainant-email").value,
+        "Phone": document.getElementById("complainant-phone").value,
+        "State": document.getElementById("state").value,
+        "District": document.getElementById("district").value,
+        "Village/Town": document.getElementById("village").value,
+        "PIN Code": document.getElementById("pincode").value,
+        "Landmark": document.getElementById("landmark").value,
+        "Category": document.getElementById("category").value,
+        "Date of Incident": document.getElementById("date").value,
+        "Time of Incident": document.getElementById("time").value,
+        "Amount Involved": document.getElementById("money").value ? `₹${document.getElementById("money").value}` : "Not specified",
+        "Injury": document.getElementById("injury").value,
+        "Missing": document.getElementById("missing").value,
+        "Severity": document.getElementById("severity").value,
+        "IMEI": document.getElementById("imei").value || "Not provided",
+        "SIM Number": document.getElementById("sim-number").value || "Not provided",
+        "Incident Details": document.getElementById("details").value,
+        "Police Complaint": document.getElementById("police-complaint").value,
+        "FIR Number": document.getElementById("fir-number").value || "Not provided",
+        "Suspect Name": document.getElementById("suspect-name").value || "Not provided",
+        "Suspect Alias": document.getElementById("suspect-alias").value || "Not provided",
+        "Suspect Email": document.getElementById("suspect-email").value || "Not provided",
+        "Suspect Phone": document.getElementById("suspect-phone").value || "Not provided",
+        "Suspect Address": document.getElementById("suspect-address").value || "Not provided",
+        "Relationship": document.getElementById("suspect-relationship").value,
+        "Website/URL": document.getElementById("suspect-website").value || "Not provided",
+        "Social Media": document.getElementById("suspect-social").value || "Not provided",
+        "Transaction ID": document.getElementById("transaction-id").value || "Not provided"
+    };
+
+    let html = "<table>";
+    for (let key in data) {
+        html += `<tr><th>${key}</th><td>${data[key]}</td></tr>`;
+    }
+    html += "</table>";
+    document.getElementById("preview").innerHTML = html;
+}
+
+// Calculate priority based on form data
+function calculatePriority() {
+    let priorityScore = 0;
+    
+    // Financial impact
+    const money = parseFloat(document.getElementById("money").value) || 0;
+    if (money > 100000) priorityScore += 3;
+    else if (money > 50000) priorityScore += 2;
+    else if (money > 10000) priorityScore += 1;
+    
+    // Injury severity
+    const injury = document.getElementById("injury").value;
+    if (injury === "serious") priorityScore += 3;
+    else if (injury === "minor") priorityScore += 1;
+    
+    // Missing person/property
+    const missing = document.getElementById("missing").value;
+    if (missing === "person") priorityScore += 3;
+    else if (missing === "property") priorityScore += 1;
+    
+    // User-selected severity
+    const severity = document.getElementById("severity").value;
+    if (severity === "critical") priorityScore += 3;
+    else if (severity === "high") priorityScore += 2;
+    else if (severity === "medium") priorityScore += 1;
+    
+    let priority, responseTime, priorityClass;
+    
+    if (priorityScore >= 7) {
+        priority = "High";
+        responseTime = "Within 24 hours";
+        priorityClass = "priority-high";
+    } else if (priorityScore >= 4) {
+        priority = "Medium";
+        responseTime = "Within 3 days";
+        priorityClass = "priority-medium";
+    } else {
+        priority = "Low";
+        responseTime = "Within 7 days";
+        priorityClass = "priority-low";
+    }
+    
+    document.getElementById("priority-estimate").innerHTML = 
+        `<span class="priority-indicator ${priorityClass}">${priority}</span>`;
+    document.getElementById("response-time").textContent = responseTime;
+    
+    // Generate reference number
+    const refNumber = "CYBER" + Date.now().toString().slice(-8);
+    document.getElementById("reference-number").textContent = refNumber;
+}
+
+// Rating system
+function rate(stars) { 
+    rating = stars;
+    document.querySelectorAll('#stars span').forEach((s, i) => { 
+        if (i < stars) {
+            s.classList.add('active'); 
+        } else {
+            s.classList.remove('active'); 
+        }
+    }); 
+}
+
+// Speech recognition
+function initSpeechRecognition() {
+    if (!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)) {
+        document.getElementById('mic-button').style.display = 'none';
+        return;
+    }
+
+    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
+
+    recognition.onstart = function() {
+        isRecording = true;
+        document.getElementById('mic-text').innerHTML = '<span class="recording-indicator"></span> Stop Recording';
+    };
+
+    recognition.onresult = function(event) {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+            transcript += event.results[i][0].transcript;
+        }
+        document.getElementById("details").value += transcript;
+    };
+
+    recognition.onerror = function(event) {
+        console.error("Speech recognition error:", event.error);
+    };
+
+    recognition.onend = function() {
+        isRecording = false;
+        document.getElementById('mic-text').textContent = 'Start Recording';
+    };
+}
+
+// Initialize speech recognition button
+document.getElementById("mic-button").onclick = function() {
+    if (!isRecording) {
+        recognition.start();
+    } else {
+        recognition.stop();
+    }
+};
+
+// Clear text function
+function clearText() {
+    document.getElementById("details").value = "";
+}
+
+// Reset form
+function resetForm() {
+    if (confirm("Are you sure you want to reset the form? All entered data will be lost.")) {
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            if (element.type !== 'button' && element.id !== 'language') {
+                element.value = '';
+                element.style.borderColor = '#ced4da';
+            }
+        });
+        
+        uploadedFiles = [];
+        uploadedEvidence = [];
+        document.getElementById('file-preview').innerHTML = '';
+        document.getElementById('evidence-preview').innerHTML = '';
+        document.getElementById('fir-section').style.display = 'none';
+        document.getElementById('validation-errors').style.display = 'none';
+        
+        rating = 0;
+        document.querySelectorAll('#stars span').forEach(s => s.classList.remove('active'));
+        
+        // Reset user mode
+        currentUserMode = null;
+        document.getElementById('auth-buttons').style.display = 'flex';
+        document.getElementById('anonymous-note').style.display = 'none';
+        document.getElementById('user-info').style.display = 'none';
+        
+        // Reset anonymous data if in anonymous mode
+        removeAnonymousData();
+        
+        goStep(1);
+    }
+}
+
+// Generate PDF
+function generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(16);
+    doc.setFont("helvetica", "bold");
+    doc.text("Government of India", 105, 15, { align: "center" });
+    doc.setFontSize(14);
+    doc.text("National Cyber Crime Reporting Portal", 105, 25, { align: "center" });
+    
+    // Border
+    doc.setLineWidth(0.2);
+    doc.rect(10, 10, 190, 270);
+    
+    // Title
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("Cyber Crime Complaint Report", 105, 40, { align: "center" });
+
+    // Content
+    let y = 55;
+    doc.setFont("helvetica", "normal");
+    
+    const addField = (label, value) => {
+        if (y > 250) {
+            doc.addPage();
+            y = 20;
+        }
+        
+        doc.setFont("helvetica", "bold");
+        doc.text(`${label}:`, 20, y);
+        doc.setFont("helvetica", "normal");
+        
+        // Handle long text by splitting into multiple lines
+        const splitText = doc.splitTextToSize(value || "Not provided", 160);
+        doc.text(splitText, 30, y + 5);
+        
+        y += 5 + (splitText.length * 5);
+    };
+    
+    addField("Complaint Reference", document.getElementById("reference-number").textContent);
+    addField("Complaint Type", currentUserMode === 'authenticated' ? 'Registered User' : 'Anonymous');
+    addField("Complainant Name", document.getElementById('complainant-name').value);
+    addField("ID Number", document.getElementById('complainant-id').value);
+    addField("Email", document.getElementById('complainant-email').value);
+    addField("Phone", document.getElementById('complainant-phone').value);
+    addField("State", document.getElementById('state').value);
+    addField("District", document.getElementById('district').value);
+    addField("Village/Town", document.getElementById('village').value);
+    addField("PIN Code", document.getElementById('pincode').value);
+    addField("Category", document.getElementById('category').value);
+    addField("Date of Incident", document.getElementById('date').value);
+    addField("Time of Incident", document.getElementById('time').value);
+    addField("Amount Involved", document.getElementById('money').value ? `₹${document.getElementById('money').value}` : "Not specified");
+    addField("Incident Details", document.getElementById('details').value);
+    addField("Priority", document.getElementById("priority-estimate").textContent);
+    
+    // Add anonymous mode indicator if applicable
+    if (currentUserMode === 'anonymous') {
+        y += 10;
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(255, 0, 0);
+        doc.text("*** FILED ANONYMOUSLY - PERSONAL INFORMATION PROTECTED ***", 105, y, { align: "center" });
+        doc.setTextColor(0, 0, 0);
+    }
+    
+    // Signatures
+    y += 10;
+    doc.line(20, y, 80, y);
+    doc.text("Complainant Signature", 20, y + 10);
+
+    y += 30;
+    doc.line(20, y, 80, y);
+    doc.text("Official Stamp & Signature", 20, y + 10);
+
+    doc.save(`CyberCrimeComplaint_${document.getElementById("reference-number").textContent}.pdf`);
+}
+
+// Submit complaint to backend
+async function submitComplaint() {
+    // Clear previous validation errors
+    document.getElementById('validation-errors').style.display = 'none';
+    
+    // Validate all fields
+    const errors = validateAllFields();
+    if (errors.length > 0) {
+        showValidationErrors(errors);
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = document.getElementById('submit-btn');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting Complaint...';
+    submitBtn.disabled = true;
+    document.body.classList.add('loading');
+    
+    try {
+        // Prepare complaint data according to backend expectations
+        const complaintData = {
+            title: document.getElementById("details").value.substring(0, 100) + "...",
+            description: document.getElementById("details").value,
+            incident_date: document.getElementById("date").value + "T" + document.getElementById("time").value + ":00Z",
+            state: document.getElementById("state").value,
+            district: document.getElementById("district").value,
+            location: document.getElementById("landmark").value,
+            victim_name: document.getElementById("complainant-name").value,
+            victim_contact: document.getElementById("complainant-phone").value,
+            estimated_loss: parseFloat(document.getElementById("money").value) || 0,
+            police_complaint_filed: document.getElementById("police-complaint").value === "yes",
+            police_station: document.getElementById("police-complaint").value === "yes" ? "Local Station" : null,
+            police_complaint_number: document.getElementById("fir-number").value || null,
+            is_anonymous: currentUserMode === 'anonymous',
+            anonymous_email: currentUserMode === 'anonymous' ? document.getElementById("complainant-email").value : null,
+            is_injury_involved: document.getElementById("injury").value !== "none",
+            injury_severity: document.getElementById("injury").value,
+            is_missing_person: document.getElementById("missing").value === "person",
+            is_property_damage: document.getElementById("missing").value === "property",
+            suspect_description: document.getElementById("suspect-name").value ? 
+                `Name: ${document.getElementById("suspect-name").value}, Alias: ${document.getElementById("suspect-alias").value}, Phone: ${document.getElementById("suspect-phone").value}, Email: ${document.getElementById("suspect-email").value}, Address: ${document.getElementById("suspect-address").value}, Relationship: ${document.getElementById("suspect-relationship").value}` : null,
+            witness_details: document.getElementById("suspect-website").value ? 
+                `Website: ${document.getElementById("suspect-website").value}, Social Media: ${document.getElementById("suspect-social").value}, Transaction ID: ${document.getElementById("transaction-id").value}` : null
+        };
+        
+        let endpoint;
+        if (currentUserMode === 'authenticated') {
+            endpoint = `${API_BASE_URL}/complaints/file`;
+        } else {
+            endpoint = `${API_BASE_URL}/complaints/file-anonymous`;
+        }
+        
+        console.log(`Submitting to: ${endpoint}`);
+        console.log('Request data:', complaintData);
+        
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(complaintData)
+        });
+        
+        if (response.ok) {
+            const result = await response.json();
+            console.log('Submission successful:', result);
+            showSuccessMessage(result);
+        } else {
+            const errorText = await response.text();
+            console.error('Submission failed:', errorText);
+            throw new Error(`Server responded with ${response.status}: ${errorText}`);
+        }
+        
+    } catch (error) {
+        console.error("Submission error:", error);
+        showErrorMessage(error);
+    } finally {
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+        document.body.classList.remove('loading');
+    }
+}
+
+function showSuccessMessage(result) {
+    const messageDiv = document.getElementById("submission-message");
+    messageDiv.style.display = "block";
+    messageDiv.className = "success-message";
+    
+    messageDiv.innerHTML = `
+        <h3>✅ Complaint Submitted Successfully!</h3>
+        <p><strong>Case ID:</strong> ${result.case_id || document.getElementById("reference-number").textContent}</p>
+        <p><strong>Priority:</strong> ${result.priority || document.getElementById("priority-estimate").textContent}</p>
+        <p><strong>Crime Type:</strong> ${result.crime_type || 'Under Review'}</p>
+        <p>Your complaint has been registered with the National Cyber Crime Reporting Portal.</p>
+        ${currentUserMode === 'authenticated' ? 
+            '<p>You can track your complaint status using your Case ID.</p>' : 
+            '<p><strong>Note:</strong> Since you filed anonymously, you will not be able to track the status of your complaint.</p>'
+        }
+    `;
+    
+    // Hide submit button
+    document.getElementById('submit-btn').style.display = "none";
+    
+    // Scroll to message
+    messageDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+function showErrorMessage(error) {
+    const messageDiv = document.getElementById("submission-message");
+    messageDiv.style.display = "block";
+    messageDiv.className = "error-message";
+    messageDiv.innerHTML = `
+        <h3>❌ Submission Failed</h3>
+        <p>There was an error submitting your complaint: ${error.message}</p>
+        <p>Please try again or contact support if the problem persists.</p>
+    `;
+    
+    messageDiv.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Enhanced initialization with connection testing
+window.onload = async function() {
+    // Test backend connection first
+    await testBackendConnection();
+    
+    // Then initialize the rest of the application
+    updateProgressBar();
+    checkUserAuthentication();
+    setupCharacterCounter();
+    
+    // Add event listeners
+    document.getElementById('complainant-name').addEventListener('blur', validateName);
+    document.getElementById('complainant-id').addEventListener('blur', validateID);
+    document.getElementById('complainant-email').addEventListener('blur', validateEmail);
+    document.getElementById('complainant-phone').addEventListener('blur', validatePhone);
+    document.getElementById('pincode').addEventListener('blur', validatePincode);
+    
+    initSpeechRecognition();
+    setupThemeToggle();
+};
+</script>

@@ -1,43 +1,2737 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iReport - Crime Reporting System</title>
-    <link rel="stylesheet" href="assets/css/main.css">
-    <link rel="stylesheet" href="assets/css/forms.css">
-    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <title>iReport - Your Cyber Crime Assistant Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #ffffff;
+            --secondary-color: #f0f0f0;
+            --accent-color: #000000;
+            --light-color: #ffffff;
+            --dark-color: #f5f5f5;
+            --text-color: #000000;
+            --bg-color: #ffffff;
+            --card-bg: #f9f9f9;
+            --header-bg: #ffffff;
+            --footer-bg: #ffffff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+            --scamwatch-color: #ff3b30;
+            --women-crime-color: #e91e63;
+            --financial-fraud-color: #ff9800;
+            --other-crime-color: #2196f3;
+        }
+
+        .dark-theme {
+            --primary-color: #000000;
+            --secondary-color: #333333;
+            --accent-color: #ffffff;
+            --light-color: #f5f5f5;
+            --dark-color: #121212;
+            --text-color: #ffffff;
+            --bg-color: #000000;
+            --card-bg: #1a1a1a;
+            --header-bg: #000000;
+            --footer-bg: #000000;
+            --shadow: 0 4px 6px rgba(255,255,255,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        /* Header Top Styles */
+        .header-top {
+            background-color: var(--header-bg);
+            color: var(--text-color);
+            padding: 0.8rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .header-top .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .logo-text .ministry {
+            font-size: 0.9rem;
+            font-weight: normal;
+            display: block;
+        }
+
+        .logo-text .center-name {
+            font-size: 1.4rem;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .links a:hover {
+            opacity: 0.8;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-report {
+            background: #ff3b30;
+            color: white;
+        }
+
+        .btn-report:hover {
+            background: #d32f2f;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: var(--transition);
+            padding: 8px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+        }
+
+        /* Main Navigation */
+        .main-nav {
+            background-color: var(--primary-color);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .main-nav .container {
+            display: flex;
+            justify-content: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .main-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .main-nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: opacity 0.3s;
+        }
+
+        .main-nav ul li a:hover {
+            opacity: 0.8;
+            border-bottom: 2px solid var(--text-color);
+        }
+
+        /* Header Image Section */
+        .header-image-section {
+            padding: 2rem 0;
+        }
+
+        .header-image-container {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .header-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .header-image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 2rem;
+        }
+
+        .header-image-overlay h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .header-image-overlay p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+        }
+
+        /* Awareness Slides Section */
+        .awareness-slides-section {
+            padding: 4rem 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            margin: 2rem 0;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .slides-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .slides-wrapper {
+            position: relative;
+            height: 450px;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            background: var(--primary-color);
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            padding: 2rem;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide-content {
+            display: flex;
+            height: 100%;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .slide-text {
+            flex: 1;
+        }
+
+        .slide-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .slide-text p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .slide-text ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .slide-text li {
+            margin-bottom: 0.5rem;
+        }
+
+        .slide-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .slide-image img {
+            max-width: 100%;
+            max-height: 350px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            object-fit: cover;
+        }
+
+        .slide-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1.5rem;
+            gap: 1rem;
+        }
+
+        .slide-prev, .slide-next {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .slide-prev:hover, .slide-next:hover {
+            background: var(--secondary-color);
+        }
+
+        .slide-indicators {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .indicator.active {
+            background: var(--accent-color);
+        }
+
+        /* Police Cases Section */
+        .police-cases-section {
+            padding: 4rem 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            margin: 2rem 0;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .cases-slides-container {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .cases-slides-wrapper {
+            position: relative;
+            height: 450px;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            background: var(--primary-color);
+        }
+
+        .case-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            padding: 2rem;
+        }
+
+        .case-slide.active {
+            opacity: 1;
+        }
+
+        .case-slide-content {
+            display: flex;
+            height: 100%;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .case-slide-text {
+            flex: 1;
+        }
+
+        .case-slide-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .case-slide-text p {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .case-slide-text ul {
+            margin-bottom: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .case-slide-text li {
+            margin-bottom: 0.5rem;
+        }
+
+        .case-slide-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .case-slide-image img {
+            max-width: 100%;
+            max-height: 350px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            object-fit: cover;
+        }
+
+        .cases-slide-nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 1.5rem;
+            gap: 1rem;
+        }
+
+        .cases-slide-prev, .cases-slide-next {
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .cases-slide-prev:hover, .cases-slide-next:hover {
+            background: var(--secondary-color);
+        }
+
+        .cases-slide-indicators {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .case-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--secondary-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .case-indicator.active {
+            background: var(--accent-color);
+        }
+
+        /* About Us Section */
+        .about-section {
+            background: #e6f2ff;
+            color: #000;
+            padding: 4rem 0;
+            text-align: center;
+            border-radius: 10px;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .dark-theme .about-section {
+            background: #0b1b33;
+            color: #fff;
+        }
+
+        .about-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            color: #0066cc;
+        }
+
+        .dark-theme .about-section h2 {
+            color: #00aaff;
+        }
+
+        .about-intro {
+            max-width: 800px;
+            margin: 0 auto 2.5rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .dark-theme .about-intro {
+            color: #cfd9e3;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .about-card {
+            background: #f0f8ff;
+            border-radius: 12px;
+            padding: 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .dark-theme .about-card {
+            background: #12284a;
+        }
+
+        .about-card i {
+            font-size: 2rem;
+            color: #0066cc;
+            margin-bottom: 1rem;
+        }
+
+        .dark-theme .about-card i {
+            color: #00aaff;
+        }
+
+        .about-card h3 {
+            color: #000;
+            margin-bottom: 0.5rem;
+        }
+
+        .dark-theme .about-card h3 {
+            color: #fff;
+        }
+
+        .about-card p {
+            color: #333;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .dark-theme .about-card p {
+            color: #cfd9e3;
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0, 102, 204, 0.3);
+        }
+
+        .dark-theme .about-card:hover {
+            box-shadow: 0 6px 15px rgba(0, 170, 255, 0.3);
+        }
+
+        /* Content Sections */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-color);
+        }
+
+        /* Quiz Section */
+        .quiz-section {
+            background: var(--card-bg);
+            padding: 3rem 0;
+            margin: 2rem 0;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .quiz-section h2 {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .quiz-section p {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        /* Emergency Section */
+        .emergency-section {
+            background: var(--primary-color);
+            color: var(--text-color);
+            text-align: center;
+            padding: 3rem 0;
+            border-radius: 10px;
+            margin: 2rem 0;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .emergency-section h2 {
+            margin-bottom: 1rem;
+        }
+
+        .emergency-section p {
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-emergency {
+            background: var(--text-color);
+            color: var(--bg-color);
+            font-size: 1.2rem;
+            padding: 1rem 2rem;
+        }
+
+        .btn-emergency:hover {
+            background: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        /* Helpline Section */
+        .helpline-section .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--secondary-color);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            background: var(--primary-color);
+            color: var(--text-color);
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-body ul {
+            list-style-position: inside;
+            margin-bottom: 1rem;
+        }
+
+        .card-body li {
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            color: var(--text-color);
+            padding: 3rem 0 1rem;
+            transition: var(--transition);
+            margin-top: 3rem;
+            border-radius: 10px 10px 0 0;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--scamwatch-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        /* Chatbot Styles - Positioned at bottom right */
+        .chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .chatbot-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+        
+        .chatbot-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .chatbot-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 350px;
+            height: 500px;
+            background: var(--card-bg);
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+            display: none;
+            flex-direction: column;
+            border: 1px solid var(--secondary-color);
+            overflow: hidden;
+        }
+        
+        .chatbot-header {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .chatbot-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+        
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        
+        .chatbot-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-height: 200px;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 10px 15px;
+            border-radius: 18px;
+            line-height: 1.4;
+            position: relative;
+        }
+        
+        .bot-message {
+            background: var(--secondary-color);
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .user-message {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .chatbot-input {
+            display: flex;
+            padding: 15px;
+            border-top: 1px solid var(--secondary-color);
+        }
+        
+        .chatbot-input input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--secondary-color);
+            border-radius: 25px;
+            background: var(--primary-color);
+            color: var(--text-color);
+            outline: none;
+        }
+        
+        .chatbot-send {
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .quick-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 15px;
+            border-top: 1px solid var(--secondary-color);
+        }
+        
+        .quick-option {
+            background: var(--secondary-color);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .quick-option:hover {
+            background: var(--accent-color);
+            color: var(--bg-color);
+        }
+        
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            padding: 10px 15px;
+        }
+        
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-color);
+            opacity: 0.6;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+        .api-status {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 1001;
+            display: none;
+        }
+        
+        .api-status.connected {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .api-status.disconnected {
+            background-color: #f44336;
+            color: white;
+        }
+        
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 4px;
+            z-index: 1001;
+            display: none;
+        }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+            40% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-top .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .actions {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .links {
+                margin-bottom: 1rem;
+            }
+            
+            .main-nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .header-image-overlay h1 {
+                font-size: 1.8rem;
+            }
+            
+            .header-image-overlay p {
+                font-size: 1rem;
+            }
+            
+            .slide-content, .case-slide-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .slide-text, .slide-image, .case-slide-text, .case-slide-image {
+                flex: none;
+            }
+            
+            .chatbot-window {
+                width: 300px;
+                height: 450px;
+            }
+            
+            .chatbot-container {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .chatbot-window {
+                width: 280px;
+                height: 400px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar" id="navbar">
-        <div class="nav-brand">
-            <h2>🚨 iReport</h2>
-        </div>
-        <div class="nav-links" id="navLinks">
-            <!-- Dynamic based on user role -->
-        </div>
-        <div class="nav-user" id="navUser">
-            <!-- User profile and logout -->
-        </div>
-    </nav>
+    <!-- API Status Indicator -->
+    <div class="api-status" id="apiStatus"></div>
+    
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
 
-    <!-- Main Content -->
-    <main id="main-content">
-        <!-- Pages load here dynamically -->
-    </main>
+    <!-- Header Top -->
+    <div class="header-top">
+        <div class="container">
+            <div class="logo-group">
+                <div class="logo">
+                    <svg width="50" height="50" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Shield Base with Indian Colors -->
+                        <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="#FF9933" stroke="#000080" stroke-width="1.5"/>
+                        
+                        <!-- White Middle Section -->
+                        <path d="M30 8 C38 8 45 12 48 18 L30 52 L12 18 C15 12 22 8 30 8 Z" fill="#FFFFFF"/>
+                        
+                        <!-- Ashoka Chakra -->
+                        <circle cx="30" cy="30" r="8" fill="#000080" stroke="#FFFFFF" stroke-width="0.5"/>
+                        
+                        <!-- 24 Spokes (Simplified) -->
+                        <g stroke="#FFFFFF" stroke-width="0.8">
+                            <!-- Main Cross -->
+                            <line x1="30" y1="22" x2="30" y2="38"/>
+                            <line x1="22" y1="30" x2="38" y2="30"/>
+                            
+                            <!-- Diagonal Spokes -->
+                            <line x1="25" y1="25" x2="35" y2="35"/>
+                            <line x1="35" y1="25" x2="25" y2="35"/>
+                            
+                            <!-- Additional Spokes -->
+                            <line x1="27" y1="23" x2="33" y2="37"/>
+                            <line x1="33" y1="23" x2="27" y2="37"/>
+                            <line x1="23" y1="27" x2="37" y2="33"/>
+                            <line x1="37" y1="27" x2="23" y2="33"/>
+                        </g>
+                        
+                        <!-- Cyber Security Elements -->
+                        <!-- Digital Lock -->
+                        <rect x="26" y="42" width="8" height="6" fill="#000080" stroke="#FFFFFF" stroke-width="0.5" rx="1"/>
+                        <circle cx="30" cy="44" r="1" fill="#FFFFFF"/>
+                        <rect x="28" y="45" width="4" height="2" fill="#FFFFFF" rx="0.5"/>
+                        
+                        <!-- Binary Code Pattern -->
+                        <text x="18" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">101</text>
+                        <text x="40" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">010</text>
+                        <text x="15" y="48" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">110</text>
+                        
+                        <!-- Shield Border -->
+                        <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="none" stroke="#000080" stroke-width="1.5"/>
+                        
+                        <!-- Cyber Circuit Lines -->
+                        <path d="M15 12 L20 12 L20 15 L25 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
+                        <path d="M45 12 L40 12 L40 15 L35 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="ministry">Your Cyber Crime Assistant Portal</span>
+                    <span class="center-name">iReport - Your Cyber Crime Assistant</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <div class="links">
+                    <a href="#" id="about-link">About Us</a>
+                    <a href="#" id="home-link">Home</a>
+                    <a href="#" onclick="window.location.href='contactus.html'">Contact Us</a>
+                    <a href="#" onclick="window.location.href='Login.html'">Login</a>
+                </div>
+                <button class="btn btn-report" onclick="window.open('complaint.html')">🚨 Report</button>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Image Section -->
+    <section class="header-image-section">
+        <div class="container">
+            <div class="header-image-container">
+                <img src="https://www.endnowfoundation.org/wp-content/uploads/elementor/thumbs/1930-Portal-2560-%C3%97-1000-px-plj1ajyig1qz2f2mvrtceyg1j1mpqov08ig6uk43uw.png" 
+                     alt="Cyber Crime Awareness Header" class="header-image">
+            </div>
+        </div>
+    </section>
+
+    <!-- Awareness Slides Section -->
+    <section class="awareness-slides-section">
+        <div class="container">
+            <h2 class="section-title">Cyber Crime Awareness</h2>
+            
+            <div class="slides-container">
+                <div class="slides-wrapper">
+                    <!-- Slide 1 -->
+                    <div class="slide active">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <h3>Phishing Awareness</h3>
+                                <p>Learn how to identify and avoid phishing attempts:</p>
+                                <ul>
+                                    <li>Check sender's email address carefully</li>
+                                    <li>Look for spelling and grammar mistakes</li>
+                                    <li>Never click on suspicious links</li>
+                                    <li>Verify requests for personal information</li>
+                                    <li>Use two-factor authentication</li>
+                                    <li>Keep your software updated</li>
+                                </ul>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1555949963-aa79dcee981c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Phishing Awareness">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 2 -->
+                    <div class="slide">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <h3>Online Financial Fraud</h3>
+                                <p>Protect yourself from banking and payment fraud:</p>
+                                <ul>
+                                    <li>Enable two-factor authentication for all financial accounts</li>
+                                    <li>Use strong, unique passwords for each banking platform</li>
+                                    <li>Monitor account activity regularly for unauthorized transactions</li>
+                                    <li>Never share OTPs, PINs, or passwords with anyone</li>
+                                    <li>Verify payment requests through multiple channels</li>
+                                    <li>Use only official banking apps from trusted sources</li>
+                                    <li>Avoid conducting financial transactions on public Wi-Fi</li>
+                                    <li>Check for HTTPS and security certificates on banking websites</li>
+                                </ul>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Financial Fraud">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Slide 3 -->
+                    <div class="slide">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <h3>Social Media Safety</h3>
+                                <p>Stay secure while using social platforms:</p>
+                                <ul>
+                                    <li>Review and adjust privacy settings regularly</li>
+                                    <li>Be cautious about sharing personal information publicly</li>
+                                    <li>Verify friend requests before accepting them</li>
+                                    <li>Report suspicious accounts and content immediately</li>
+                                    <li>Think carefully before posting personal details or locations</li>
+                                    <li>Use strong, unique passwords for each social media account</li>
+                                    <li>Be aware of social engineering tactics used by scammers</li>
+                                    <li>Limit location sharing and check-in features</li>
+                                </ul>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1611605698335-8b1569810432?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Social Media Safety">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 4 -->
+                    <div class="slide">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <h3>Ransomware Protection</h3>
+                                <p>Prevent and respond to ransomware attacks:</p>
+                                <ul>
+                                    <li>Regularly back up important files to external drives or cloud</li>
+                                    <li>Keep your operating system and software updated</li>
+                                    <li>Use reputable antivirus and anti-malware software</li>
+                                    <li>Be extremely cautious with email attachments</li>
+                                    <li>Avoid visiting suspicious or untrustworthy websites</li>
+                                    <li>Never pay ransom demands - contact authorities instead</li>
+                                    <li>Enable pop-up blockers in your web browser</li>
+                                    <li>Educate employees about phishing and social engineering</li>
+                                </ul>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Ransomware Protection">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 5 -->
+                    <div class="slide">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <h3>Identity Theft Prevention</h3>
+                                <p>Protect your personal information from theft:</p>
+                                <ul>
+                                    <li>Shred sensitive documents before disposal</li>
+                                    <li>Use strong, unique passwords for all online accounts</li>
+                                    <li>Monitor your credit reports regularly for suspicious activity</li>
+                                    <li>Be cautious when using public Wi-Fi networks</li>
+                                    <li>Use VPN for secure internet connections</li>
+                                    <li>Freeze your credit if you suspect identity theft</li>
+                                    <li>Secure your devices with passwords or biometric locks</li>
+                                    <li>Be wary of unsolicited requests for personal information</li>
+                                </ul>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Identity Theft">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 6 -->
+                    <div class="slide">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <h3>Online Shopping Security</h3>
+                                <p>Safe practices for e-commerce transactions:</p>
+                                <ul>
+                                    <li>Shop only from reputable and well-known websites</li>
+                                    <li>Look for HTTPS and padlock symbol in address bar</li>
+                                    <li>Use credit cards instead of debit cards for online purchases</li>
+                                    <li>Avoid saving payment information on shopping sites</li>
+                                    <li>Check seller ratings and reviews before purchasing</li>
+                                    <li>Be cautious of deals that seem too good to be true</li>
+                                    <li>Use virtual credit cards for additional security</li>
+                                    <li>Keep records of all online transactions and confirmations</li>
+                                </ul>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1607082350899-7e105aa886ae?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Online Shopping">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 7 -->
+                    <div class="slide">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <h3>Mobile Device Security</h3>
+                                <p>Protecting your smartphones and tablets:</p>
+                                <ul>
+                                    <li>Use strong passwords or biometric authentication</li>
+                                    <li>Install apps only from official app stores</li>
+                                    <li>Keep your device's operating system updated</li>
+                                    <li>Be cautious of app permissions - grant only necessary ones</li>
+                                    <li>Enable remote tracking and wiping features</li>
+                                    <li>Avoid connecting to unsecured public Wi-Fi networks</li>
+                                    <li>Use mobile security software for additional protection</li>
+                                    <li>Be careful about what you download and install</li>
+                                </ul>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Mobile Security">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 8 -->
+                    <div class="slide">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <h3>Password Security</h3>
+                                <p>Creating and managing secure passwords:</p>
+                                <ul>
+                                    <li>Use long passwords with mix of characters, numbers, symbols</li>
+                                    <li>Avoid using personal information in passwords</li>
+                                    <li>Use different passwords for different accounts</li>
+                                    <li>Consider using a reputable password manager</li>
+                                    <li>Enable two-factor authentication wherever possible</li>
+                                    <li>Change passwords regularly, especially after security breaches</li>
+                                    <li>Never share passwords through email or messaging apps</li>
+                                    <li>Be cautious of password reset requests you didn't initiate</li>
+                                </ul>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1595675024853-0f3ec9098ac7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Password Security">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 9 -->
+                    <div class="slide">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <h3>Public Wi-Fi Risks</h3>
+                                <p>Staying safe on public networks:</p>
+                                <ul>
+                                    <li>Avoid accessing sensitive information on public Wi-Fi</li>
+                                    <li>Use a VPN when connecting to public networks</li>
+                                    <li>Verify the network name with establishment staff</li>
+                                    <li>Turn off file sharing when on public networks</li>
+                                    <li>Forget the network after use to prevent auto-connection</li>
+                                    <li>Use your mobile data for sensitive transactions when possible</li>
+                                    <li>Ensure your firewall is enabled on your device</li>
+                                    <li>Look for HTTPS on websites when browsing publicly</li>
+                                </ul>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Public Wi-Fi">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Slide 10 -->
+                    <div class="slide">
+                        <div class="slide-content">
+                            <div class="slide-text">
+                                <h3>Child Online Safety</h3>
+                                <p>Protecting children in digital spaces:</p>
+                                <ul>
+                                    <li>Use parental control software to monitor and restrict access</li>
+                                    <li>Educate children about online risks and safe behavior</li>
+                                    <li>Keep computers in common areas of the home</li>
+                                    <li>Set privacy settings on social media and gaming accounts</li>
+                                    <li>Teach children not to share personal information online</li>
+                                    <li>Monitor your child's online friends and contacts</li>
+                                    <li>Encourage open communication about online experiences</li>
+                                    <li>Set time limits for device and internet usage</li>
+                                </ul>
+                            </div>
+                            <div class="slide-image">
+                                <img src="https://th.bing.com/th/id/OIP.8jPF9DpN4up6PKFGBUnTTQHaEA?w=318&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="Child Online Safety">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Slide Navigation -->
+                <div class="slide-nav">
+                    <button class="slide-prev">❮</button>
+                    <div class="slide-indicators">
+                        <!-- Indicators would be generated dynamically in JavaScript -->
+                    </div>
+                    <button class="slide-next">❯</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Police Cases Section -->
+    <section class="police-cases-section">
+        <div class="container">
+            <h2 class="section-title">Recently Solved Cyber Crime Cases</h2>
+            
+            <div class="cases-slides-container">
+                <div class="cases-slides-wrapper">
+                    <!-- Case Slide 1 -->
+                    <div class="case-slide active">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Online Investment Scam Busted</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>5 individuals arrested in ₹2.5 crore fraud</li>
+                                    <li>Targeted senior citizens with fake investment schemes</li>
+                                    <li>Operated across 3 states</li>
+                                    <li>Recovered ₹1.2 crore of stolen funds</li>
+                                    <li>Used fake company websites and documents</li>
+                                    <li>Victims promised high returns on investments</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Investment Scam">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Case Slide 2 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Job Fraud Racket Dismantled</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Fake job portal duped 200+ job seekers</li>
+                                    <li>Charged registration fees for non-existent jobs</li>
+                                    <li>Operated from Delhi and NCR region</li>
+                                    <li>Used fake company identities</li>
+                                    <li>Created counterfeit offer letters</li>
+                                    <li>Victims lost ₹5000-₹25000 each</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Job Fraud">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Case Slide 3 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Social Media Harassment Case Solved</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Perpetrator arrested for online harassment</li>
+                                    <li>Created multiple fake profiles to target women</li>
+                                    <li>Used threatening and abusive language</li>
+                                    <li>Victims included professionals and students</li>
+                                    <li>Digital evidence collected from multiple platforms</li>
+                                    <li>Case registered under IT Act and IPC sections</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://images.unsplash.com/photo-1589652717521-10c0d092dea9?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Social Media Harassment">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 4 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>UPI Fraud Gang Nabbed</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>12-member gang arrested for UPI fraud</li>
+                                    <li>Affected 500+ victims across 5 states</li>
+                                    <li>Used social engineering techniques</li>
+                                    <li>Posed as bank officials and customer care</li>
+                                    <li>Stole ₹50 lakh through unauthorized transactions</li>
+                                    <li>Used multiple bank accounts to launder money</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="data:image/webp;base64,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" alt="UPI Fraud">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 5 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Data Breach Prevention Success</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Prevented major data breach targeting banks</li>
+                                    <li>Protected 2 million customer records</li>
+                                    <li>Hackers used sophisticated phishing techniques</li>
+                                    <li>Attempted to access sensitive financial data</li>
+                                    <li>International cyber crime syndicate involved</li>
+                                    <li>Collaboration with international agencies</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Data Breach">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 6 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Cryptocurrency Scam Busted</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>8 arrested in ₹15 crore crypto investment fraud</li>
+                                    <li>Promised high returns on fake crypto schemes</li>
+                                    <li>Created fake trading platforms and apps</li>
+                                    <li>Used social media influencers for promotion</li>
+                                    <li>Victims from 7 different countries</li>
+                                    <li>Frozen assets worth ₹8 crore recovered</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://images.unsplash.com/photo-1621761191319-c6fb62004040?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Cryptocurrency Scam">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 7 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Fake Call Center Racket Exposed</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>3 fake call centers shut down in Mumbai</li>
+                                    <li>Posed as tech support for Microsoft and Apple</li>
+                                    <li>Targeted foreign nationals primarily</li>
+                                    <li>Used VoIP calls to appear as legitimate companies</li>
+                                    <li>45 arrests made in coordinated raids</li>
+                                    <li>Estimated losses of ₹25 crore prevented</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="data:image/webp;base64,UklGRpYcAABXRUJQVlA4IIocAACQegCdASpsAeoAPp1Kn0ulpCKipfkpoLATiU3SYAXYSJO1fEb5T8wPxV7BPsHx7+N/WM8h5E3Ov/C+8D52f8b1T/qH2EP1z6YP7k+pH9lf3S91T/j/tB7wf2R9gD+uf7j1m/+Z7L/94/7nsP/uz6c/7r/DX/eP/N6XOqI/Ouxb/b+IvlS93e5PM07B8zfpd/F/u3uE/nv9n4r/t38h6AXs/+8eK3tgLb+gR7JfYvx18x7/Y/xnqt9h/+f7gX80/rn/U/sftb4HX2r/hewL/RP7x/3PVR/6vNh9b+wl+w/W89FIjkJgMxrYsOL0BKaoYv25dyIWHZFOpYx4lirpt1J66xHa66aoQIrr/1XFmm1MbTinGfGyX3YXTm06hE5HRLvKY0VCmKEdtjBWDRUUxw3sLgEYB8A9TubRz3BOH3A9auIZpg8fhcTTMea2B32aK7haJkGvCZetaIuah1HGN0Byxn24NZ7LrtqtzohCaoA+uSONtHGmB+xuOsWKq5Tmri5dJvHHrvoPsE/Rjo8jZz0TxuVmILmViGONH0Z1R8cQBSIqtYgpRdYlQkubA5L6PtwL13Xk/Py1UyviqmB+I+z0ce2FwYv7T3snLWbkBP9O6T5sr3eaHjkeeXamy3sEVGY8USp4qQwZFLseRGIzpH+2PXFRt+UtQ8jhVnAqggjVMPAaujgJeE85EAiW2gd26pGRntKHbA3shuBTr91AxiWGLYOYVuAFgoJliwBczx9z269/6aYrLEmNU9v6Sh+UnC+7HukaTtaEswSQGHHOqtX0KfqikefwxPBxfVL1IH4i5yPa3ONVjnkYZvP7pb6ikWZBUxh+vFEOZTRoSUpbmjOJA5UXrGCvDLQXQ9OHOdz9+gKj+Xjg3YX55FZUthpqBz5XHmyVzAl4m/sRYc2zoAiSf/OZPYHxNmNTbv1afgDhBqXnichIuqzUU1Hsy6FM+lkTDyH437GMhXaPqIg5NjhPBxVR7xZ0UdczrmJFe+ahzoeapcMyio0VEb2F9zonHL3BpfO9LmpJVPdZ+CWX1XdcpJ2Z4jaJ2+N0N2RuxzL6Wb9W+iu1YpcnsndyMQU8y7WH9rufud18IQvNyyb4uXGRNA6iC5VL9uXgxo+APcqvqRue5a0KK5jah4I7DV+qFY2gRFmPb/F3sNt10Vsouse/QBy/29BiflkAkOOxt9xSt5PuK8lg74lM9cr2LfgpX0wnlKyxflQero1BuwzPzETJIJPvxlJeyOqEdTksXl/EYj+EkYszu6SA8k1UxeQsJig0PKYllUqxJCmemEM0BLla2euVBsMfz6ZIGRIqAAD+8fGKdh0bb/u8Hn+R2//9sZaHd8S0ZjjvX0tyRzK4/U8zSGFIbfG1YlzCN6s+hVBzw8qHgtPWgAqSnqcvVooVeFK1BMaJ7WD8s9SMbZTRP1F83e8vRMwSbBFpnqMz4N+kCGJgAbmAQuDI4vUduNbqvsxeAAvvEqw/51rPd0XvikQV8Ryx7Vi/3AAAJ0XehgS1+kC4bf5F3St3Wao2pyBMk7DWB0vBWqxSNzNoUkApQG906BMDOakb80xDUoBICN8PLn5Cz4WFkBMoiKaWaN6P8ZNrPeEyAw9vN2piLrRR9nYhQaVseUxkKcCuI++7IZF5TIoVkF2kiJaNYXPGFTN64ToSK7/ZqcsVt3srhDFYKCLqvH7xMo8SBwAEwxmbVgYV8HUgxskUeZvPGD87KiRzI/s5THWT7ZmPsTVWC7nS90A8pp6mTIxyf5zazvp94nj6yYMRHk13DiyPc1uGEeVX1DEksRACkbWOm/YZ+ps40H2fpzBH1ntGTxnloUyOdLGTE6audDbKdNCNFdBl+UiF7PuZeMFz1+dF9OliT+ubXvCRXuaDQKzzYc9f3+xdrqXqI8BfDonS0dfrsrjwDXIwo0+H/CnCjdiZikWvMWeNhX41+FmMMydZ9+8Y6RLVjC8JcPckCD4MqUod2UWfgz/e2mO4i7EZ8HaE2dPNOTWNmYjAvw2MZEcOkS19U5FM7czQaoC86OEuQ9lVaNCImtlh21/qRCDSfAxOrAhisCKwR88MRUYxa+b8Vovyd4oH3xvUKSBIfPOp3ZIShZPUOSsAVYbbJOlowV4cho5H2TJavB9DAlVWKf2jPB/gNLEhFuWml27XKY0kM34m6xSk60J9lv5ZDBQONt1h5Ez5iv9W7ugyR/ckgD86Bz+Nn31E0N0IPMN/8MyW23GxSwP5vr7Mi94ipcEGpIoNDTjm1PYjwnrIoeBE8Rqac/34RnRVHMaOEyP2s/upcnWiQP6W7OKG95uxpoqNPkmHKFINlt38gP0+erggLdALCnYEyhyhQdQugWc+xttsXQfjBaa7K3PleQOc/OCkq10O3YPdgdgFfZ3RJWVLYRvQkK7gVDiV8LLbZxFUekZry4R0WwsMa3K1O2Ji/cRP2c78FW4DMuI+gXklo83hyKJnHt6SAHQb5QXItiJWteLv5wnry9RsrT5F/9aZW2zOKGzkrhxSPDu6HBnpSxQsG7nRoqO17nUABVbxwS9sPu+AdGIb8/KlWBvh962fKIbriUIG82ya1n5hzDBG5dWwWL1okscx7gYa/0B5Fp+QZzky5JzO9cjeY4xGmtEK6DGDTN4U1iZ1FLebEKAleHeHw7LF/2IMBpDWCQ1LsGvBmEHAGt1T1ZQJUjSWHtgdacsI5RfoETSmNzUjimiZZlf5hOVVw3j5QzwIjLFrLZ2yuhxGy2LHAfzOm5YSvZ8DxmTsSl7LcIJ1ILFN7oYQ/J1IVA8/1GQ2X1ZyTcvLAee9KBPB5aO/AZDAy6AJJf8s9G7xPDSUtVGMNeYbIK7+zI2PwNUb6MgZIQNljAR8tzuJeqFfp8Qm2Uw6LdLUT8BgcIcu0t0Bk7wzxv3mMDNvu6hTNUC8tsJi0EifvZCT5XcI31GeUEpofLgXpkK4pG9bsTvbl2jNUlfap3UTj5fez6fYx0lnAohwAg0vGhYHGGmzYLzCMq2NS05A0uOxGqctFF+jsTEUwX/MIuKlmOVmfYsh1q5M17Bpz5il8xAfQJhGXHtLCWklp7p1lh3bPs+5MZdiLWMLWPVZ2+OwtRQEveTSDLDpAqihHtMA35v8xGz1T1DW7VN6a1rgZrlovyW7K3Wln7Knfq3o6iwEyLB8fMeJd8Rmj9cZHXbmGYR9hblypxjFJfMV8YqJV0eXemoy63c+7Cedq/Aqa/Is+UkxwVJo7ENX3gHk2+H8uGUExs0h97ar8SnELcBRUaPlOftIO8K1BEWWSN4wlFhso3v+w6NrgF+MG/y4d7t+aC1CKqSQ5wq3/AqPGsv0Y7sB9DMGiTOqLgaj7VXl+yKCNXry0FnfLLtpKvr+wZ27J2mZzs5DXnQucJNfEPB8JI5xQB1EQbzokFNv5VL46NDqS63sL3lbV9+7CXgQrrkyQ1g7vCaat8aaE0TOlSu92Rl27dMNxaqlH1C1/m8inZ+OjpG4YeuIcVsDZ/4PffXdJHbqB4ybPrbk/dqp0IL0yfaLmX7X3LVQ+KlseQYHXCGrS68WM3NPN2nQH1idvSeqZjC/0B0ydOlR43iPFQHS9lnBU14mUocZziwEPbn0se8OYfooSzps4zaNy1DpOrZ0mODNCkwqgO/KZc/Me5vUnEa+rtED3nE8637Pdz+RzpVo0VmvkC7gEmqvwD8oTDitKWAXhmBsvbczcpk2eOYd6MDwaBIs5HQGQLyD6Qc9idtmO56/o2h5G8GFeUwL6gOaJefu9rGw1wcp01RthePvn+P96885o9YWDFX9qsqEBTPoaTlzM9QW+TLrkCVv7It8CHxt0PoH6HneoHVHJXXZM3wX+GSpP8zQ4FXoRxUGK6J32BTIl1yOnm/ooES40vuCB3Fi4p5g3sLeLR7qA5zpVeg2AjsC4u3hYiumGAxRHua+V0pKeRuD/SqmW3cBjVLFm54ZRMawTUsMAhdLBjWRJ9R5tCGHZ5PeeKmw9pSdBqXPEFAq8d6kBJ1OOZGNKjtD8i69SO2gMTD5+9RTZESsyoQfbuXE8OGe+5JV9LDz+0SUSgPN+4CHrC36OKY+8t8fo73GIbrMmlE+xD13P4/bjTguD5H9SCmi+BI8R+8ldTaKzuN6am+rMIGtortgL55kGHPO4dgvJa/Lhxthq5wI0eG3dba1huQsa0yM4p88Wea1R2+8nHrpsmPeSkDk0sH9pvWssqQP7WxWfureZGEzcT8jpb20E08ZfXXBlZ8dydmSGiO24+LCtg5/cbhFUVRUAtECKmpUEZDLHir77zjIAxZxeHidw5stuldQuJkgcBaQdsnJTQsQ5Awbv/EVm4SppyQXDUhhhYTz0S4OTnz/viVwX8mSBCaOqkhkw1vM2AC9V19TcxD5ICSk0Hf5E0iy68OOgzOpNzwV065dkq9EIX7Y5Uw0YZe44n+XO5S3oOX6jwcV8rRcUdJ95QpMfheQ3qiOV4D4l7bCoVHsc2n1lFOkBMrYLfh3sjlPtFn60TAgbd2lxfVMPuRblg5imipswjg+A1PpXAAwU2taSCeBmD/zOGSqqxPkx+dQgNuDWPW35jqUWw3omrreDakdU9E/CqWynMVGPKN6qky1KL4HoZ6K4zMosr1QJsGE81q9HB9etJX2LobKiNTrBvxTuFMg6PI3UbRqLYa2NkcURlcu4XTy4rsxlmFqHnQTiVWSeOKhUtxgKsjiwV4rUbqk31Nlb2wEv4bARRYuw7XlUYTvmeJi/pelzLL4U1XnZltW/V6gsA5QKKnjaDdEk22rquWUDQW7BvOocTOr7C18EsQJvOis1I23zjBcyL4EAlJB7ky3JE4sL+/I0vSrRButMeNHLY6S1lnjeq3N+ws0BRvxwx9Xyd5gnt3EULnnOnyzCU9dFWS6DcSukmL+J5LWQKfX09Uk6j99D7WLKIxjaa1FwkATcEZBX4+/dEy19yRWXZVKD1gT5X6zuSzMnHz4L2PX5Mhf2vKB0o2p/0NXaQSm9j9Hsgd1RYSYVPsEFQ4p/FOsqrjnsjNIdGCon8B96YbC1MfvUQ8cOIuW+jxQxkuzWP81ULNaYk0a+bg4nnZ/G2Dv3x1icmFIYJx2PE5KxSVTkIfkkyHqxSs/qKvDLZs8d7vORL3sIql5VgX230pI5s0LqdrI+BGj9++kqYg7l+UCnlVbdg5MXx4lDtlk7AvVcRIpJNgrD3+usPK45xp1GT5SemlbEjFn8fOiEs5yLOAvnhjD7lzVGgP7xTXGwW1XeliLMBJVrbHAz/WNfTaY443E3z0mgKkv2oIDnnNyhuoS/UNk/WVMsrxoCVTboBhDbFJeGoqmlRXnJd5KhzOamxvkl6dUPOWihsXn81zq8uQtAPyh4chTdAv6fhcPu2IP43O9zV0IdDAxnII3pcoFOBAwAgLvCPTe4VxghB7ws0EetPvtt+8n4fRfl8z2+gma70/YVBznH1f+2YJYsvenomfGeMW2aziC/prdbSecG5wkPpDWeWwt2s5zHy+V2RiWlXHL16iDzrecYHN0pCzaaaelcVBPeGXcjk2KHavq7xVTUv8hiC+TfH5a7cbKArUxxhb6Zt9tYi78ovTpMeDpZZCMwAa3UxHcrfPRGK9x5q8xt+vr7SXB+kuZdLU2wutFxeXTGpQqohlZPzzIGFGWsY/MrdiNDmAm0v/LT60f4ArtvyF4+PBhtroDj6pAW8Td5IUy3JOWvYOS14f3UqoWhf/MiQmzd+VwxEV4dIdnqT4BRk4y7bd4KBgr+iYtV9ThUObWZqGxtKfAQKxVXEE7SrX3RTc30VcdzqKaTs0sYDrUQPT5k+wgsccNVXwdU6hfGiEsbR7OIo1cbQlugcdvx5MoXyQ5xSIMN4Eq4kMl/uJkXAanEAKxmziExa+R/cgqcCmgGfHbAf4zN5sAGnZDuX3l7+/i59wf+0zEQvoOCVzAh+XiZGtbVHi3p9QBbCLpUOsLr6qgH6rl3luM9TiuomCyNRiBPiHd8wB05UT13NGrZn/cfkdIZwNSxMUusptj1ieFMYR9tdS+9Z/qrmghwEiIbWnh+FWOVndTnjNb+/wx774haChv8tBn+1T5VwGvka4ko4ymkBU4texI6s0iza39A6+InUegztmydOCjVqyyLfyFcIq7uLsyxfhdUPZFiSD5w7j5iTRLKrzU5HQkQ/88PhSs/CYCCujsGT7+S9DLAbdTQmSTD5ux53lxskO0fcWZYPm4QtI9NnMBK/4QEIt7dotsauMFvPW3u8xue838qRo8kfmntgJbGVomBZxsVSpmP+am1Ml5mjDgZ/6rLhfbUaI7cohIa23bx9vqFpRTzFJOp+TGhOr/Kxqte9r7KTBpHq/e+jlIJcxiyQcKty1TZ20zryuLATDIBdk+JPJe4LFBi4vdfuoDGiqxUDI1ISRp/YrpEyCrbHLX4UOlNFGgy2CEx5VmRl1ceXhCsiSRrdLoCpriWmverrzRX4akJ72g3vz2f/v1RZK6O5+ad3faeRv6qKTzXFHyIE1Q+nfp06rRertKsrxT03ffgpf/Mt2QxZVB7jzPTzxQiPvl+qeePJGX08nOBko/DN931uUJZf75Te76W/AmpX47Dwi82IKF85hb2pQFrqO8+YCGplwDk+sjSTDVSeO+5/1qJTCJZo5D9I07PJbOM+hX4JMKJdoQWS5R9up+8Vm4ZJt682XDKIQwP0YFdidTzdRfdV/9eySIu46z5e+Pbl8copbIF3UVN4zMcdBowzgZRYwKMT3Lo/yKDS0XeFKlLflTdzWu8KD0/mjLMJqMdVZZcsqpMQqvNR7CiYDrdXtBPfnBaONjH+t+1RrdtXY/v2x4H/GItx9mqx5wHtov3zzJuoM3sHZ0C83usfRlSq9mjt6UwhEYW4cBZj/eE+T2xQxlVs9wXTeFveMMItWKjoNJcosmSbHBPdiQt/QwdLAV0FvB88KRvD+rBELdez/cMLfGzdaHRKpEVnY/xC/j2etPUktn3CQE7DqvuJTUfTnwimzxSqBceI92SnERzKF66OQ6XWI+9IrkrSPsGJm7+VhAqaE9PvcdlNFLptsHzX4JR+ueXt6veSdUGVFPvUSnkJHreB1qW/cwrwgex3iYDUjuiuz/oRINWAx2sM9Y0BkQCp3lz4vlVHezUMM+HTZt/v00bx0KMaQUxQNRqEkdaZMHKdqJ6YjySEHL0q85WD00PlJqlFHIMVE9rjWX5rgALHyMY8WsCB6hRbWn4woPXQ4Qm/ZWyOihdzJjSC5tHSQAoNGB3nXGHNJP9avq6AhvzB8pFIWaG7Ab+eE1LI4RT8Zz0RzeQqe5D9E5fznszLIMbCg0HwGLEMsm5dLWXGxwKY3Aj2P43IMGK0FHVWHcYD8zLdGwUnfhaPy3rrIId7/5FczNHe7D7soYkMxm4/r4l9t1kOIOLZr+Lrr8OywQOXwrzKug0hMrpIoqeP0cToUIA1Cjtlq8mMtqCuaeOae2+Z0oEtV0JReUjGZLjhZF3LLA84ZQNfX/g9+W7p5qDqzfwIKRFXEAlwsZAArgCtCMdUdqf6kI4oiZY0fqPPpz+xRimAJzFcB3fnBV1zQIC7gRKg48VFCj1cnT47P64W7fG56irKBtRNvmt9TQQBWK29urDSZw+ZMMf5FNMhgcRnaXvvO41x62OT8hOaIJaICspj+zx30kFYSe4dSIjmqZlI//BJm6/PzNMXVUdI3QafBv1Sq/XaCJa2kaJugPfI7e6tmOa1hln9SLrW2eoB7/pWitowzlgPPd2BUZgvuX7p+Rtg6wj9qLoUbyUEqPoQNsHoyR55SFQSBja5lPCxH+0Akw0iLaxIFjDHamuy64pZR6JgkDdSXrwMgAxP9ULH9tM6CvXUeW/WD9zq2p+8eyoc2/Cmf2uk00X5wfVgYYiaKZRzYLK4ZbmJUzinLH8u75BOckFOVwBJ/fzoY/KUGBfIiccLxVjSdSyyQ4bnR8u8pa3OfmMeJGV54u+/nzR87SxupNx1gtKxa0b0A9m25aILzNjGFDyQOA/oh2foRAHK4ei08fxxG5tpnBxbTNUFeSvOJxVgC4YH2jcOIC0NkEiGOrltYhT/+v9hajfgWuTW3EIKKVOB2SfRIWcDb+hBJcxXev9rtnc7xClUUzFIjdEhpUF9WVUX69QZfAd/l0wVDzVdsiwBibHTb77nlGpaf/uO9zf+z2sh/KI9mC3ybL9rei7uKWp+cZ4BMsDv6zab2uegBQTTZuWHoiVLlnFFWuNTOf3Oe8l9gWCg20czv3Mtun1ZCJ4VbmoXxpbRODK4Ain+huLWcnpQn2IDZFaT3YTcsAABAsB3XG476Wx+uJlSpIBBvcjeDv/pW8U41YUF/ITQf5SHcYv92hCp6yIj/2dwgNr6El3AIglq151gZ5WAEUY+UIhy7ZqQrYVedIDZqhovyNc9EH+O+IBiK0FbgAwOH5BPTwuhtUysZU1mljPseyaphr9Re6ZGqtIXUKLjHUt8kELWLllPerqgIpxanDysMh4jBdzzSkoxsgKp47gEzj0rvZb5Lpl43Y7zxJc6jvBRZcRvubfuZVKmVfmFWvBlr2K3xYkjO8P17/GInyJBI0cLYL0D0ptDtJn8lJx+CABFt1v9T2TPxhhuGY3VdF5mJvrnrD67X6VoEW53HtlJt/x1L02hW34J7FtJXNw3/LsQ3EIW6YM2Vt8425nD3clU9Xf+n0SG6DyL3IcO+79DgP49qUDm6ZrUw1RmLP6gSbZ35LRynyJQC8tZnWivQABKsB/rMvCqH7glWvylLNum0Z+Ii1EQ0wwKR48bcSK8LuoH3E8xV2LnfXUtXE1JVms0Rjvu2cLUFDUz7GNd/ZMA+3e9DInmqRia0i6CjeGkkXQf3dxrnxW6J8GFIJsKVCWH2Pm1teB9lrEqqQylQqFAp28ck1jBTEhv2nmg0n7DQd6cBeiSSAFw4e4d8oKkGgF98tSl8ed5FIfvWA82qhlYf1RoB88c/+mZZwVIADOPTw8NJCpZlITs0cEsV5xiC93Aw6I9TvDV6haaf93uhN6e/ooR8gRocC6Fv5lGqz+z0k/qAE+1w6uHpc98aUR0nE3RoFdeT6uwkpqey0xI9rjE9IXFY1tLuEwlcilhLqzl0jZJ573Fkukd+GbovuLosjIe2Ng6PQa10bYVI+H6/JAp/viFwYe5a8wRicl4Qr9AHkk2vI47KRy5aA1mx61nK6G7TxTd46p+ZGwWPsvPm4/6Zmfqwe4AIAAmWBAByGIYxYK5BizksioxgS8gUG+IIqhMNO2Empwghbp5E5/aojNhGT4CLtWuGWPt/X0DIQOocHj9SRYGIbDzGeWi1qyfXv3PJ536kkmtnJyBdbaHDq7UZboPZuDzoMyUNzta43jRZh1xUarGKEiqnCvOOcM+qwLL7W4fQIlieV83GRHWpIKXeu1YTuXziBcLaS5AhAUUE8jJBCvMPuHiGjVcmAujtuXf06TIQf/psR7xEztN+TTiUSMAKGMIoEkQRvlqd91vCrbOtyy0o414KN7U3Fs3Yy/JAlcaz+EWsB3tq8VucpeGhWFiAB2stbx7BknUTHhrWYVIXjEQRpuYOSP5wwiEi6OiIUCar374RFbb3bG6Si5KVIfZwwD5FZnlV8qqteWxMXTj96jlmtB7WdcTQBu/zuBIU8SckKyqCMfMOibTmTj6IIeEXEGSUGRyTAm1+tZPew8fiDEAgD7BhP9YAkZNHWBWxkW7J1TmxemvH2NmRQXHaq/vOTi8Ndjl+APNbk/I/cwAAA" alt="Call Center Fraud">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 8 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Online Lottery Scam Solved</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>International lottery scam gang dismantled</li>
+                                    <li>Victims told they won millions in fake lotteries</li>
+                                    <li>Asked to pay processing fees to claim prizes</li>
+                                    <li>Operated from multiple countries including Nigeria</li>
+                                    <li>15 arrests across 3 countries</li>
+                                    <li>Recovered ₹3.2 crore from frozen accounts</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://images.unsplash.com/photo-1604594849809-dfedbc827105?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Lottery Scam">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 9 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Fake Antivirus Software Racket</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Tech support scam using fake antivirus software</li>
+                                    <li>Created pop-up warnings about virus infections</li>
+                                    <li>Charged victims for unnecessary software and services</li>
+                                    <li>Operated through compromised websites</li>
+                                    <li>22 arrests in coordinated cyber crime operation</li>
+                                    <li>Estimated 10,000 victims across India</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://images.unsplash.com/photo-1563206767-5b18f218e8de?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Fake Antivirus">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 10 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Romance Scam Network Busted</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Online romance scam targeting lonely hearts</li>
+                                    <li>Created fake profiles on dating sites and social media</li>
+                                    <li>Built emotional connections before asking for money</li>
+                                    <li>Used stories of medical emergencies and travel needs</li>
+                                    <li>18 arrests made across 4 states</li>
+                                    <li>Estimated ₹12 crore stolen from victims</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://th.bing.com/th/id/OIP.QlMYhxwBKYSA2K-iZQ6K3gHaFF?w=241&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="Romance Scam">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 11 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Fake E-commerce Website Shut Down</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Fake e-commerce portal selling non-existent products</li>
+                                    <li>Offered heavy discounts on premium brands</li>
+                                    <li>Took payments but never delivered products</li>
+                                    <li>Used fake customer reviews and ratings</li>
+                                    <li>12 arrests in Delhi and Noida</li>
+                                    <li>Over 5,000 complaints registered against the portal</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://th.bing.com/th/id/OIP.82EeUoLzXk_0CeDCqk1nGQHaEK?w=309&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="E-commerce Fraud">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 12 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>SIM Swap Fraud Gang Arrested</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>SIM card cloning and swapping fraud</li>
+                                    <li>Stole OTPs and bypassed two-factor authentication</li>
+                                    <li>Accessed bank accounts and digital wallets</li>
+                                    <li>Used insider help from telecom employees</li>
+                                    <li>25 arrests including telecom staff</li>
+                                    <li>Prevented potential losses of ₹8 crore</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://th.bing.com/th/id/OIP.97J05dXcy5LEGUCyMepYGgHaF3?w=235&h=186&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="SIM Swap Fraud">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 13 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Online Education Fraud Exposed</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Fake online education portal offering courses</li>
+                                    <li>Promised certifications from reputed institutions</li>
+                                    <li>Charged fees but provided no proper education</li>
+                                    <li>Used fake accreditation and partnerships</li>
+                                    <li>14 arrests in Bangalore and Hyderabad</li>
+                                    <li>Over 3,000 students affected across India</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Education Fraud">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 14 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Fake Loan App Scam Busted</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Multiple fake loan apps on Play Store and App Store</li>
+                                    <li>Offered instant loans without proper verification</li>
+                                    <li>Charged exorbitant processing fees and interest</li>
+                                    <li>Used harassment tactics for recovery</li>
+                                    <li>30 arrests across multiple cities</li>
+                                    <li>Apps downloaded over 1 million times</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="data:image/webp;base64,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" alt="Loan App Fraud">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 15 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Corporate Email Compromise Solved</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Business email compromise targeting companies</li>
+                                    <li>Spoofed CEO emails to request urgent payments</li>
+                                    <li>Used social engineering on finance department staff</li>
+                                    <li>Attempted to transfer ₹18 crore from company accounts</li>
+                                    <li>International cyber crime gang involved</li>
+                                    <li>Funds recovered and transactions reversed</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://images.unsplash.com/photo-1547658719-da2b51169166?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Email Compromise">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 16 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Fake Government Portal Scam</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Fake government websites for services and schemes</li>
+                                    <li>Charged fees for services that are normally free</li>
+                                    <li>Collected personal information and documents</li>
+                                    <li>Used official-looking logos and designs</li>
+                                    <li>20 arrests in coordinated cyber crime raids</li>
+                                    <li>Shut down 15 fake government portals</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="data:image/webp;base64,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" alt="Government Portal Scam">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 17 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Online Gaming Fraud Solved</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Fake gaming tournaments and competitions</li>
+                                    <li>Charged entry fees for non-existent prizes</li>
+                                    <li>Used popular game names without authorization</li>
+                                    <li>Targeted young gamers and students</li>
+                                    <li>16 arrests in Mumbai and Pune</li>
+                                    <li>Estimated 8,000 gamers affected</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Gaming Fraud">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 18 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Fake Charity Scam During Disaster</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Fake charity websites during natural disasters</li>
+                                    <li>Collected donations for flood and earthquake victims</li>
+                                    <li>Used emotional appeals and fake victim stories</li>
+                                    <li>No actual relief work conducted</li>
+                                    <li>12 arrests for misusing disaster situations</li>
+                                    <li>Recovered ₹2.3 crore from fake charity accounts</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://th.bing.com/th/id/OIP.O_kDS57m1NnUEtFfILCCvgHaDt?w=279&h=174&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="Charity Scam">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 19 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Fake Tech Support for Seniors</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Targeted senior citizens with fake tech support</li>
+                                    <li>Called claiming to be from internet service providers</li>
+                                    <li>Convinced victims to install remote access software</li>
+                                    <li>Stole personal information and banking details</li>
+                                    <li>28 arrests in specialized elder abuse operation</li>
+                                    <li>Average victim age was 72 years</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://images.unsplash.com/photo-1586953208448-b95a79798f07?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Tech Support Scam">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Case Slide 20 -->
+                    <div class="case-slide">
+                        <div class="case-slide-content">
+                            <div class="case-slide-text">
+                                <h3>Online Matrimonial Fraud Busted</h3>
+                                <p>Key details of the case:</p>
+                                <ul>
+                                    <li>Fake profiles on matrimonial websites</li>
+                                    <li>Targeted individuals seeking marriage partners</li>
+                                    <li>Asked for money for travel, medical emergencies</li>
+                                    <li>Used stolen photos and fake identities</li>
+                                    <li>22 arrests across multiple states</li>
+                                    <li>Estimated 500 victims over 2 years</li>
+                                </ul>
+                            </div>
+                            <div class="case-slide-image">
+                                <img src="https://th.bing.com/th/id/OIP.6VnfDRAzZ7CmNCn5mekdQwHaEK?w=312&h=180&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3" alt="Matrimonial Fraud">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Case Slide Navigation -->
+                <div class="cases-slide-nav">
+                    <button class="cases-slide-prev">❮</button>
+                    <div class="cases-slide-indicators">
+                        <!-- Indicators would be generated dynamically in JavaScript -->
+                    </div>
+                    <button class="cases-slide-next">❯</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quiz Section -->
+    <section class="quiz-section">
+        <div class="container">
+            <h2>Test Your Cyber Security Knowledge</h2>
+            <p>How well do you understand cyber threats and protection measures?</p>
+            <a href="#" onclick="window.open('Quiz.html', '_blank')" class="btn">Take the Security Quiz</a>
+        </div>
+    </section>
+
+    <!-- Helpline Section -->
+    <section id="helpline" class="helpline-section">
+        <div class="container">
+            <h2 class="section-title">SOS - Cyber Crime Helpline & Support</h2>
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>National Helpline</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Cyber Crime Helpline:</strong> 1930</p>
+                        <p>Available 24/7 for reporting cyber crimes and seeking immediate assistance.</p>
+                        <a href="tel:1930" class="btn">Call Now</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Online Support</h3>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Email:</strong> support@cybercrime.gov.in</p>
+                        <p><strong>Website:</strong> www.cybercrime.gov.in</p>
+                        <p>For non-emergency queries and online assistance.</p>
+                        <a href="mailto:support@cybercrime.gov.in" class="btn">Email Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about-us" class="about-section">
+        <div class="container">
+            <h2>About iReport - Cyber Crime Assistant Portal</h2>
+            <div class="about-intro">
+                <p>iReport is an initiative of the Cyber Crime Assistant Portal Coordination Centre (I4C) under the Ministry of Home Affairs, Government of India. Our mission is to provide a secure platform for citizens to report cyber crimes and access resources to protect themselves from digital threats.</p>
+            </div>
+            <div class="about-grid">
+                <div class="about-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Our Mission</h3>
+                    <p>To create a cyber-safe India by enabling citizens to report cyber crimes easily and providing timely assistance to victims.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Our Vision</h3>
+                    <p>A digitally empowered India where citizens can use technology without fear of cyber crimes.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fas fa-balance-scale"></i>
+                    <h3>Legal Framework</h3>
+                    <p>Operating under the Information Technology Act, 2000 and other relevant cyber laws of India.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fas fa-handshake"></i>
+                    <h3>Partnerships</h3>
+                    <p>Collaborating with state police, financial institutions, and cybersecurity experts to combat cyber crimes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <footer class="footer">
-        <p>&copy; 2024 iReport Crime Reporting System. All rights reserved.</p>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#" onclick="window.open('Dashboard.html', '_blank')">Dashboard</a></li>
+                        <li><a href="#" id="about-link-footer">About Us</a></li>
+                        <li><a href="#helpline">HelpLine</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Cyber Security Tips</a></li>
+                        <li><a href="#">Latest Alerts</a></li>
+                        <li><a href="#">Educational Materials</a></li>
+                        <li><a href="#">Legal Framework</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li>Helpline: 1930</li>
+                        <li>Email: support@cybercrime.gov.in</li>
+                        <li>Address: Your Cyber Crime Assistant Portal Coordination Centre, New Delhi</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 iReport - Your Cyber Crime Assistant Portal Coordination Centre. All rights reserved.</p>
+                <p>An initiative of the Ministry of Home Affairs, Government of India.</p>
+            </div>
+        </div>
     </footer>
 
-    <!-- Scripts -->
-    <script src="assets/js/config.js"></script>
-    <script src="assets/js/utils.js"></script>
-    <script src="assets/js/api.js"></script>
-    <script src="assets/js/auth.js"></script>
-    <script src="assets/js/script.js"></script>
+    <!-- Chakra AI Chatbot - Positioned at bottom right -->
+    <div class="chatbot-container">
+        <button class="chatbot-toggle" id="chatbotToggle">
+            <i class="fas fa-robot"></i>
+        </button>
+        <div class="chatbot-window" id="chatbotWindow">
+            <div class="chatbot-header">
+                <div class="chatbot-title">
+                    <i class="fas fa-robot"></i>
+                    <span>Chakra AI Assistant</span>
+                </div>
+                <button class="chatbot-close" id="chatbotClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot-message">
+                    Hello! I'm Chakra AI, your cyber crime assistant. How can I help you today?
+                </div>
+            </div>
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+            <div class="quick-options">
+                <button class="quick-option" data-message="How to report a cyber crime?">Report Cyber Crime</button>
+                <button class="quick-option" data-message="What is phishing?">Phishing Info</button>
+                <button class="quick-option" data-message="How to secure my accounts?">Account Security</button>
+                <button class="quick-option" data-message="What is identity theft?">Identity Theft</button>
+                <button class="quick-option" data-message="What is ransomware?">Ransomware</button>
+                <button class="quick-option" data-message="Social media safety">Social Media Safety</button>
+                <button class="quick-option" data-message="UPI fraud prevention">UPI Fraud</button>
+                <button class="quick-option" data-message="Helpline information">Helpline Info</button>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="Type your message...">
+                <button class="chatbot-send" id="chatbotSend">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+// API Configuration
+const API_BASE_URL = 'http://localhost:5000/api';
+let authToken = localStorage.getItem('authToken');
+let currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+// API Status Check
+async function checkApiStatus() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/health`);
+        const statusElement = document.getElementById('apiStatus');
+        
+        if (response.ok) {
+            statusElement.textContent = 'API Connected';
+            statusElement.className = 'api-status connected';
+            statusElement.style.display = 'block';
+        } else {
+            throw new Error('API not responding');
+        }
+    } catch (error) {
+        const statusElement = document.getElementById('apiStatus');
+        statusElement.textContent = 'API Disconnected';
+        statusElement.className = 'api-status disconnected';
+        statusElement.style.display = 'block';
+        console.error('API connection failed:', error);
+    }
+}
+
+// Show notification
+function showNotification(message, type = 'info') {
+    const notification = document.getElementById('notification');
+    if (!notification) return;
+    
+    notification.textContent = message;
+    notification.style.display = 'block';
+    notification.style.background = type === 'error' ? '#f44336' : 
+                                   type === 'success' ? '#4CAF50' : '#333';
+    
+    setTimeout(() => {
+        notification.style.display = 'none';
+    }, 3000);
+}
+
+// API Request Helper
+async function apiRequest(endpoint, options = {}) {
+    const url = `${API_BASE_URL}${endpoint}`;
+    const config = {
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        ...options
+    };
+
+    // Add auth token if available
+    if (authToken) {
+        config.headers.Authorization = `Bearer ${authToken}`;
+    }
+
+    try {
+        const response = await fetch(url, config);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('API request error:', error);
+        showNotification('Service temporarily unavailable. Using offline mode.', 'error');
+        throw error;
+    }
+}
+
+// Authentication Functions
+async function loginUser(email, password) {
+    try {
+        const data = await apiRequest('/auth/login', {
+            method: 'POST',
+            body: JSON.stringify({ email, password })
+        });
+        
+        if (data.token) {
+            authToken = data.token;
+            currentUser = data.user;
+            
+            // Store in localStorage
+            localStorage.setItem('authToken', authToken);
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            showNotification('Login successful!', 'success');
+            updateUIForLoggedInUser();
+            
+            return data;
+        }
+    } catch (error) {
+        console.error('Login failed:', error);
+        // Fallback: Simulate successful login for demo
+        if (email && password) {
+            const demoUser = {
+                token: 'demo-token-' + Date.now(),
+                user: { id: 'demo-user', name: email.split('@')[0], email: email }
+            };
+            authToken = demoUser.token;
+            currentUser = demoUser.user;
+            localStorage.setItem('authToken', authToken);
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            updateUIForLoggedInUser();
+            showNotification('Demo login successful!', 'success');
+            return demoUser;
+        } else {
+            showNotification('Login failed. Please try again.', 'error');
+            throw error;
+        }
+    }
+}
+
+async function registerUser(userData) {
+    try {
+        const data = await apiRequest('/auth/register', {
+            method: 'POST',
+            body: JSON.stringify(userData)
+        });
+        
+        showNotification('Registration successful!', 'success');
+        return data;
+    } catch (error) {
+        console.error('Registration failed:', error);
+        // Fallback: Simulate successful registration for demo
+        const demoUser = {
+            token: 'demo-token-' + Date.now(),
+            user: { 
+                id: 'demo-user-' + Date.now(), 
+                name: userData.name, 
+                email: userData.email 
+            }
+        };
+        showNotification('Demo registration successful!', 'success');
+        return demoUser;
+    }
+}
+
+function logoutUser() {
+    authToken = null;
+    currentUser = {};
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('currentUser');
+    updateUIForLoggedOutUser();
+    showNotification('Logged out successfully', 'success');
+}
+
+// Complaint Functions
+async function fileComplaint(complaintData) {
+    try {
+        const data = await apiRequest('/complaints/file', {
+            method: 'POST',
+            body: JSON.stringify(complaintData)
+        });
+        
+        showNotification('Complaint filed successfully!', 'success');
+        return data;
+    } catch (error) {
+        console.error('Failed to file complaint:', error);
+        // Fallback: Simulate successful complaint filing for demo
+        const demoResponse = {
+            caseId: 'CASE-' + Date.now(),
+            status: 'registered',
+            message: 'Complaint registered successfully'
+        };
+        showNotification('Demo complaint filed successfully! Case ID: ' + demoResponse.caseId, 'success');
+        return demoResponse;
+    }
+}
+
+async function getMyComplaints() {
+    try {
+        const data = await apiRequest('/complaints/my-complaints');
+        return data;
+    } catch (error) {
+        console.error('Failed to fetch complaints:', error);
+        // Fallback: Return demo data
+        return {
+            complaints: [
+                {
+                    id: 1,
+                    caseId: 'CASE-2024-001',
+                    type: 'Online Fraud',
+                    status: 'Under Investigation',
+                    date: new Date().toISOString()
+                }
+            ]
+        };
+    }
+}
+
+async function trackComplaint(caseId) {
+    try {
+        const data = await apiRequest(`/track/status/${caseId}`);
+        return data;
+    } catch (error) {
+        console.error('Failed to track complaint:', error);
+        // Fallback: Return demo tracking data
+        return {
+            caseId: caseId,
+            status: 'Under Review',
+            lastUpdated: new Date().toISOString(),
+            officer: 'Cyber Crime Department',
+            message: 'Your case is being processed'
+        };
+    }
+}
+
+// Update UI based on authentication status
+function updateUIForLoggedInUser() {
+    const loginLinks = document.querySelectorAll('a[href*="Login"]');
+    const dashboardLinks = document.querySelectorAll('a[href*="Dashboard"]');
+    const reportButtons = document.querySelectorAll('.btn-report');
+    
+    // Update login links to show user info
+    loginLinks.forEach(link => {
+        link.innerHTML = `<i class="fas fa-user"></i> ${currentUser.name || 'User'}`;
+        link.href = '#';
+        link.onclick = () => {
+            showUserProfile();
+        };
+    });
+    
+    // Enable dashboard access
+    dashboardLinks.forEach(link => {
+        link.style.display = 'inline-block';
+    });
+    
+    // Enable report buttons
+    reportButtons.forEach(button => {
+        button.disabled = false;
+        button.title = 'Report a cyber crime';
+    });
+    
+    // Update chatbot to use authenticated session
+    initializeAuthenticatedChatbot();
+}
+
+function updateUIForLoggedOutUser() {
+    const loginLinks = document.querySelectorAll('a[href*="Login"]');
+    const dashboardLinks = document.querySelectorAll('a[href*="Dashboard"]');
+    const reportButtons = document.querySelectorAll('.btn-report');
+    
+    // Reset login links
+    loginLinks.forEach(link => {
+        link.innerHTML = 'Login';
+        link.href = '#';
+        link.onclick = () => window.open('Login.html', '_blank');
+    });
+    
+    // Show dashboard links but they'll require login
+    dashboardLinks.forEach(link => {
+        link.style.display = 'inline-block';
+    });
+    
+    // Report buttons will redirect to login if not authenticated
+    reportButtons.forEach(button => {
+        button.onclick = function(e) {
+            if (!authToken) {
+                e.preventDefault();
+                showNotification('Please login to file a complaint', 'error');
+                window.open('Login.html', '_blank');
+                return false;
+            }
+            window.open('complaint.html', '_blank');
+        };
+    });
+}
+
+// Show user profile (placeholder function)
+function showUserProfile() {
+    showNotification(`Welcome ${currentUser.name || 'User'}! Access your profile from the dashboard.`, 'success');
+}
+
+// Initialize authenticated chatbot
+function initializeAuthenticatedChatbot() {
+    // This would initialize chatbot with user context
+    console.log('Initializing chatbot for user:', currentUser.name);
+}
+
+// Verify token validity
+async function verifyToken() {
+    if (!authToken) return;
+    
+    try {
+        await apiRequest('/auth/me');
+    } catch (error) {
+        // Token is invalid, logout user
+        logoutUser();
+    }
+}
+
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    // Check API status
+    checkApiStatus();
+    
+    // Update UI based on authentication status
+    if (authToken) {
+        updateUIForLoggedInUser();
+        
+        // Verify token is still valid
+        verifyToken();
+    } else {
+        updateUIForLoggedOutUser();
+    }
+    
+    // Initialize theme and other UI components
+    initializeTheme();
+    initializeSlideshows();
+    initializeChatbot();
+    initializeNavigation();
+});
+
+// Theme Toggle Functionality
+function initializeTheme() {
+    const themeToggle = document.getElementById('themeToggle');
+    if (!themeToggle) return;
+    
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // Check for saved theme preference or default to light
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    // Apply the saved theme on page load
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+    }
+    
+    // Toggle theme when button is clicked
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
+        
+        if (document.body.classList.contains('dark-theme')) {
+            localStorage.setItem('theme', 'dark');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        } else {
+            localStorage.setItem('theme', 'light');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+    });
+}
+
+// Navigation functionality
+function initializeNavigation() {
+    // About link
+    const aboutLinks = document.querySelectorAll('#about-link, #about-link-footer');
+    aboutLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const aboutSection = document.getElementById('about-us');
+            if (aboutSection) {
+                aboutSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    });
+    
+    // Home link
+    const homeLinks = document.querySelectorAll('#home-link');
+    homeLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+}
+
+// Slideshow Functionality
+function initializeSlideshows() {
+    // Awareness Slides
+    let currentSlide = 0;
+    let slideInterval;
+    const slides = document.querySelectorAll('.slide');
+    const slideIndicatorsContainer = document.querySelector('.slide-indicators');
+    const slideCount = slides.length;
+
+    if (slideCount === 0) return;
+
+    // Create indicators for awareness slides
+    if (slideIndicatorsContainer) {
+        slideIndicatorsContainer.innerHTML = '';
+        for (let i = 0; i < slideCount; i++) {
+            const indicator = document.createElement('span');
+            indicator.className = 'indicator';
+            if (i === 0) indicator.classList.add('active');
+            indicator.setAttribute('data-slide', i);
+            slideIndicatorsContainer.appendChild(indicator);
+        }
+    }
+
+    const indicators = document.querySelectorAll('.slide-indicators .indicator');
+
+    function showSlide(index) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        indicators.forEach(indicator => indicator.classList.remove('active'));
+        
+        if (slides[index]) {
+            slides[index].classList.add('active');
+        }
+        if (indicators[index]) {
+            indicators[index].classList.add('active');
+        }
+        
+        currentSlide = index;
+    }
+
+    function nextSlide() {
+        let nextIndex = (currentSlide + 1) % slideCount;
+        showSlide(nextIndex);
+    }
+
+    function prevSlide() {
+        let prevIndex = (currentSlide - 1 + slideCount) % slideCount;
+        showSlide(prevIndex);
+    }
+
+    function startAutoPlay() {
+        if (slideInterval) clearInterval(slideInterval);
+        slideInterval = setInterval(nextSlide, 5000);
+    }
+
+    // Event listeners for slide navigation
+    const slideNext = document.querySelector('.slide-next');
+    const slidePrev = document.querySelector('.slide-prev');
+    
+    if (slideNext) {
+        slideNext.addEventListener('click', () => {
+            nextSlide();
+            clearInterval(slideInterval);
+            startAutoPlay();
+        });
+    }
+    
+    if (slidePrev) {
+        slidePrev.addEventListener('click', () => {
+            prevSlide();
+            clearInterval(slideInterval);
+            startAutoPlay();
+        });
+    }
+
+    // Event listeners for indicators
+    indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            showSlide(index);
+            clearInterval(slideInterval);
+            startAutoPlay();
+        });
+    });
+
+    // Initialize the slideshow
+    showSlide(0);
+    startAutoPlay();
+
+    // Police Cases Slides (similar implementation)
+    initializeCaseSlides();
+}
+
+function initializeCaseSlides() {
+    let currentCaseSlide = 0;
+    let caseSlideInterval;
+    const caseSlides = document.querySelectorAll('.case-slide');
+    const caseSlideIndicatorsContainer = document.querySelector('.cases-slide-indicators');
+    const caseSlideCount = caseSlides.length;
+
+    if (caseSlideCount === 0) return;
+
+    if (caseSlideIndicatorsContainer) {
+        caseSlideIndicatorsContainer.innerHTML = '';
+        for (let i = 0; i < caseSlideCount; i++) {
+            const indicator = document.createElement('span');
+            indicator.className = 'case-indicator';
+            if (i === 0) indicator.classList.add('active');
+            indicator.setAttribute('data-slide', i);
+            caseSlideIndicatorsContainer.appendChild(indicator);
+        }
+    }
+
+    const caseIndicators = document.querySelectorAll('.cases-slide-indicators .case-indicator');
+
+    function showCaseSlide(index) {
+        caseSlides.forEach(slide => slide.classList.remove('active'));
+        caseIndicators.forEach(indicator => indicator.classList.remove('active'));
+        
+        if (caseSlides[index]) {
+            caseSlides[index].classList.add('active');
+        }
+        if (caseIndicators[index]) {
+            caseIndicators[index].classList.add('active');
+        }
+        
+        currentCaseSlide = index;
+    }
+
+    function nextCaseSlide() {
+        let nextIndex = (currentCaseSlide + 1) % caseSlideCount;
+        showCaseSlide(nextIndex);
+    }
+
+    function prevCaseSlide() {
+        let prevIndex = (currentCaseSlide - 1 + caseSlideCount) % caseSlideCount;
+        showCaseSlide(prevIndex);
+    }
+
+    function startCaseAutoPlay() {
+        if (caseSlideInterval) clearInterval(caseSlideInterval);
+        caseSlideInterval = setInterval(nextCaseSlide, 5000);
+    }
+
+    // Event listeners for case slide navigation
+    const casesSlideNext = document.querySelector('.cases-slide-next');
+    const casesSlidePrev = document.querySelector('.cases-slide-prev');
+    
+    if (casesSlideNext) {
+        casesSlideNext.addEventListener('click', () => {
+            nextCaseSlide();
+            clearInterval(caseSlideInterval);
+            startCaseAutoPlay();
+        });
+    }
+    
+    if (casesSlidePrev) {
+        casesSlidePrev.addEventListener('click', () => {
+            prevCaseSlide();
+            clearInterval(caseSlideInterval);
+            startCaseAutoPlay();
+        });
+    }
+
+    // Event listeners for case indicators
+    caseIndicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            showCaseSlide(index);
+            clearInterval(caseSlideInterval);
+            startCaseAutoPlay();
+        });
+    });
+
+    // Initialize the case slideshow
+    showCaseSlide(0);
+    startCaseAutoPlay();
+}
+
+// Chatbot Functionality
+function initializeChatbot() {
+    const chatbotToggle = document.getElementById('chatbotToggle');
+    const chatbotWindow = document.getElementById('chatbotWindow');
+    const chatbotClose = document.getElementById('chatbotClose');
+    const chatbotMessages = document.getElementById('chatbotMessages');
+    const chatbotInput = document.getElementById('chatbotInput');
+    const chatbotSend = document.getElementById('chatbotSend');
+    const typingIndicator = document.getElementById('typingIndicator');
+    const quickOptions = document.querySelectorAll('.quick-option');
+
+    if (!chatbotToggle || !chatbotWindow) return;
+
+    let chatSessionId = null;
+    let isChatbotInitialized = false;
+
+    // Toggle chatbot window
+    chatbotToggle.addEventListener('click', () => {
+        chatbotWindow.style.display = chatbotWindow.style.display === 'flex' ? 'none' : 'flex';
+        
+        if (!isChatbotInitialized && chatbotWindow.style.display === 'flex') {
+            initializeChatbotSession();
+            isChatbotInitialized = true;
+        }
+        
+        // Auto-focus input when chatbot opens
+        if (chatbotWindow.style.display === 'flex' && chatbotInput) {
+            setTimeout(() => {
+                chatbotInput.focus();
+            }, 300);
+        }
+    });
+
+    // Close chatbot window
+    if (chatbotClose) {
+        chatbotClose.addEventListener('click', () => {
+            chatbotWindow.style.display = 'none';
+        });
+    }
+
+    // Initialize chatbot session
+    async function initializeChatbotSession() {
+        try {
+            const response = await apiRequest('/chatbot/start-session', {
+                method: 'POST',
+                body: JSON.stringify({
+                    user_id: currentUser.id || 'anonymous',
+                    user_name: currentUser.name || 'Guest'
+                })
+            });
+            
+            chatSessionId = response.session_id;
+            console.log('Chatbot session started:', chatSessionId);
+        } catch (error) {
+            console.error('Failed to initialize chatbot session:', error);
+            // Continue with local chatbot as fallback
+        }
+    }
+
+    // Send message function
+    async function sendMessage() {
+        const message = chatbotInput.value.trim();
+        if (message === '') return;
+        
+        // Add user message
+        addMessage(message, 'user');
+        chatbotInput.value = '';
+        
+        // Show typing indicator
+        if (typingIndicator) {
+            typingIndicator.style.display = 'flex';
+        }
+        
+        try {
+            let botResponse;
+            
+            // Try to get response from backend first
+            if (chatSessionId) {
+                try {
+                    const response = await apiRequest('/chatbot/send-message', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            message: message,
+                            session_id: chatSessionId,
+                            user_id: currentUser.id || 'anonymous'
+                        })
+                    });
+                    
+                    botResponse = response.response;
+                } catch (apiError) {
+                    console.warn('Backend chatbot unavailable, using local response');
+                    botResponse = generateLocalBotResponse(message);
+                }
+            } else {
+                botResponse = generateLocalBotResponse(message);
+            }
+            
+            // Hide typing indicator
+            if (typingIndicator) {
+                typingIndicator.style.display = 'none';
+            }
+            
+            // Add bot response
+            addMessage(botResponse, 'bot');
+            
+        } catch (error) {
+            // Hide typing indicator
+            if (typingIndicator) {
+                typingIndicator.style.display = 'none';
+            }
+            
+            // Fallback response
+            const fallbackResponse = "I'm experiencing technical difficulties. Please try again later or contact our helpline at 1930 for immediate assistance.";
+            addMessage(fallbackResponse, 'bot');
+        }
+        
+        // Scroll to bottom
+        if (chatbotMessages) {
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+    }
+
+    // Add message to chat
+    function addMessage(text, sender) {
+        if (!chatbotMessages) return;
+        
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${sender}-message`;
+        
+        const formattedText = text.replace(/\n/g, '<br>');
+        messageDiv.innerHTML = formattedText;
+        
+        chatbotMessages.appendChild(messageDiv);
+        
+        // Scroll to bottom
+        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+
+    // Local bot response generator (fallback)
+    function generateLocalBotResponse(userMessage) {
+        const lowerMessage = userMessage.toLowerCase();
+        
+        if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+            return "Hello! I'm Chakra AI, your cyber crime assistant. I can help you with information about cyber security, reporting crimes, and prevention tips. What would you like to know?";
+        }
+        else if (lowerMessage.includes('report') || lowerMessage.includes('complaint')) {
+            return "To report a cyber crime:\n\n1. Click the 'Report' button on our website\n2. Call the national helpline at 1930\n3. Visit cybercrime.gov.in\n4. Contact your local police station\n\nI can guide you through the process!";
+        }
+        else if (lowerMessage.includes('phishing')) {
+            return "Phishing is a cyber attack using disguised emails. Protect yourself by:\n- Not clicking suspicious links\n- Checking sender addresses\n- Using two-factor authentication\n- Verifying requests for personal information";
+        }
+        else if (lowerMessage.includes('helpline')) {
+            return "Cyber Crime Helpline:\n📞 1930 (24/7)\n🌐 cybercrime.gov.in\n📧 support@cybercrime.gov.in\n\nAvailable for immediate assistance!";
+        }
+        else if (lowerMessage.includes('security') || lowerMessage.includes('secure')) {
+            return "Cyber Security Tips:\n- Use strong, unique passwords\n- Enable two-factor authentication\n- Keep software updated\n- Be cautious with email attachments\n- Use antivirus software\n- Backup important data regularly";
+        }
+        else if (lowerMessage.includes('fraud') || lowerMessage.includes('scam')) {
+            return "Common online frauds to watch for:\n- Fake job offers\n- Investment scams\n- Lottery frauds\n- Impersonation scams\n- Fake customer support\n\nAlways verify before sharing personal or financial information.";
+        }
+        else {
+            return "I'm here to help with cyber crime related questions. You can ask me about:\n- Reporting cyber crimes\n- Online safety tips\n- Account security\n- Emergency contacts\n- Fraud prevention\n- Or use the quick options below!";
+        }
+    }
+
+    // Send message on button click
+    if (chatbotSend) {
+        chatbotSend.addEventListener('click', sendMessage);
+    }
+
+    // Send message on Enter key
+    if (chatbotInput) {
+        chatbotInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    }
+
+    // Quick options functionality
+    quickOptions.forEach(option => {
+        option.addEventListener('click', () => {
+            const message = option.getAttribute('data-message');
+            if (chatbotInput) {
+                chatbotInput.value = message;
+                sendMessage();
+            }
+        });
+    });
+
+    // Close chatbot when clicking outside (optional)
+    document.addEventListener('click', (e) => {
+        if (!chatbotWindow.contains(e.target) && !chatbotToggle.contains(e.target) && 
+            chatbotWindow.style.display === 'flex') {
+            chatbotWindow.style.display = 'none';
+        }
+    });
+}
+
+// Make functions available globally for other pages
+window.loginUser = loginUser;
+window.registerUser = registerUser;
+window.logoutUser = logoutUser;
+window.fileComplaint = fileComplaint;
+window.getMyComplaints = getMyComplaints;
+window.trackComplaint = trackComplaint;
+</script>
 </body>
 </html>

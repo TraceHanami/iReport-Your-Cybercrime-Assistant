@@ -1,36 +1,1063 @@
-<div class="dashboard public-dashboard">
-    <div class="hero-section">
-        <h1>Report Crimes Anonymously & Safely</h1>
-        <p>Help make your community safer by reporting incidents</p>
-        <div class="cta-buttons">
-            <button class="btn-primary" onclick="loadPage('file-complaint.html')">
-                🚨 File Complaint
-            </button>
-            <button class="btn-secondary" onclick="loadPage('track.html')">
-                📋 Track Complaint
-            </button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iReport - Cybercrime Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #333333;
+            --secondary-color: #555555;
+            --accent-color: #666666;
+            --light-color: #f5f5f5;
+            --text-color: #333333;
+            --bg-color: #ffffff;
+            --card-bg: #ffffff;
+            --header-bg: #ffffff;
+            --footer-bg: #f8f9fa;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --transition: all 0.3s ease;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+            --border-radius: 12px;
+        }
+
+        .dark-theme {
+            --primary-color: #e0e0e0;
+            --secondary-color: #b0b0b0;
+            --accent-color: #cccccc;
+            --light-color: #2a2a2a;
+            --text-color: #e0e0e0;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --header-bg: #1a1a1a;
+            --footer-bg: #1a1a1a;
+            --shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header Styles */
+        .header {
+            background-color: var(--header-bg);
+            color: var(--text-color);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .logo-text .ministry {
+            font-size: 0.9rem;
+            font-weight: normal;
+            display: block;
+        }
+
+        .logo-text .center-name {
+            font-size: 1.4rem;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .btn-home {
+            background: var(--info-color);
+        }
+
+        .btn-home:hover {
+            background: #0b7dda;
+        }
+
+        .btn-report {
+            background: var(--danger-color);
+        }
+
+        .btn-report:hover {
+            background: #d32f2f;
+        }
+        
+        .btn-logout {
+            background: var(--warning-color);
+        }
+        
+        .btn-logout:hover {
+            background: #e68900;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 8px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--accent-color);
+            color: white;
+            transform: rotate(15deg);
+        }
+
+        /* Dashboard Hero Section */
+        .dashboard-hero {
+            padding: 3rem 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            color: var(--text-color);
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dark-theme .dashboard-hero {
+            background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+        }
+
+        .dashboard-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(0,0,0,0.03)"/></svg>');
+            background-size: cover;
+        }
+
+        .dark-theme .dashboard-hero::before {
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0,0 L100,0 L100,100 Z" fill="rgba(255,255,255,0.03)"/></svg>');
+        }
+
+        .dashboard-hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .dashboard-hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        .stats-container {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            position: relative;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            min-width: 180px;
+            text-align: center;
+            transition: var(--transition);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-theme .stat-card {
+            background: rgba(30, 30, 30, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .dark-theme .stat-card:hover {
+            background: rgba(40, 40, 40, 0.9);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Main Dashboard Grid */
+        .dashboard-main {
+            padding: 2rem 0;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .dashboard-card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border-left: 5px solid var(--accent-color);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .dashboard-card i {
+            font-size: 2.5rem;
+            margin-bottom: 1.2rem;
+            color: var(--accent-color);
+        }
+
+        .dashboard-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            color: var(--text-color);
+        }
+
+        .dashboard-card p {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .card-badge {
+            background: var(--light-color);
+            color: var(--text-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Quick Actions Section */
+        .quick-actions {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--light-color);
+            padding: 1.5rem 1rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+            border: 1px solid transparent;
+        }
+
+        .action-btn:hover {
+            background: var(--accent-color);
+            color: white;
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .action-btn i {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        /* Recent Activity Section */
+        .recent-activity {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light-color);
+            transition: var(--transition);
+        }
+
+        .activity-item:hover {
+            background: rgba(0,0,0,0.02);
+            border-radius: 8px;
+            padding-left: 10px;
+            padding-right: 10px;
+        }
+
+        .dark-theme .activity-item:hover {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: var(--accent-color);
+            flex-shrink: 0;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-time {
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+
+        .activity-status {
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-resolved {
+            background: #d1edff;
+            color: #0c5460;
+        }
+
+        .status-investigating {
+            background: #ffeaa7;
+            color: #8d6e00;
+        }
+
+        /* Security Tips Section */
+        .security-tips {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 3rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tip-card {
+            background: var(--light-color);
+            padding: 1.5rem;
+            border-radius: 10px;
+            transition: var(--transition);
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .tip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .tip-card i {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--accent-color);
+        }
+
+        .tip-card h4 {
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .tip-card p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            color: var(--text-color);
+            padding: 3rem 0 1.5rem;
+            margin-top: 3rem;
+            border-top: 1px solid var(--light-color);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            font-size: 1.2rem;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-section h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+            opacity: 0.8;
+        }
+
+        .footer-section a:hover {
+            opacity: 1;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--light-color);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Emergency Banner */
+        .emergency-banner {
+            background: linear-gradient(90deg, var(--danger-color), #ff6b6b);
+            color: white;
+            padding: 0.8rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+        }
+
+        .emergency-banner a {
+            color: white;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-actions {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .dashboard-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .stats-container {
+                gap: 1rem;
+            }
+            
+            .stat-card {
+                min-width: 140px;
+                padding: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 2rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-title {
+                font-size: 1.5rem;
+            }
+            
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-group">
+                <div class="logo">
+                   <svg width="50" height="50" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+    <!-- Shield Base with Indian Colors -->
+    <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="#FF9933" stroke="#000080" stroke-width="1.5"/>
+    
+    <!-- White Middle Section -->
+    <path d="M30 8 C38 8 45 12 48 18 L30 52 L12 18 C15 12 22 8 30 8 Z" fill="#FFFFFF"/>
+    
+    <!-- Ashoka Chakra -->
+    <circle cx="30" cy="30" r="8" fill="#000080" stroke="#FFFFFF" stroke-width="0.5"/>
+    
+    <!-- 24 Spokes (Simplified) -->
+    <g stroke="#FFFFFF" stroke-width="0.8">
+        <!-- Main Cross -->
+        <line x1="30" y1="22" x2="30" y2="38"/>
+        <line x1="22" y1="30" x2="38" y2="30"/>
+        
+        <!-- Diagonal Spokes -->
+        <line x1="25" y1="25" x2="35" y2="35"/>
+        <line x1="35" y1="25" x2="25" y2="35"/>
+        
+        <!-- Additional Spokes -->
+        <line x1="27" y1="23" x2="33" y2="37"/>
+        <line x1="33" y1="23" x2="27" y2="37"/>
+        <line x1="23" y1="27" x2="37" y2="33"/>
+        <line x1="37" y1="27" x2="23" y2="33"/>
+    </g>
+    
+    <!-- Cyber Security Elements -->
+    <!-- Digital Lock -->
+    <rect x="26" y="42" width="8" height="6" fill="#000080" stroke="#FFFFFF" stroke-width="0.5" rx="1"/>
+    <circle cx="30" cy="44" r="1" fill="#FFFFFF"/>
+    <rect x="28" y="45" width="4" height="2" fill="#FFFFFF" rx="0.5"/>
+    
+    <!-- Binary Code Pattern -->
+    <text x="18" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">101</text>
+    <text x="40" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">010</text>
+    <text x="15" y="48" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">110</text>
+    
+    <!-- Shield Border -->
+    <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="none" stroke="#000080" stroke-width="1.5"/>
+    
+    <!-- Cyber Circuit Lines -->
+    <path d="M15 12 L20 12 L20 15 L25 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
+    <path d="M45 12 L40 12 L40 15 L35 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
+</svg>
+                </div>
+                <div class="logo-text">
+                    <span class="ministry">INDIAN CYBER CRIME</span>
+                    <span class="center-name">iReport - Cyber Crime Assistant</span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <a href="index.html" class="btn btn-home">Home</a>
+                <a href="complaint.html" class="btn btn-report">🚨 Report Crime</a>
+                <button class="btn btn-logout" id="logoutBtn">Logout</button>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Emergency Banner -->
+    <div class="emergency-banner">
+        <div class="container">
+            <p><strong>Emergency:</strong> If you're in immediate danger, call your local police at <strong>100</strong> or the national cybercrime helpline at <strong>1930</strong></p>
         </div>
     </div>
 
-    <div class="quick-stats">
-        <div class="stat-card">
-            <h3>Total Reports</h3>
-            <p id="total-reports">0</p>
+    <!-- Dashboard Hero Section -->
+    <section class="dashboard-hero">
+        <div class="container">
+            <h1>iReport Cybercrime Dashboard</h1>
+            <p>Your central hub for reporting cybercrimes, accessing security tools, and staying informed about digital threats</p>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number">1,247</div>
+                    <div class="stat-label">Cases Reported</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">893</div>
+                    <div class="stat-label">Cases Resolved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">72%</div>
+                    <div class="stat-label">Success Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">48</div>
+                    <div class="stat-label">Active Volunteers</div>
+                </div>
+            </div>
         </div>
-        <div class="stat-card">
-            <h3>My Reports</h3>
-            <p id="my-reports">0</p>
-        </div>
-        <div class="stat-card">
-            <h3>Resolved</h3>
-            <p id="resolved-reports">0</p>
-        </div>
-    </div>
+    </section>
 
-    <div class="recent-activity">
-        <h3>My Recent Complaints</h3>
-        <div id="recent-complaints-list" class="complaints-list">
-            <!-- Dynamic content -->
+    <!-- Main Dashboard Content -->
+    <section class="dashboard-main">
+        <div class="container">
+            <!-- Main Dashboard Grid -->
+            <h2 class="section-title"><i class="fas fa-th-large"></i> Dashboard Tools</h2>
+            <div class="dashboard-grid">
+                <div class="dashboard-card" onclick="window.location.href='Learning.html'">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>Learning Space</h3>
+                    <p>Access educational resources, tutorials, and guides on cybersecurity best practices</p>
+                    <div class="card-footer">
+                        <span class="card-badge">Educational</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card" onclick="window.location.href='volunteer.html'">
+                    <i class="fas fa-hands-helping"></i>
+                    <h3>Volunteer Program</h3>
+                    <p>Join our cyber safety initiative and help protect others from digital threats</p>
+                    <div class="card-footer">
+                        <span class="card-badge">Community</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+
+                <div class="dashboard-card" onclick="window.location.href='malware-check.html'">
+                    <i class="fas fa-bug"></i>
+                    <h3>Malware Check</h3>
+                    <p>Scan files, URLs, or your system for potential malware and security threats</p>
+                    <div class="card-footer">
+                        <span class="card-badge">Security Tool</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card" onclick="window.location.href='phishing-check.html'">
+                    <i class="fas fa-fish"></i>
+                    <h3>Phishing Check</h3>
+                    <p>Verify if a website, email, or message is a phishing attempt</p>
+                    <div class="card-footer">
+                        <span class="card-badge">Verification</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card" onclick="window.location.href='Checksuspect.html'">
+                    <i class="fas fa-user-secret"></i>
+                    <h3>Suspect Analysis</h3>
+                    <p>Analyze phone numbers, emails, or profiles for suspicious activity</p>
+                    <div class="card-footer">
+                        <span class="card-badge">Investigation</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                
+                <div class="dashboard-card" onclick="window.location.href='CheckScams.html'">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Check Scams</h3>
+                    <p>Verify potential scams and fraudulent activities before engaging</p>
+                    <div class="card-footer">
+                        <span class="card-badge">Verification</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                
+                <!-- NEW CARDS -->
+                <div class="dashboard-card" onclick="window.location.href='track.html'">
+                    <i class="fas fa-search"></i>
+                    <h3>Track Your Case</h3>
+                    <p>Monitor the status and progress of your reported cybercrime cases</p>
+                    <div class="card-footer">
+                        <span class="card-badge">Case Management</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                </div>
+                
+            </div>
+            <!-- Security Tips Section -->
+            <h2 class="section-title"><i class="fas fa-lightbulb"></i> Security Tips</h2>
+            <div class="security-tips">
+                <div class="tips-grid">
+                    <div class="tip-card">
+                        <i class="fas fa-lock"></i>
+                        <h4>Use Strong Passwords</h4>
+                        <p>Create unique passwords with a mix of letters, numbers, and symbols for each account.</p>
+                    </div>
+                    <div class="tip-card">
+                        <i class="fas fa-shield-alt"></i>
+                        <h4>Enable 2FA</h4>
+                        <p>Add an extra layer of security with two-factor authentication on all important accounts.</p>
+                    </div>
+                    <div class="tip-card">
+                        <i class="fas fa-sync-alt"></i>
+                        <h4>Update Regularly</h4>
+                        <p>Keep your software, apps, and operating systems updated to patch security vulnerabilities.</p>
+                    </div>
+                    <div class="tip-card">
+                        <i class="fas fa-eye"></i>
+                        <h4>Be Wary of Links</h4>
+                        <p>Don't click on suspicious links in emails or messages, even if they seem to be from trusted sources.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity Section -->
+            <h2 class="section-title"><i class="fas fa-history"></i> Recent Activity</h2>
+            <div class="recent-activity">
+                <ul class="activity-list">
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Malware Scan Completed</div>
+                            <div class="activity-time">2 hours ago</div>
+                        </div>
+                        <div class="activity-status status-resolved">Clean</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Phishing Attempt Detected</div>
+                            <div class="activity-time">1 day ago</div>
+                        </div>
+                        <div class="activity-status status-pending">Blocked</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Case CYB-2023-5876 Updated</div>
+                            <div class="activity-time">3 days ago</div>
+                        </div>
+                        <div class="activity-status status-investigating">In Progress</div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Security Training Completed</div>
+                            <div class="activity-time">1 week ago</div>
+                        </div>
+                        <div class="activity-status status-resolved">Completed</div>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#">Dashboard</a></li>
+                        <li><a href="complaint.html">Report Crime</a></li>
+                        <li><a href="Learning.html">Learning Space</a></li>
+                        <li><a href="CheckScams.html">Check Scams</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Cyber Security Tips</a></li>
+                        <li><a href="#">Latest Alerts</a></li>
+                        <li><a href="#">Educational Materials</a></li>
+                        <li><a href="#">Legal Framework</a></li>
+                        <li><a href="#">Statistics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li>Helpline: 1930</li>
+                        <li>Email: support@cybercrime.gov.in</li>
+                        <li>Address: Indian Cyber Crime Coordination Centre, New Delhi</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 iReport - Indian Cyber Crime Coordination Centre. All rights reserved.</p>
+                <p>An initiative of the Ministry of Home Affairs, Government of India.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or default to light
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply the saved theme on page load
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+
+        // Logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to logout?')) {
+                // In a real application, you would make an API call to invalidate the session
+                // For this demo, we'll just redirect to the login page
+                alert('You have been logged out successfully.');
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Card click handlers
+        document.querySelectorAll('.dashboard-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Add a visual feedback
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stats on scroll
+            const observerOptions = {
+                threshold: 0.5
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe stat cards for animation
+            document.querySelectorAll('.stat-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

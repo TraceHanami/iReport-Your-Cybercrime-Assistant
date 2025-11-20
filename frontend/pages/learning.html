@@ -1,193 +1,901 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HTB Dashboard Clone</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <style>
-    :root {
-      --bg-dark: url('https://images.unsplash.com/photo-1510511459019-5dda7724fd87?auto=format&fit=crop&w=1920&q=80');
-      --text-color: #fff;
-      --card-bg: rgba(255, 255, 255, 0.1);
-      --inner-card-bg: rgba(255, 255, 255, 0.2);
-      --shadow-color: rgba(0, 0, 0, 0.3);
-      --btn-bg: #00c853;
-    }
-    body.light-mode {
-      --bg-dark: url('https://images.unsplash.com/photo-1508780709619-79562169bc64?auto=format&fit=crop&w=1920&q=80');
-      --text-color: #111;
-      --card-bg: rgba(255, 255, 255, 0.7);
-      --inner-card-bg: rgba(255, 255, 255, 0.8);
-      --shadow-color: rgba(0, 0, 0, 0.1);
-      --btn-bg: #0078d7;
-    }
-    * { box-sizing: border-box; margin:0; padding:0; }
-    body {
-      font-family: "Poppins", sans-serif;
-      color: var(--text-color);
-      background: var(--bg-dark) no-repeat center center/cover;
-      background-attachment: fixed;
-      min-height: 100vh;
-      transition: all 0.3s ease;
-    }
-    .bg-fixed {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: var(--bg-dark) no-repeat center center/cover;
-      z-index: -1;
-      pointer-events: none;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CyberLearn Hub - Cybersecurity Education</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --primary-color: #ffffff;
+    --secondary-color: #f5f5f5;
+    --accent-color: #333333;
+    --light-color: #ffffff;
+    --dark-color: #f5f5f5;
+    --text-color: #333333;
+    --bg-color: #ffffff;
+    --card-bg: #f9f9f9;
+    --header-bg: #ffffff;
+    --footer-bg: #f8f9fa;
+    --shadow: 0 4px 6px rgba(0,0,0,0.1);
+    --transition: all 0.3s ease;
+    --accent-1: #4a5568;
+    --accent-2: #718096;
+  }
 
-    /* Floating Buttons */
-    .theme-toggle, .live-chart-btn {
-      position: fixed;
-      top: 20px;
-      z-index: 1000;
-      cursor: pointer;
-    }
-    .theme-toggle {
-      left: 20px;
-      background: transparent;
-      border: 2px solid var(--text-color);
-      color: var(--text-color);
-      border-radius: 50%;
-      width: 40px; height: 40px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.2rem;
-      transition: all 0.3s ease;
-    }
-    .theme-toggle:hover { background: var(--inner-card-bg); }
-    .live-chart-btn {
-      right: 20px;
-      background: var(--btn-bg);
-      color: #fff;
-      border: none;
-      border-radius: 25px;
-      padding: 10px 18px;
-      font-weight: 500;
-      display: flex; align-items: center; gap: 8px;
-      box-shadow: 0 3px 10px var(--shadow-color);
-      transition: background 0.3s ease;
-    }
-    .live-chart-btn:hover { background: #00a544; }
+  .dark-theme {
+    --primary-color: #121212;
+    --secondary-color: #1e1e1e;
+    --accent-color: #e0e0e0;
+    --light-color: #f5f5f5;
+    --dark-color: #121212;
+    --text-color: #e0e0e0;
+    --bg-color: #000000;
+    --card-bg: #1a1a1a;
+    --header-bg: #000000;
+    --footer-bg: #1a1a1a;
+    --shadow: 0 4px 6px rgba(255,255,255,0.1);
+    --accent-1: #a0aec0;
+    --accent-2: #cbd5e0;
+  }
 
-    /* Main Container */
-    .main-container {
-      background: var(--card-bg);
-      margin: 40px auto;
-      padding: 40px;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px var(--shadow-color);
-      backdrop-filter: blur(15px);
-      max-width: 1200px;
-    }
-    .main-container header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-    .main-container h2 { margin-bottom: 20px; }
-    .dashboard-stats {
-      display: flex;
-      justify-content: space-around;
-      margin-bottom: 30px;
-    }
-    .stat {
-      text-align: center;
-      background: var(--inner-card-bg);
-      padding: 20px;
-      border-radius: 12px;
-      width: 30%;
-    }
-    .progress-bar {
-      height: 8px;
-      background: #0073e6;
-      border-radius: 5px;
-      margin-top: 5px;
-    }
-    .inner-box {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 20px;
-    }
-    .module {
-      background: var(--inner-card-bg);
-      border-radius: 12px;
-      padding: 20px;
-      text-align: center;
-      display: flex;
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    transition: var(--transition);
+  }
+  
+  /* HEADER & NAVIGATION */
+  .header {
+    background: var(--header-bg);
+    color: var(--text-color);
+    padding: 20px 0;
+    box-shadow: var(--shadow);
+    border-bottom: 1px solid var(--secondary-color);
+  }
+  
+  .header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+  }
+  
+  .logo {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: var(--accent-color);
+  }
+  
+  .nav {
+    display: flex;
+    gap: 25px;
+  }
+  
+  .nav a {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+    padding: 8px 12px;
+    border-radius: 4px;
+  }
+  
+  .nav a:hover {
+    color: var(--accent-1);
+    background: var(--secondary-color);
+  }
+  
+  .theme-toggle {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 50%;
+    background-color: var(--secondary-color);
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+  }
+  
+  .theme-toggle:hover {
+    background-color: var(--accent-color);
+    color: var(--bg-color);
+    transform: rotate(15deg);
+  }
+  
+  .search-bar {
+    display: flex;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+  
+  .search-bar input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 1px solid var(--secondary-color);
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+    font-size: 1rem;
+    background: var(--card-bg);
+    color: var(--text-color);
+    transition: var(--transition);
+  }
+  
+  .search-bar input:focus {
+    outline: none;
+    border-color: var(--accent-1);
+    box-shadow: 0 0 0 2px rgba(74, 85, 104, 0.2);
+  }
+  
+  .search-bar button {
+    background: var(--accent-1);
+    color: var(--light-color);
+    border: none;
+    padding: 0 25px;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+  }
+  
+  .search-bar button:hover {
+    background: var(--accent-2);
+  }
+  
+  /* MAIN CONTENT */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .section-title {
+    font-size: 1.8rem;
+    color: var(--accent-color);
+    margin: 30px 0 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--accent-1);
+    transition: var(--transition);
+  }
+  
+  /* SLIDER */
+  .featured-slider {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 40px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--secondary-color);
+    transition: var(--transition);
+  }
+  
+  .slider-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  .slide {
+    flex: 0 0 100%;
+    padding: 60px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 400px;
+  }
+  
+  .slide-content {
+    background: rgba(0,0,0,0.7);
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 600px;
+    border-left: 4px solid var(--accent-1);
+  }
+  
+  .slide h3 {
+    color: #f0f0f0;
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+  }
+  
+  .slide p {
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #f0f0f0;
+  }
+  
+  .slide button {
+    background: var(--accent-1);
+    border: none;
+    border-radius: 4px;
+    padding: 12px 25px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: var(--transition);
+  }
+  
+  .slide button:hover {
+    background: var(--accent-2);
+    transform: translateY(-2px);
+  }
+  
+  #slide1 { background: linear-gradient(135deg, #2d3748, #4a5568); }
+  #slide2 { background: linear-gradient(135deg, #4a5568, #718096); }
+  #slide3 { background: linear-gradient(135deg, #2d3748, #4a5568); }
+  #slide4 { background: linear-gradient(135deg, #4a5568, #718096); }
+  #slide5 { background: linear-gradient(135deg, #2d3748, #4a5568); }
+  
+  .slider-dots {
+    text-align: center;
+    margin-top: 15px;
+  }
+  
+  .dot {
+    height: 12px;
+    width: 12px;
+    margin: 0 8px;
+    background: #ccc;
+    border-radius: 50%;
+    display: inline-block;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .dot.active {
+    background: var(--accent-1);
+  }
+  
+  /* GRID SECTIONS */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    border-top: 4px solid var(--accent-1);
+    border: 1px solid var(--secondary-color);
+  }
+  
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    border-color: var(--accent-1);
+  }
+  
+  .card .icon {
+    font-size: 2.5rem;
+    color: var(--accent-1);
+    margin-bottom: 15px;
+  }
+  
+  .card h3 {
+    color: var(--text-color);
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+  }
+  
+  .card p {
+    color: var(--text-color);
+    opacity: 0.8;
+    margin-bottom: 15px;
+  }
+  
+  .card .btn {
+    display: inline-block;
+    background: var(--accent-1);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: var(--transition);
+  }
+  
+  .card .btn:hover {
+    background: var(--accent-2);
+    transform: translateY(-2px);
+  }
+  
+  /* ABOUT SECTION */
+  .about-section {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    margin-bottom: 40px;
+    border: 1px solid var(--secondary-color);
+    border-left: 4px solid var(--accent-1);
+    transition: var(--transition);
+  }
+  
+  .about-section h2 {
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+  }
+  
+  .about-section p {
+    margin-bottom: 15px;
+    line-height: 1.7;
+    color: var(--text-color);
+    opacity: 0.9;
+  }
+  
+  .about-list {
+    margin: 20px 0;
+    padding-left: 20px;
+  }
+  
+  .about-list li {
+    margin-bottom: 10px;
+    line-height: 1.6;
+    color: var(--text-color);
+    opacity: 0.9;
+  }
+  
+  /* CERTIFICATIONS */
+  .certifications {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+  
+  .cert-card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: var(--shadow);
+    border-left: 4px solid var(--accent-1);
+    border: 1px solid var(--secondary-color);
+    transition: var(--transition);
+  }
+  
+  .cert-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+  
+  .cert-card h3 {
+    color: var(--text-color);
+    margin-bottom: 10px;
+    font-size: 1.3rem;
+  }
+  
+  .cert-card .provider {
+    color: var(--accent-1);
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .cert-card .level {
+    display: inline-block;
+    background: rgba(74, 85, 104, 0.2);
+    color: var(--accent-1);
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+  }
+  
+  .cert-card p {
+    color: var(--text-color);
+    opacity: 0.8;
+    margin-bottom: 15px;
+  }
+  
+  /* FOOTER */
+  .footer {
+    background: var(--footer-bg);
+    color: var(--text-color);
+    padding: 40px 20px;
+    margin-top: 60px;
+    border-top: 1px solid var(--secondary-color);
+    transition: var(--transition);
+  }
+  
+  .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+  }
+  
+  .footer-section h3 {
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+  }
+  
+  .footer-section p {
+    margin-bottom: 10px;
+    opacity: 0.9;
+  }
+  
+  .footer-links {
+    list-style: none;
+  }
+  
+  .footer-links li {
+    margin-bottom: 10px;
+  }
+  
+  .footer-links a {
+    color: var(--text-color);
+    text-decoration: none;
+    opacity: 0.9;
+    transition: var(--transition);
+  }
+  
+  .footer-links a:hover {
+    opacity: 1;
+    color: var(--accent-1);
+  }
+  
+  .copyright {
+    text-align: center;
+    padding-top: 30px;
+    margin-top: 30px;
+    border-top: 1px solid var(--secondary-color);
+    opacity: 0.7;
+  }
+  
+  /* RESPONSIVE DESIGN */
+  @media (max-width: 900px) {
+    .header-content {
       flex-direction: column;
-      justify-content: space-between;
-      align-items: center;
-      transition: transform 0.3s ease;
+      gap: 15px;
     }
-    .module:hover { transform: scale(1.05); }
-    .module button {
-      background: var(--btn-bg);
-      border: none;
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      color: white;
-      transition: background 0.3s ease;
+    
+    .nav {
+      flex-wrap: wrap;
+      justify-content: center;
     }
-    .module button:hover { background:#00a544; }
-
-    @media(max-width: 900px) { .inner-box { grid-template-columns: repeat(2,1fr); } }
-    @media(max-width: 500px) { .inner-box { grid-template-columns: 1fr; } }
-
-  </style>
+    
+    .slide {
+      padding: 40px 20px;
+      min-height: 350px;
+    }
+    
+    .slide-content {
+      padding: 20px;
+    }
+    
+    .slide h3 {
+      font-size: 1.8rem;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .certifications {
+      grid-template-columns: 1fr;
+    }
+    
+    .about-section {
+      padding: 25px;
+    }
+  }
+</style>
 </head>
 <body>
-  <div class="bg-fixed"></div>
 
-  <button class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-adjust"></i></button>
+<!-- HEADER -->
+<header class="header">
+  <div class="header-content">
+    <div class="logo">CyberLearn Hub</div>
+    <nav class="nav">
+      <a href="#featured">Featured</a>
+      <a href="#courses">Courses</a>
+      <a href="#certifications">Certifications</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode">
+      <i class="fas fa-moon"></i>
+    </button>
+  </div>
+</header>
+
+<!-- SEARCH BAR -->
+<div class="search-bar">
+  <input type="text" placeholder="Search for courses, certifications, or learning paths...">
+  <button><i class="fas fa-search"></i> Search</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
   
-  <div class="main-container">
-    <header>
-      <h2>Dashboard</h2>
-      <div>
-        <button class="module-btn" onclick="toggleSidebar()">Account</button>
-        <button class="module-btn">Purchase Cubes</button>
+  <!-- FEATURED SLIDER -->
+  <section id="featured">
+    <h2 class="section-title">🌟 Featured Cybersecurity Learning Paths</h2>
+    
+    <div class="featured-slider">
+      <div class="slider-wrapper" id="slider-wrapper">
+        <div class="slide" id="slide1">
+          <div class="slide-content">
+            <h3>Certified Ethical Hacker (CEH)</h3>
+            <p>Master penetration testing methodologies and tools in this comprehensive 40-hour program. Includes hands-on labs and prepares you for the CEH certification exam.</p>
+            <button>Enroll Now</button>
+          </div>
+        </div>
+        <div class="slide" id="slide2">
+          <div class="slide-content">
+            <h3>AI-Powered Cyber Defense</h3>
+            <p>Learn to implement machine learning models for threat detection and response. This cutting-edge course covers anomaly detection and automated defense systems.</p>
+            <button>View Path</button>
+          </div>
+        </div>
+        <div class="slide" id="slide3">
+          <div class="slide-content">
+            <h3>Cloud Security Mastery</h3>
+            <p>Secure cloud deployments across AWS, Azure, and GCP platforms. Learn identity management, data protection, and compliance frameworks.</p>
+            <button>Start Now</button>
+          </div>
+        </div>
+        <div class="slide" id="slide4">
+          <div class="slide-content">
+            <h3>Digital Forensics & Incident Response</h3>
+            <p>Learn to investigate cyber incidents, collect digital evidence, and implement effective response strategies with realistic scenarios.</p>
+            <button>Try Free</button>
+          </div>
+        </div>
+        <div class="slide" id="slide5">
+          <div class="slide-content">
+            <h3>Advanced Cryptography & PKI</h3>
+            <p>Deep dive into RSA, ECC, quantum-resistant algorithms, and Public Key Infrastructure implementation for enterprise security.</p>
+            <button>Join Course</button>
+          </div>
+        </div>
       </div>
-    </header>
-
-    <div class="dashboard-stats">
-      <div class="stat">
-        <h3>0.00%</h3>
-        <p>Offensive</p>
-      </div>
-      <div class="stat">
-        <h3>0.00%</h3>
-        <p>Defensive</p>
-      </div>
-      <div class="stat">
-        <h3>7.37%</h3>
-        <p>General</p>
+      <div class="slider-dots" id="slider-dots">
+        <span class="dot active" data-slide="0"></span>
+        <span class="dot" data-slide="1"></span>
+        <span class="dot" data-slide="2"></span>
+        <span class="dot" data-slide="3"></span>
+        <span class="dot" data-slide="4"></span>
       </div>
     </div>
+  </section>
+  
+  <!-- COURSES -->
+  <section id="courses">
+    <h2 class="section-title">Popular Cybersecurity Courses</h2>
+    
+    <div class="grid">
+      <div class="card">
+        <div class="icon">🔐</div>
+        <h3>Network Security Fundamentals</h3>
+        <p>Learn firewall configuration, IDS/IPS, VPN technologies, and network segmentation strategies.</p>
+        <a href="#" class="btn">View Course</a>
+      </div>
+      
+      <div class="card">
+        <div class="icon">🛡️</div>
+        <h3>Application Security & OWASP Top 10</h3>
+        <p>Master secure coding practices and defend against the most critical web application security risks.</p>
+        <a href="#" class="btn">View Course</a>
+      </div>
+      
+      <div class="card">
+        <div class="icon">☁️</div>
+        <h3>AWS Security Specialty</h3>
+        <p>Deep dive into AWS security services, identity management, and data protection in the cloud.</p>
+        <a href="#" class="btn">View Course</a>
+      </div>
+      
+      <div class="card">
+        <div class="icon">🔍</div>
+        <h3>Threat Intelligence & Hunting</h3>
+        <p>Learn to proactively identify and mitigate security threats before they impact your organization.</p>
+        <a href="#" class="btn">View Course</a>
+      </div>
+      
+      <div class="card">
+        <div class="icon">📱</div>
+        <h3>Mobile Security & Forensics</h3>
+        <p>Secure Android and iOS platforms and learn mobile device forensic investigation techniques.</p>
+        <a href="#" class="btn">View Course</a>
+      </div>
+      
+      <div class="card">
+        <div class="icon">⚡</div>
+        <h3>Incident Response & Recovery</h3>
+        <p>Develop skills to effectively respond to security incidents and restore normal operations quickly.</p>
+        <a href="#" class="btn">View Course</a>
+      </div>
+      
+      <div class="card">
+        <div class="icon">🧠</div>
+        <h3>AI & Machine Learning Security</h3>
+        <p>Protect AI systems from adversarial attacks and ensure the security of machine learning models.</p>
+        <a href="#" class="btn">View Course</a>
+      </div>
+      
+      <div class="card">
+        <div class="icon">🔒</div>
+        <h3>Zero Trust Architecture</h3>
+        <p>Implement Zero Trust security models to protect modern enterprise environments.</p>
+        <a href="#" class="btn">View Course</a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- CERTIFICATIONS -->
+  <section id="certifications">
+    <h2 class="section-title">Industry-Recognized Certifications</h2>
+    
+    <div class="certifications">
+      <div class="cert-card">
+        <h3>CompTIA Security+</h3>
+        <div class="provider">CompTIA</div>
+        <span class="level">Entry Level</span>
+        <p>Foundational cybersecurity certification covering network security, threats, and vulnerabilities.</p>
+        <a href="#" class="btn">Prepare Now</a>
+      </div>
+      
+      <div class="cert-card">
+        <h3>Certified Ethical Hacker (CEH)</h3>
+        <div class="provider">EC-Council</div>
+        <span class="level">Intermediate</span>
+        <p>Learn penetration testing methodologies and tools to ethically hack organizations.</p>
+        <a href="#" class="btn">Prepare Now</a>
+      </div>
+      
+      <div class="cert-card">
+        <h3>CISSP</h3>
+        <div class="provider">(ISC)²</div>
+        <span class="level">Advanced</span>
+        <p>Advanced certification for security leaders covering 8 domains of cybersecurity.</p>
+        <a href="#" class="btn">Prepare Now</a>
+      </div>
+      
+      <div class="cert-card">
+        <h3>CISM</h3>
+        <div class="provider">ISACA</div>
+        <span class="level">Management</span>
+        <p>Focuses on information security management and governance for security leaders.</p>
+        <a href="#" class="btn">Prepare Now</a>
+      </div>
+      
+      <div class="cert-card">
+        <h3>GSEC</h3>
+        <div class="provider">GIAC</div>
+        <span class="level">Intermediate</span>
+        <p>Hands-on certification validating security skills across multiple domains.</p>
+        <a href="#" class="btn">Prepare Now</a>
+      </div>
+      
+      <div class="cert-card">
+        <h3>CCSP</h3>
+        <div class="provider">(ISC)²</div>
+        <span class="level">Advanced</span>
+        <p>Cloud security certification covering architecture, design, and operations.</p>
+        <a href="#" class="btn">Prepare Now</a>
+      </div>
+    </div>
+  </section>
+  
+  <!-- ABOUT SECTION -->
+  <section id="about">
+    <h2 class="section-title">About CyberLearn Hub</h2>
+    
+    <div class="about-section">
+      <h2>Your Premier Cybersecurity Learning Destination</h2>
+      <p>CyberLearn Hub is dedicated to providing world-class cybersecurity education and training to professionals and aspiring security experts worldwide. Our mission is to bridge the cybersecurity skills gap by offering comprehensive, practical, and up-to-date learning resources.</p>
+      
+      <h3 style="margin: 25px 0 15px; color: var(--accent-color);">What We Offer:</h3>
+      <ul class="about-list">
+        <li><strong>Comprehensive Course Catalog:</strong> 50+ courses covering all cybersecurity domains</li>
+        <li><strong>Industry-Expert Instructors:</strong> Learn from seasoned cybersecurity professionals</li>
+        <li><strong>Hands-On Labs:</strong> Practice in realistic, simulated environments</li>
+        <li><strong>Certification Preparation:</strong> Specialized paths for major cybersecurity certifications</li>
+        <li><strong>Flexible Learning:</strong> Self-paced and instructor-led options to fit your schedule</li>
+        <li><strong>Career Services:</strong> Resume reviews, interview preparation, and job placement assistance</li>
+        <li><strong>Community Support:</strong> Connect with peers and mentors in our exclusive forums</li>
+        <li><strong>Continuous Updates:</strong> Content regularly updated to reflect the latest threats and technologies</li>
+      </ul>
+      
+      <h3 style="margin: 25px 0 15px; color: var(--accent-color);">Our Track Record:</h3>
+      <ul class="about-list">
+        <li>15,000+ cybersecurity professionals trained</li>
+        <li>92% certification success rate</li>
+        <li>Partnerships with 50+ industry organizations</li>
+        <li>98% student satisfaction rating</li>
+        <li>Recognized by leading cybersecurity authorities</li>
+      </ul>
+      
+      <p>Whether you're just starting your cybersecurity journey or looking to advance your career, CyberLearn Hub provides the resources, guidance, and community you need to succeed in this dynamic field.</p>
+    </div>
+  </section>
+</div>
 
-    <h2>Currently Enrolled Path</h2>
-    <div class="inner-box">
-      <div class="module"><span>Intro to Academy</span><button>View</button></div>
-      <div class="module"><span>Learning Process</span><button>View</button></div>
-      <div class="module"><span>Setting Up</span><button>Unlock</button></div>
-      <div class="module"><span>Linux Fundamentals</span><button>Continue</button></div>
-      <div class="module"><span>Windows Fundamentals</span><button>Unlock</button></div>
+
+    <!-- About Us Section -->
+    <section id="about-us" class="about-section">
+        <div class="container">
+            <h2>About iReport -  Cyber Crime Assisant Portal</h2>
+            <div class="about-intro">
+                <p>iReport is an initiative of the Cyber Crime Assisant Portal Coordination Centre (I4C) under the Ministry of Home Affairs, Government of India. Our mission is to provide a secure platform for citizens to report cyber crimes and access resources to protect themselves from digital threats.</p>
+            </div>
+            <div class="about-grid">
+                <div class="about-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Our Mission</h3>
+                    <p>To create a cyber-safe India by enabling citizens to report cyber crimes easily and providing timely assistance to victims.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Our Vision</h3>
+                    <p>A digitally empowered India where citizens can use technology without fear of cyber crimes.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fas fa-balance-scale"></i>
+                    <h3>Legal Framework</h3>
+                    <p>Operating under the Information Technology Act, 2000 and other relevant cyber laws of India.</p>
+                </div>
+                <div class="about-card">
+                    <i class="fas fa-handshake"></i>
+                    <h3>Partnerships</h3>
+                    <p>Collaborating with state police, financial institutions, and cybersecurity experts to combat cyber crimes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+<!-- FOOTER -->
+<footer class="footer" id="contact">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>CyberLearn Hub</h3>
+      <p>Your premier destination for cybersecurity education and career advancement.</p>
+      <p>Email: contact@cyberlearnhub.com</p>
+      <p>Phone: +1 (555) 123-4567</p>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Quick Links</h3>
+      <ul class="footer-links">
+        <li><a href="#featured">Featured Courses</a></li>
+        <li><a href="#courses">All Courses</a></li>
+        <li><a href="#certifications">Certifications</a></li>
+        <li><a href="#about">About Us</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Resources</h3>
+      <ul class="footer-links">
+        <li><a href="#">Cybersecurity Blog</a></li>
+        <li><a href="#">Learning Paths</a></li>
+        <li><a href="#">Career Guide</a></li>
+        <li><a href="#">Free Resources</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Connect With Us</h3>
+      <ul class="footer-links">
+        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
+        <li><a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+        <li><a href="#"><i class="fab fa-youtube"></i> YouTube</a></li>
+        <li><a href="#"><i class="fab fa-github"></i> GitHub</a></li>
+      </ul>
     </div>
   </div>
+  
+  <div class="copyright">
+    &copy; 2025 CyberLearn Hub. All rights reserved.
+  </div>
+</footer>
 
-  <script>
-    function toggleSidebar(){
-      alert("Sidebar toggled! You can implement this functionality.");
+<script>
+  // Theme toggle functionality
+  const themeToggle = document.getElementById('themeToggle');
+  const themeIcon = themeToggle.querySelector('i');
+  
+  // Check for saved theme preference or default to light
+  const currentTheme = localStorage.getItem('theme') || 'light';
+  
+  // Apply the saved theme on page load
+  if (currentTheme === 'dark') {
+    document.body.classList.add('dark-theme');
+    themeIcon.classList.remove('fa-moon');
+    themeIcon.classList.add('fa-sun');
+  }
+  
+  // Toggle theme when button is clicked
+  themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-theme');
+    
+    if (document.body.classList.contains('dark-theme')) {
+      localStorage.setItem('theme', 'dark');
+      themeIcon.classList.remove('fa-moon');
+      themeIcon.classList.add('fa-sun');
+    } else {
+      localStorage.setItem('theme', 'light');
+      themeIcon.classList.remove('fa-sun');
+      themeIcon.classList.add('fa-moon');
     }
+  });
+  
+  // Slider functionality
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.dot');
+  const wrapper = document.getElementById('slider-wrapper');
+  let current = 0;
+  let slideInterval;
+  
+  function showSlide(i) {
+    wrapper.style.transform = `translateX(-${i * 100}%)`;
+    dots.forEach((d, idx) => d.classList.toggle('active', idx === i));
+    current = i;
+  }
+  
+  dots.forEach(d => {
+    d.addEventListener('click', () => {
+      clearInterval(slideInterval);
+      showSlide(Number(d.dataset.slide));
+      startSlider();
+    });
+  });
+  
+  function startSlider() {
+    slideInterval = setInterval(() => {
+      showSlide((current + 1) % slides.length);
+    }, 5000);
+  }
+  
+  // Start the slider
+  startSlider();
+  
+  // Search functionality
+  document.querySelector('.search-bar button').addEventListener('click', function() {
+    const searchTerm = document.querySelector('.search-bar input').value;
+    if (searchTerm.trim() !== '') {
+      alert(`Searching for: ${searchTerm}`);
+      // In a real implementation, this would redirect to search results
+    }
+  });
+  
+  // Allow Enter key to trigger search
+  document.querySelector('.search-bar input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      document.querySelector('.search-bar button').click();
+    }
+  });
+</script>
 
-    function toggleTheme(){
-      document.body.classList.toggle('light-mode');
-    }
-  </script>
 </body>
 </html>

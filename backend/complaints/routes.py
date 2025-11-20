@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from database.connection import db
-from database.models import Complaint, User, CaseAssignment, CaseUpdate, generate_case_id
+from database.models import Complaint, User, CaseAssignment, CaseUpdate
 from complaints.ai_classifier import classify_complaint, extract_keywords, crime_classifier
 from complaints.ai_assigner import case_assigner
 from auth.auth_handler import Auth
@@ -142,7 +142,7 @@ def file_complaint(current_user):
                 return jsonify({"error": f"Missing required field: {field}"}), 400
         
         # Generate case ID
-        case_id = generate_case_id()
+        case_id = Complaint.generate_case_id()
         print(f"🔍 Generated case ID: {case_id}")
         
         # AI Classification
@@ -224,7 +224,7 @@ def file_anonymous_complaint():
                 return jsonify({"error": f"Missing required field: {field}"}), 400
         
         # Generate case ID
-        case_id = generate_case_id()
+        case_id = Complaint.generate_case_id()
         print(f"🔍 Generated case ID: {case_id}")
         
         # AI Classification

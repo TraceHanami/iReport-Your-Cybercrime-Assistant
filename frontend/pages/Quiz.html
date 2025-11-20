@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSec Journey - Security Quiz Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #1a365d;
+            --secondary-color: #2d4a7c;
+            --accent-color: #e53e3e;
+            --light-color: #f5f7fa;
+            --dark-color: #2d3748;
+            --text-color: #2d3748;
+            --bg-color: #ffffff;
+            --card-bg: #f9f9f9;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        .dark-theme {
+            --primary-color: #5fa8ff;
+            --secondary-color: #7bc5ff;
+            --accent-color: #ff6b6b;
+            --light-color: #2d3748;
+            --dark-color: #1a202c;
+            --text-color: #e2e8f0;
+            --bg-color: #1a202c;
+            --card-bg: #2d3748;
+            --shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(26, 54, 93, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(45, 74, 124, 0.1) 0%, transparent 20%);
+        }
+
+        .dark-theme body {
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(95, 168, 255, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(123, 197, 255, 0.05) 0%, transparent 20%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: var(--transition);
+            z-index: 100;
+        }
+
+        .theme-toggle:hover {
+            background: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        header {
+            text-align: center;
+            padding: 20px 0;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .screen {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            display: none;
+            border: 1px solid var(--light-color);
+            transition: background-color 0.3s, box-shadow 0.3s, border-color 0.3s;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .intro-screen {
+            text-align: center;
+        }
+
+        .intro-screen h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .intro-screen p {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow);
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .btn-accent {
+            background: var(--accent-color);
+        }
+
+        .btn-accent:hover {
+            background: #c53030;
+        }
+
+        .map-screen {
+            text-align: center;
+        }
+
+        .map-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .level-map {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .level-node {
+            background: var(--light-color);
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            margin: 0 auto;
+            border: 2px solid var(--light-color);
+        }
+
+        .level-node.locked {
+            background: var(--light-color);
+            color: #a0aec0;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .level-node.unlocked {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .level-node.current {
+            background: var(--accent-color);
+            color: white;
+            border-color: var(--accent-color);
+            animation: pulse 2s infinite;
+        }
+
+        .level-node.completed {
+            background: #38a169;
+            color: white;
+            border-color: #38a169;
+        }
+
+        .level-node::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background: inherit;
+            transform: rotate(45deg);
+            bottom: -8px;
+            border-bottom: 2px solid var(--light-color);
+            border-right: 2px solid var(--light-color);
+        }
+
+        .level-node:nth-child(5)::after {
+            display: none;
+        }
+
+        .level-node:nth-child(6) {
+            grid-column: 5;
+            grid-row: 2;
+        }
+
+        .level-node:nth-child(7) {
+            grid-column: 4;
+            grid-row: 3;
+        }
+
+        .level-node:nth-child(8) {
+            grid-column: 3;
+            grid-row: 4;
+        }
+
+        .level-node:nth-child(9) {
+            grid-column: 2;
+            grid-row: 5;
+        }
+
+        .level-node:nth-child(10) {
+            grid-column: 1;
+            grid-row: 6;
+        }
+
+        .level-info-panel {
+            margin-top: 30px;
+            padding: 20px;
+            background: var(--light-color);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .level-info-panel h3 {
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .quiz-screen {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        .level-info {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .attempts {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--light-color);
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .question {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .option {
+            background: var(--light-color);
+            padding: 15px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid var(--light-color);
+        }
+
+        .option:hover {
+            background: #edf2f7;
+        }
+
+        .dark-theme .option:hover {
+            background: #4a5568;
+        }
+
+        .option.selected {
+            background: #bee3f8;
+            border: 2px solid var(--primary-color);
+        }
+
+        .dark-theme .option.selected {
+            background: #2b6cb0;
+        }
+
+        .option.correct {
+            background: #c6f6d5;
+            border: 2px solid #38a169;
+        }
+
+        .dark-theme .option.correct {
+            background: #22543d;
+        }
+
+        .option.incorrect {
+            background: #fed7d7;
+            border: 2px solid #e53e3e;
+        }
+
+        .dark-theme .option.incorrect {
+            background: #742a2a;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .results-screen {
+            text-align: center;
+        }
+
+        .results-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .score {
+            font-size: 4rem;
+            margin: 30px 0;
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .message {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+        }
+
+        .level-complete {
+            color: #38a169;
+        }
+
+        .level-failed {
+            color: var(--accent-color);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            background: var(--light-color);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .results-controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .level-map {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 10px;
+            }
+            
+            .level-node {
+                width: 55px;
+                height: 55px;
+                font-size: 1.1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1rem;
+            }
+            
+            .quiz-controls, .results-controls {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .quiz-controls button, .results-controls button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="theme-toggle" id="themeToggle">
+            <i class="fas fa-moon"></i>
+        </button>
+        
+        <header>
+            <h1>CyberSec Journey</h1>
+            <div class="subtitle">Master Security Concepts Through Gamified Learning</div>
+        </header>
+        
+        <div class="game-container">
+            <!-- Intro Screen -->
+            <div id="intro-screen" class="screen active">
+                <div class="intro-screen">
+                    <h2>Test Your Security Knowledge</h2>
+                    <p>How well do you understand device updates and security?</p>
+                    <p>Embark on a journey through 10 challenging levels, each focusing on different aspects of cybersecurity. Prove your skills and become a security expert!</p>
+                    <button id="start-btn" class="btn">Start Your Journey</button>
+                </div>
+            </div>
+            
+            <!-- Map Screen -->
+            <div id="map-screen" class="screen">
+                <div class="map-screen">
+                    <h2 class="map-title">CyberSec Journey Map</h2>
+                    <p>Complete each level to progress. You have 5 attempts per level.</p>
+                    
+                    <div class="level-map">
+                        <div class="level-node current" data-level="1">1</div>
+                        <div class="level-node locked" data-level="2">2</div>
+                        <div class="level-node locked" data-level="3">3</div>
+                        <div class="level-node locked" data-level="4">4</div>
+                        <div class="level-node locked" data-level="5">5</div>
+                        <div class="level-node locked" data-level="6">6</div>
+                        <div class="level-node locked" data-level="7">7</div>
+                        <div class="level-node locked" data-level="8">8</div>
+                        <div class="level-node locked" data-level="9">9</div>
+                        <div class="level-node locked" data-level="10">10</div>
+                    </div>
+                    
+                    <div class="level-info-panel">
+                        <h3 id="current-level-title">Level 1: The Basics</h3>
+                        <p id="current-level-desc">Learn the fundamentals of updates and patches.</p>
+                        <button id="play-level-btn" class="btn">Play Level</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quiz Screen -->
+            <div id="quiz-screen" class="screen">
+                <div class="quiz-screen">
+                    <div class="quiz-header">
+                        <div class="level-info">Level <span id="current-level">1</span>: <span id="level-theme">The Basics</span></div>
+                        <div class="attempts">Attempts: <span id="attempts-left">5</span>/5</div>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress" id="question-progress" style="width: 0%"></div>
+                    </div>
+                    
+                    <div class="question" id="question-text">
+                        What is the primary security reason for installing software updates?
+                    </div>
+                    
+                    <div class="options" id="options-container">
+                        <!-- Options will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="quiz-controls">
+                        <button id="prev-btn" class="btn" disabled>Previous</button>
+                        <button id="next-btn" class="btn">Next Question</button>
+                        <button id="submit-btn" class="btn" style="display: none;">Submit Quiz</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Screen -->
+            <div id="results-screen" class="screen">
+                <div class="results-screen">
+                    <h2 class="results-title">Level Complete!</h2>
+                    <div class="score" id="final-score">7/10</div>
+                    <div class="message" id="result-message">Good job! You passed this level.</div>
+                    
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div class="stat-value" id="correct-answers">7</div>
+                            <div class="stat-label">Correct</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="incorrect-answers">3</div>
+                            <div class="stat-label">Incorrect</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="attempts-used">1</div>
+                            <div class="stat-label">Attempts Used</div>
+                        </div>
+                    </div>
+                    
+                    <div class="results-controls">
+                        <button id="retry-btn" class="btn">Try Again</button>
+                        <button id="map-btn" class="btn">Back to Map</button>
+                        <button id="next-level-btn" class="btn">Next Level</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or default to light
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply the saved theme on page load
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+
+        // Game state
+        const gameState = {
+            currentLevel: 1,
+            currentQuestion: 0,
+            score: 0,
+            attempts: 5,
+            selectedOption: null,
+            answers: [],
+            levelsCompleted: 0
+        };
+
+        // Quiz questions database
+        const questionsDatabase = {
+            1: [
+                {
+                    question: "What is the primary security reason for installing software updates?",
+                    options: [
+                        "To get new emojis and features",
+                        "To fix security vulnerabilities and bugs",
+                        "To make your computer consume more power",
+                        "Because the update notifications are annoying"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "What does the term 'Zero-day' vulnerability refer to?",
+                    options: [
+                        "A bug that is patched on the same day it's discovered",
+                        "A security flaw that is known to the vendor but has no fix yet",
+                        "An update that is released at midnight",
+                        "A day when no security issues are reported"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Automatic updates are generally recommended because they:",
+                    options: [
+                        "Use more of your internet data",
+                        "Ensure you are protected as soon as a patch is available",
+                        "Prevent you from using custom settings",
+                        "Are only for enterprise users"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Besides the OS, which other software requires regular updates?",
+                    options: [
+                        "Only your web browser",
+                        "Only your games",
+                        "All software, including browsers, apps, and plugins",
+                        "Software never needs updates after installation"
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "Before applying a major system update, what is a good practice?",
+                    options: [
+                        "Ignore it until your computer forces you",
+                        "Back up your important files",
+                        "Delete old files to make space",
+                        "Post on social media about it"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "What is a 'patch' in software terms?",
+                    options: [
+                        "A decorative background for your desktop",
+                        "A small piece of software designed to fix problems",
+                        "A type of virus that patches security holes",
+                        "A method for organizing files"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Why might organizations delay installing updates?",
+                    options: [
+                        "They enjoy security risks",
+                        "To thoroughly test updates before deployment",
+                        "Updates are always harmful",
+                        "They don't know how to install them"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "What is 'end-of-life' for software?",
+                    options: [
+                        "When the software becomes too popular",
+                        "When the vendor stops providing updates and support",
+                        "When the software is installed on too many devices",
+                        "When a new version is released"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "What should you do if an update fails to install?",
+                    options: [
+                        "Ignore it and hope it fixes itself",
+                        "Try again or seek help from IT support",
+                        "Uninstall the software completely",
+                        "Restart your computer repeatedly"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "What is the purpose of a 'security update'?",
+                    options: [
+                        "To change the software's user interface",
+                        "To add new functionality",
+                        "To address specific security vulnerabilities",
+                        "To improve performance only"
+                    ],
+                    correct: 2
+                }
+            ],
+            2: [
+                {
+                    question: "What is the characteristic of a strong password?",
+                    options: [
+                        "It is a common word like 'password' or 'admin'",
+                        "It uses a long mix of uppercase, lowercase, numbers, and symbols",
+                        "It is your pet's name followed by '123'",
+                        "It is written on a sticky note under your keyboard"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "What is the main advantage of using a Password Manager?",
+                    options: [
+                        "It makes all your passwords the same",
+                        "It creates and stores complex, unique passwords for every site",
+                        "It shares your passwords with your friends",
+                        "It requires you to remember one simple password for everything"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Two-Factor Authentication (2FA) adds security by:",
+                    options: [
+                        "Requiring two different passwords",
+                        "Using something you know (password) and something you have (e.g., phone)",
+                        "Making you log in twice",
+                        "Asking you two security questions"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Why is it bad to use the same password on multiple websites?",
+                    options: [
+                        "It's easier to remember",
+                        "If one site is breached, all your accounts are at risk",
+                        "Websites don't allow it",
+                        "It makes your password stronger"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "A 'Password' and a 'Passphrase' are the same thing.",
+                    options: [
+                        "True",
+                        "False (A passphrase is typically a longer sequence of words)"
+                    ],
+                    correct: 1
+                }
+            ],
+            3: [
+                {
+                    question: "What is a common sign of a phishing email?",
+                    options: [
+                        "It comes from a trusted organization you have an account with",
+                        "It has poor grammar and spelling mistakes",
+                        "It includes your correct name and contact information",
+                        "It has a professional-looking logo"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "What should you do if you receive a suspicious email asking for personal information?",
+                    options: [
+                        "Reply with the requested information",
+                        "Click on links to verify the sender's identity",
+                        "Delete the email without responding",
+                        "Forward it to all your contacts to warn them"
+                    ],
+                    correct: 2
+                }
+            ]
+            // Additional levels would be defined here
+        };
+
+        // Level information
+        const levelInfo = {
+            1: { title: "The Basics: Updates & Patches", description: "Learn the fundamentals of updates and patches." },
+            2: { title: "Password Fortress", description: "Secure your keys! Master the art of passwords." },
+            3: { title: "Phishing Swamp", description: "Navigate the tricky waters of phishing emails." },
+            4: { title: "Public Wi-Fi Jungle", description: "Stay safe in the untamed wilds of public networks." },
+            5: { title: "Social Engineering Lair", description: "Can you spot the manipulators?" },
+            6: { title: "Malware Caves", description: "Defend against viruses, ransomware, and spyware." },
+            7: { title: "Device Defense (IoT & Mobile)", description: "Protect your phones and smart devices." },
+            8: { title: "Data & Privacy Citadel", description: "Guard the kingdom's most valuable resource: Data." },
+            9: { title: "Network Watchtower", description: "See the big picture of network security." },
+            10: { title: "The Final Boss: Advanced Threats", description: "Face the ultimate security challenges. Are you ready?" }
+        };
+
+        // DOM elements
+        const introScreen = document.getElementById('intro-screen');
+        const mapScreen = document.getElementById('map-screen');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultsScreen = document.getElementById('results-screen');
+
+        const startBtn = document.getElementById('start-btn');
+        const playLevelBtn = document.getElementById('play-level-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const submitBtn = document.getElementById('submit-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const mapBtn = document.getElementById('map-btn');
+        const nextLevelBtn = document.getElementById('next-level-btn');
+
+        const currentLevelEl = document.getElementById('current-level');
+        const levelThemeEl = document.getElementById('level-theme');
+        const attemptsLeftEl = document.getElementById('attempts-left');
+        const questionProgressEl = document.getElementById('question-progress');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const finalScoreEl = document.getElementById('final-score');
+        const resultMessageEl = document.getElementById('result-message');
+        const correctAnswersEl = document.getElementById('correct-answers');
+        const incorrectAnswersEl = document.getElementById('incorrect-answers');
+        const attemptsUsedEl = document.getElementById('attempts-used');
+        const currentLevelTitleEl = document.getElementById('current-level-title');
+        const currentLevelDescEl = document.getElementById('current-level-desc');
+
+        // Event listeners
+        startBtn.addEventListener('click', showMapScreen);
+        playLevelBtn.addEventListener('click', startLevel);
+        prevBtn.addEventListener('click', showPreviousQuestion);
+        nextBtn.addEventListener('click', showNextQuestion);
+        submitBtn.addEventListener('click', submitQuiz);
+        retryBtn.addEventListener('click', retryLevel);
+        mapBtn.addEventListener('click', showMapScreen);
+        nextLevelBtn.addEventListener('click', startNextLevel);
+
+        // Level map nodes
+        const levelNodes = document.querySelectorAll('.level-node');
+        levelNodes.forEach(node => {
+            node.addEventListener('click', function() {
+                const level = parseInt(this.getAttribute('data-level'));
+                if (!this.classList.contains('locked')) {
+                    selectLevel(level);
+                }
+            });
+        });
+
+        // Show map screen
+        function showMapScreen() {
+            introScreen.classList.remove('active');
+            quizScreen.classList.remove('active');
+            resultsScreen.classList.remove('active');
+            mapScreen.classList.add('active');
+            
+            updateMap();
+            selectLevel(gameState.currentLevel);
+        }
+
+        // Update the level map based on progress
+        function updateMap() {
+            levelNodes.forEach(node => {
+                const level = parseInt(node.getAttribute('data-level'));
+                
+                node.classList.remove('current', 'completed', 'unlocked', 'locked');
+                
+                if (level < gameState.currentLevel) {
+                    node.classList.add('completed');
+                } else if (level === gameState.currentLevel) {
+                    node.classList.add('current');
+                } else if (level === gameState.currentLevel + 1 && gameState.levelsCompleted >= gameState.currentLevel) {
+                    node.classList.add('unlocked');
+                } else {
+                    node.classList.add('locked');
+                }
+            });
+        }
+
+        // Select a level on the map
+        function selectLevel(level) {
+            gameState.currentLevel = level;
+            currentLevelTitleEl.textContent = `Level ${level}: ${levelInfo[level].title}`;
+            currentLevelDescEl.textContent = levelInfo[level].description;
+            
+            // Enable/disable play button based on level status
+            const node = document.querySelector(`.level-node[data-level="${level}"]`);
+            if (node.classList.contains('locked')) {
+                playLevelBtn.disabled = true;
+                playLevelBtn.textContent = "Locked";
+            } else {
+                playLevelBtn.disabled = false;
+                playLevelBtn.textContent = "Play Level";
+            }
+        }
+
+        // Start a level
+        function startLevel() {
+            gameState.currentQuestion = 0;
+            gameState.score = 0;
+            gameState.selectedOption = null;
+            gameState.answers = [];
+            
+            mapScreen.classList.remove('active');
+            quizScreen.classList.add('active');
+            
+            updateQuizUI();
+        }
+
+        // Update the quiz UI with current question
+        function updateQuizUI() {
+            const questions = questionsDatabase[gameState.currentLevel];
+            const question = questions[gameState.currentQuestion];
+            
+            currentLevelEl.textContent = gameState.currentLevel;
+            levelThemeEl.textContent = levelInfo[gameState.currentLevel].title;
+            attemptsLeftEl.textContent = gameState.attempts;
+            
+            // Update progress bar
+            const progress = ((gameState.currentQuestion) / questions.length) * 100;
+            questionProgressEl.style.width = `${progress}%`;
+            
+            // Update question text
+            questionTextEl.textContent = question.question;
+            
+            // Update options
+            optionsContainer.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const optionEl = document.createElement('div');
+                optionEl.className = 'option';
+                optionEl.textContent = option;
+                optionEl.setAttribute('data-index', index);
+                
+                optionEl.addEventListener('click', function() {
+                    selectOption(this);
+                });
+                
+                optionsContainer.appendChild(optionEl);
+            });
+            
+            // Update navigation buttons
+            prevBtn.disabled = gameState.currentQuestion === 0;
+            nextBtn.style.display = gameState.currentQuestion < questions.length - 1 ? 'block' : 'none';
+            submitBtn.style.display = gameState.currentQuestion === questions.length - 1 ? 'block' : 'none';
+            
+            // Clear selected option
+            gameState.selectedOption = null;
+        }
+
+        // Select an option
+        function selectOption(optionEl) {
+            // Clear previous selection
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Select new option
+            optionEl.classList.add('selected');
+            gameState.selectedOption = parseInt(optionEl.getAttribute('data-index'));
+        }
+
+        // Show previous question
+        function showPreviousQuestion() {
+            if (gameState.currentQuestion > 0) {
+                gameState.currentQuestion--;
+                updateQuizUI();
+            }
+        }
+
+        // Show next question
+        function showNextQuestion() {
+            if (gameState.selectedOption !== null) {
+                // Save answer
+                gameState.answers[gameState.currentQuestion] = gameState.selectedOption;
+                
+                if (gameState.currentQuestion < questionsDatabase[gameState.currentLevel].length - 1) {
+                    gameState.currentQuestion++;
+                    updateQuizUI();
+                }
+            } else {
+                alert("Please select an answer before proceeding.");
+            }
+        }
+
+        // Submit the quiz
+        function submitQuiz() {
+            if (gameState.selectedOption !== null) {
+                // Save final answer
+                gameState.answers[gameState.currentQuestion] = gameState.selectedOption;
+                
+                // Calculate score
+                const questions = questionsDatabase[gameState.currentLevel];
+                gameState.score = 0;
+                
+                for (let i = 0; i < questions.length; i++) {
+                    if (gameState.answers[i] === questions[i].correct) {
+                        gameState.score++;
+                    }
+                }
+                
+                // Show results
+                showResults();
+            } else {
+                alert("Please select an answer before submitting.");
+            }
+        }
+
+        // Show results screen
+        function showResults() {
+            quizScreen.classList.remove('active');
+            resultsScreen.classList.add('active');
+            
+            const questions = questionsDatabase[gameState.currentLevel];
+            const percentage = (gameState.score / questions.length) * 100;
+            
+            finalScoreEl.textContent = `${gameState.score}/${questions.length}`;
+            correctAnswersEl.textContent = gameState.score;
+            incorrectAnswersEl.textContent = questions.length - gameState.score;
+            attemptsUsedEl.textContent = 5 - gameState.attempts + 1;
+            
+            if (percentage >= 70) {
+                resultMessageEl.textContent = "Congratulations! You passed this level.";
+                resultMessageEl.className = "message level-complete";
+                nextLevelBtn.style.display = "inline-block";
+                
+                // Mark level as completed
+                if (gameState.currentLevel === gameState.levelsCompleted + 1) {
+                    gameState.levelsCompleted++;
+                }
+            } else {
+                resultMessageEl.textContent = "You didn't pass this time. Try again!";
+                resultMessageEl.className = "message level-failed";
+                nextLevelBtn.style.display = "none";
+                
+                // Decrease attempts
+                gameState.attempts--;
+                
+                if (gameState.attempts <= 0) {
+                    retryBtn.textContent = "Reset Attempts";
+                    // In a real game, you might want to implement a cooldown or other penalty
+                }
+            }
+        }
+
+        // Retry the current level
+        function retryLevel() {
+            if (gameState.attempts <= 0) {
+                // Reset attempts after they're all used
+                gameState.attempts = 5;
+            }
+            
+            resultsScreen.classList.remove('active');
+            startLevel();
+        }
+
+        // Start the next level
+        function startNextLevel() {
+            if (gameState.currentLevel < 10) {
+                gameState.currentLevel++;
+                gameState.attempts = 5; // Reset attempts for new level
+                resultsScreen.classList.remove('active');
+                startLevel();
+            } else {
+                // Game completed
+                alert("Congratulations! You've completed all levels!");
+                showMapScreen();
+            }
+        }
+
+        // Initialize the game
+        function initGame() {
+            // Set initial state
+            gameState.currentLevel = 1;
+            gameState.levelsCompleted = 0;
+            gameState.attempts = 5;
+            
+            // Show intro screen
+            introScreen.classList.add('active');
+        }
+
+        // Start the game
+        initGame();
+    </script>
+</body>
+</html>

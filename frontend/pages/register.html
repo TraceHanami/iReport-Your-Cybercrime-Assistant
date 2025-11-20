@@ -4,120 +4,568 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - iReport</title>
-    <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="stylesheet" href="/assets/css/forms.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .hidden { display: none !important; }
-        .role-fields { margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; }
+        :root {
+            --primary-color: #ffffff;
+            --secondary-color: #f0f0f0;
+            --accent-color: #000000;
+            --light-color: #ffffff;
+            --dark-color: #f5f5f5;
+            --text-color: #000000;
+            --bg-color: #ffffff;
+            --card-bg: #f9f9f9;
+            --header-bg: #ffffff;
+            --footer-bg: #ffffff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+            --scamwatch-color: #ff3b30;
+            --women-crime-color: #e91e63;
+            --financial-fraud-color: #ff9800;
+            --other-crime-color: #2196f3;
+            --success-color: #4CAF50;
+            --error-color: #f44336;
+        }
+
+        .dark-theme {
+            --primary-color: #000000;
+            --secondary-color: #333333;
+            --accent-color: #ffffff;
+            --light-color: #f5f5f5;
+            --dark-color: #121212;
+            --text-color: #ffffff;
+            --bg-color: #000000;
+            --card-bg: #1a1a1a;
+            --header-bg: #000000;
+            --footer-bg: #000000;
+            --shadow: 0 4px 6px rgba(255,255,255,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header Top Styles */
+        .header-top {
+            background-color: var(--header-bg);
+            color: var(--text-color);
+            padding: 0.8rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .header-top .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .logo-text .ministry {
+            font-size: 0.9rem;
+            font-weight: normal;
+            display: block;
+        }
+
+        .logo-text .center-name {
+            font-size: 1.4rem;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .links a:hover {
+            opacity: 0.8;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-report {
+            background: #ff3b30;
+            color: white;
+        }
+
+        .btn-report:hover {
+            background: #d32f2f;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: var(--transition);
+            padding: 8px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+        }
+
+        /* Main Navigation */
+        .main-nav {
+            background-color: var(--primary-color);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .main-nav .container {
+            display: flex;
+            justify-content: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .main-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .main-nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: opacity 0.3s;
+        }
+
+        .main-nav ul li a:hover {
+            opacity: 0.8;
+            border-bottom: 2px solid var(--text-color);
+        }
+
+        /* Register Section */
+        .register-section {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 0;
+        }
+
+        .register-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 600px;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .register-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .register-header p {
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .register-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .register-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .register-form input,
+        .register-form select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 6px;
+            background: var(--primary-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .register-form input:focus,
+        .register-form select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-theme .register-form input:focus,
+        .dark-theme .register-form select:focus {
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+        }
+
+        .password-container {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .role-fields {
+            margin-top: 1rem;
+            padding: 1.5rem;
+            background: var(--secondary-color);
+            border-radius: 8px;
+            border-left: 4px solid var(--other-crime-color);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .form-text {
+            font-size: 0.85rem;
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        .terms-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .terms-container input {
+            width: auto;
+            margin-top: 0.2rem;
+        }
+
+        .terms-container label {
+            margin-bottom: 0;
+        }
+
+        .terms-link {
+            color: var(--other-crime-color);
+            text-decoration: none;
+        }
+
+        .terms-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-register {
+            width: 100%;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            padding: 0.8rem;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+        }
+
+        .btn-register:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-register:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .register-footer {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        .register-footer p {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .login-link {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: var(--error-color);
+        }
+
+        .notification.info {
+            background-color: var(--other-crime-color);
+        }
+
+        .form-message {
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .form-message.error {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+
+        .form-message.success {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            color: white;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--other-crime-color);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            margin-top: 5px;
+            font-size: 0.8rem;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            color: var(--text-color);
+            padding: 3rem 0 1rem;
+            transition: var(--transition);
+            margin-top: 3rem;
+            border-radius: 10px 10px 0 0;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--scamwatch-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-top .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .actions {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .links {
+                margin-bottom: 1rem;
+            }
+            
+            .main-nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .register-container {
+                padding: 2rem 1.5rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .notification {
+                top: 10px;
+                right: 10px;
+                left: 10px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-card">
-            <div class="auth-header">
-                <h1>Create Account</h1>
-                <p>Join iReport to start reporting crimes</p>
-            </div>
-            
-            <form id="registerForm">
-                <div class="form-group">
-                    <label for="full_name" class="form-label">Full Name *</label>
-                    <input type="text" id="full_name" name="full_name" class="form-control" required 
-                           placeholder="Enter your full name">
-                </div>
-                
-                <div class="form-group">
-                    <label for="email" class="form-label">Email Address *</label>
-                    <input type="email" id="email" name="email" class="form-control" required 
-                           placeholder="Enter your email">
-                </div>
-                
-                <div class="form-group">
-                    <label for="phone" class="form-label">Phone Number *</label>
-                    <input type="tel" id="phone" name="phone" class="form-control" required 
-                           placeholder="Enter your 10-digit phone number" pattern="[0-9]{10}">
-                </div>
-                
-                <div class="form-group">
-                    <label for="role" class="form-label">Account Type *</label>
-                    <select id="role" name="role" class="form-control" required>
-                        <option value="">Select account type</option>
-                        <option value="public">Public User</option>
-                        <option value="police">Police Officer</option>
-                        <option value="volunteer">Community Volunteer</option>
-                    </select>
-                </div>
-                
-                <!-- Police Officer Fields -->
-                <div id="policeFields" class="role-fields hidden">
-                    <div class="form-group">
-                        <label for="badge_number" class="form-label">Badge Number *</label>
-                        <input type="text" id="badge_number" name="badge_number" class="form-control" 
-                               placeholder="Enter your badge number">
-                    </div>
-                    <div class="form-group">
-                        <label for="station" class="form-label">Police Station *</label>
-                        <input type="text" id="station" name="station" class="form-control" 
-                               placeholder="Enter your police station">
-                    </div>
-                    <div class="form-group">
-                        <label for="police_state" class="form-label">State *</label>
-                        <input type="text" id="police_state" name="police_state" class="form-control" 
-                               placeholder="Enter your state">
-                    </div>
-                    <div class="form-group">
-                        <label for="police_district" class="form-label">District *</label>
-                        <input type="text" id="police_district" name="police_district" class="form-control" 
-                               placeholder="Enter your district">
-                    </div>
-                </div>
-                
-                <!-- Volunteer Fields -->
-                <div id="volunteerFields" class="role-fields hidden">
-                    <div class="form-group">
-                        <label for="volunteer_state" class="form-label">State *</label>
-                        <input type="text" id="volunteer_state" name="volunteer_state" class="form-control" 
-                               placeholder="Enter your state">
-                    </div>
-                    <div class="form-group">
-                        <label for="volunteer_district" class="form-label">District *</label>
-                        <input type="text" id="volunteer_district" name="volunteer_district" class="form-control" 
-                               placeholder="Enter your district">
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="password" class="form-label">Password *</label>
-                    <input type="password" id="password" name="password" class="form-control" required 
-                           placeholder="Create a strong password" minlength="8">
-                    <div class="form-text">
-                        Password must be at least 8 characters with uppercase, lowercase, number and special character
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label for="confirm_password" class="form-label">Confirm Password *</label>
-                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required 
-                           placeholder="Confirm your password">
-                </div>
-                
-                <div class="form-group">
-                    <div class="form-check">
-                        <input type="checkbox" id="terms" name="terms" class="form-check-input" required>
-                        <label for="terms" class="form-check-label">
-                            I agree to the <a href="#" onclick="alert('Terms of Service')">Terms of Service</a> and <a href="#" onclick="alert('Privacy Policy')">Privacy Policy</a>
-                        </label>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn btn-primary btn-block">Create Account</button>
-            </form>
-            
-            <div class="auth-footer">
-                <p>Already have an account? <a href="login.html">Sign in here</a></p>
-            </div>
-        </div>
-    </div>
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
 
     <!-- Loading Overlay -->
     <div id="loadingOverlay" class="loading-overlay hidden">
@@ -125,12 +573,375 @@
         <div class="loading-text">Processing...</div>
     </div>
 
-    <script src="/assets/js/config.js"></script>
-    <script src="/assets/js/api.js"></script>
-    <script src="/assets/js/utils.js"></script>
-    <script src="/assets/js/auth.js"></script>
-    
+    <!-- Header Top -->
+    <div class="header-top">
+        <div class="container">
+            <div class="logo-group">
+                <div class="logo">
+                    <svg width="50" height="50" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="30" cy="30" r="28" fill="currentColor" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="30" cy="30" r="20" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="M15 30 L45 30 M30 15 L30 45" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="30" cy="30" r="8" fill="currentColor"/>
+                        <path d="M25 25 L35 35 M35 25 L25 35" stroke="#ffffff" stroke-width="2"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="ministry">INDIAN CYBER CRIME</span>
+                    <span class="center-name">iReport - Create Account</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <div class="links">
+                    <a href="#">EN ▼</a>
+                    <a href="#">Contact us</a>
+                    <a href="index.html">Back to Home</a>
+                </div>
+
+                <button class="btn">🔍 Search</button>
+                <button class="btn btn-report" onclick="window.open('complaint.html')">🚨 Report</button>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <ul>
+                <li><a href="index.html#about-us">About Us</a></li>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="index.html#dashboard">Dashboard</a></li>
+                <li><a href="CheckScams.html">CheckScams</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Register Section -->
+    <section class="register-section">
+        <div class="container">
+            <div class="register-container">
+                <div class="register-header">
+                    <h1>Create Account</h1>
+                    <p>Join iReport to start reporting crimes</p>
+                </div>
+                
+                <form class="register-form" id="registerForm">
+                    <div id="formMessage" class="form-message" style="display: none;"></div>
+                    
+                    <div class="form-group">
+                        <label for="full_name">Full Name *</label>
+                        <input type="text" id="full_name" name="full_name" required 
+                               placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required 
+                               placeholder="Enter your email">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" required 
+                               placeholder="Enter your 10-digit phone number" pattern="[0-9]{10}">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="role">Account Type *</label>
+                        <select id="role" name="role" required>
+                            <option value="">Select account type</option>
+                            <option value="public">Public User</option>
+                            <option value="police">Police Officer</option>
+                            <option value="volunteer">Community Volunteer</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Police Officer Fields -->
+                    <div id="policeFields" class="role-fields hidden">
+                        <div class="form-group">
+                            <label for="badge_number">Badge Number *</label>
+                            <input type="text" id="badge_number" name="badge_number" 
+                                   placeholder="Enter your badge number">
+                        </div>
+                        <div class="form-group">
+                            <label for="station">Police Station *</label>
+                            <input type="text" id="station" name="station" 
+                                   placeholder="Enter your police station">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="police_state">State *</label>
+                                <input type="text" id="police_state" name="police_state" 
+                                       placeholder="Enter your state">
+                            </div>
+                            <div class="form-group">
+                                <label for="police_district">District *</label>
+                                <input type="text" id="police_district" name="police_district" 
+                                       placeholder="Enter your district">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Volunteer Fields -->
+                    <div id="volunteerFields" class="role-fields hidden">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="volunteer_state">State *</label>
+                                <input type="text" id="volunteer_state" name="volunteer_state" 
+                                       placeholder="Enter your state">
+                            </div>
+                            <div class="form-group">
+                                <label for="volunteer_district">District *</label>
+                                <input type="text" id="volunteer_district" name="volunteer_district" 
+                                       placeholder="Enter your district">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password *</label>
+                        <div class="password-container">
+                            <input type="password" id="password" name="password" required 
+                                   placeholder="Create a strong password" minlength="8">
+                            <button type="button" class="toggle-password" id="togglePassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                        <div class="form-text">
+                            Password must be at least 8 characters with uppercase, lowercase, number and special character
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm_password">Confirm Password *</label>
+                        <div class="password-container">
+                            <input type="password" id="confirm_password" name="confirm_password" required 
+                                   placeholder="Confirm your password">
+                            <button type="button" class="toggle-password" id="toggleConfirmPassword">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="terms-container">
+                        <input type="checkbox" id="terms" name="terms" required>
+                        <label for="terms">
+                            I agree to the <a href="#" class="terms-link" onclick="showTerms()">Terms of Service</a> and 
+                            <a href="#" class="terms-link" onclick="showPrivacy()">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn-register" id="registerButton">
+                        <span id="registerText">Create Account</span>
+                        <span id="registerSpinner" style="display: none;">
+                            <i class="fas fa-spinner fa-spin"></i> Creating Account...
+                        </span>
+                    </button>
+                </form>
+                
+                <div class="register-footer">
+                    <p>Already have an account?</p>
+                    <a href="login.html" class="login-link">Sign in here</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html#dashboard">Dashboard</a></li>
+                        <li><a href="CheckScams.html">CheckScams</a></li>
+                        <li><a href="Learning.html">Learning Space</a></li>
+                        <li><a href="complaint.html">File Complaint</a></li>
+                        <li><a href="index.html#helpline">SOS</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Cyber Security Tips</a></li>
+                        <li><a href="#">Latest Alerts</a></li>
+                        <li><a href="#">Educational Materials</a></li>
+                        <li><a href="#">Legal Framework</a></li>
+                        <li><a href="#">Statistics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li>Helpline: 1930</li>
+                        <li>Email: support@cybercrime.gov.in</li>
+                        <li>Address: Indian Cyber Crime Coordination Centre, New Delhi</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 iReport - Indian Cyber Crime Coordination Centre. All rights reserved.</p>
+                <p>An initiative of the Ministry of Home Affairs, Government of India.</p>
+            </div>
+        </div>
+    </footer>
+
     <script>
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:5000/api';
+        let authToken = localStorage.getItem('authToken');
+
+        // Show notification
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // Show loading
+        function showLoading(message = 'Loading...') {
+            const overlay = document.getElementById('loadingOverlay');
+            const text = overlay.querySelector('.loading-text');
+            text.textContent = message;
+            overlay.classList.remove('hidden');
+        }
+
+        // Hide loading
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        // Show form message
+        function showFormMessage(message, type) {
+            const formMessage = document.getElementById('formMessage');
+            formMessage.textContent = message;
+            formMessage.className = `form-message ${type}`;
+            formMessage.style.display = 'block';
+        }
+
+        // Hide form message
+        function hideFormMessage() {
+            document.getElementById('formMessage').style.display = 'none';
+        }
+
+        // API Request Helper
+        async function apiRequest(endpoint, options = {}) {
+            const url = `${API_BASE_URL}${endpoint}`;
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                },
+                ...options
+            };
+
+            // Add auth token if available
+            if (authToken) {
+                config.headers.Authorization = `Bearer ${authToken}`;
+            }
+
+            try {
+                const response = await fetch(url, config);
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error('API request error:', error);
+                throw error;
+            }
+        }
+
+        // Register function - UPDATED TO MATCH BACKEND FIELDS
+        async function registerUser(userData) {
+            try {
+                const data = await apiRequest('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify(userData)
+                });
+                
+                return data;
+            } catch (error) {
+                console.error('Registration failed:', error);
+                throw error;
+            }
+        }
+
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or default to light
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply the saved theme on page load
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+        
+        // Toggle Password Visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const confirmPasswordInput = document.getElementById('confirm_password');
+        
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+        
+        toggleConfirmPassword.addEventListener('click', function() {
+            const type = confirmPasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            confirmPasswordInput.setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+
         // Show/hide role-specific fields
         document.getElementById('role').addEventListener('change', function() {
             const role = this.value;
@@ -138,6 +949,19 @@
             // Hide all role fields
             document.getElementById('policeFields').classList.add('hidden');
             document.getElementById('volunteerFields').classList.add('hidden');
+            
+            // Clear role-specific fields when changing roles
+            if (role !== 'police') {
+                document.getElementById('badge_number').value = '';
+                document.getElementById('station').value = '';
+                document.getElementById('police_state').value = '';
+                document.getElementById('police_district').value = '';
+            }
+            
+            if (role !== 'volunteer') {
+                document.getElementById('volunteer_state').value = '';
+                document.getElementById('volunteer_district').value = '';
+            }
             
             // Show relevant fields
             if (role === 'police') {
@@ -155,48 +979,80 @@
             const hasNumbers = /\d/.test(password);
             const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
             
-            return password.length >= minLength && 
-                   hasUpperCase && 
-                   hasLowerCase && 
-                   hasNumbers && 
-                   hasSpecialChar;
+            return {
+                isValid: password.length >= minLength && hasUpperCase && hasLowerCase && hasNumbers && hasSpecialChar,
+                issues: [
+                    password.length < minLength ? `Minimum ${minLength} characters` : null,
+                    !hasUpperCase ? 'At least one uppercase letter' : null,
+                    !hasLowerCase ? 'At least one lowercase letter' : null,
+                    !hasNumbers ? 'At least one number' : null,
+                    !hasSpecialChar ? 'At least one special character' : null
+                ].filter(Boolean)
+            };
         }
 
-        // Show loading
-        function showLoading(message = 'Loading...') {
-            const overlay = document.getElementById('loadingOverlay');
-            const text = overlay.querySelector('.loading-text');
-            text.textContent = message;
-            overlay.classList.remove('hidden');
+        // Email validation
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
         }
 
-        // Hide loading
-        function hideLoading() {
-            document.getElementById('loadingOverlay').classList.add('hidden');
+        // Phone validation
+        function isValidPhone(phone) {
+            const phoneRegex = /^[0-9]{10}$/;
+            return phoneRegex.test(phone);
         }
 
-        // Show error message
-        function showError(message) {
-            alert('Error: ' + message);
+        // Terms and Privacy functions
+        function showTerms() {
+            alert('Terms of Service:\n\n1. You agree to use this platform responsibly\n2. All reports must be truthful and accurate\n3. Misuse may result in account suspension\n4. Follow all applicable laws and regulations');
+            return false;
         }
 
-        // Show success message
-        function showSuccess(message) {
-            alert('Success: ' + message);
+        function showPrivacy() {
+            alert('Privacy Policy:\n\n1. We protect your personal information\n2. Data is used only for crime reporting purposes\n3. We comply with data protection laws\n4. Your identity is kept confidential when required');
+            return false;
         }
 
-        // Handle registration form submission
+        // Real-time password strength indicator
+        document.getElementById('password').addEventListener('input', function(e) {
+            const password = e.target.value;
+            const validation = validatePassword(password);
+            
+            // Remove existing strength indicator
+            let strengthIndicator = document.getElementById('passwordStrength');
+            if (!strengthIndicator) {
+                strengthIndicator = document.createElement('div');
+                strengthIndicator.id = 'passwordStrength';
+                strengthIndicator.className = 'password-strength';
+                e.target.parentNode.appendChild(strengthIndicator);
+            }
+            
+            if (password.length === 0) {
+                strengthIndicator.innerHTML = '';
+                return;
+            }
+            
+            if (validation.isValid) {
+                strengthIndicator.innerHTML = '<span style="color: green;">✓ Strong password</span>';
+            } else {
+                strengthIndicator.innerHTML = `<span style="color: orange;">⚠ ${validation.issues[0]}</span>`;
+            }
+        });
+
+        // Handle registration form submission - UPDATED TO MATCH BACKEND FIELDS
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
             const formData = new FormData(this);
+            
+            // CORRECTED: Using full_name to match backend database model
             const data = {
-                full_name: formData.get('full_name'),
+                full_name: formData.get('full_name'),  // CHANGED FROM 'name' TO 'full_name'
                 email: formData.get('email'),
                 phone: formData.get('phone'),
                 role: formData.get('role'),
-                password: formData.get('password'),
-                language: 'en'
+                password: formData.get('password')
             };
 
             // Add role-specific fields
@@ -210,49 +1066,137 @@
                 data.district = formData.get('volunteer_district');
             }
 
-            // Validate passwords
-            const password = formData.get('password');
-            const confirmPassword = formData.get('confirm_password');
-            
-            if (password !== confirmPassword) {
-                showError('Passwords do not match');
-                return;
-            }
-            
-            if (!validatePassword(password)) {
-                showError('Password must be at least 8 characters with uppercase, lowercase, number and special character');
+            console.log('📤 Sending registration data:', data); // Debug log
+
+            // Basic validation
+            if (!data.full_name || !data.email || !data.phone || !data.role || !data.password) {
+                showFormMessage('Please fill in all required fields', 'error');
                 return;
             }
 
-            // Validate role-specific fields
-            if (data.role === 'police' && (!data.badge_number || !data.station || !data.state || !data.district)) {
-                showError('Please fill all police officer details');
+            // Email validation
+            if (!isValidEmail(data.email)) {
+                showFormMessage('Please enter a valid email address', 'error');
                 return;
+            }
+
+            // Phone validation
+            if (!isValidPhone(data.phone)) {
+                showFormMessage('Please enter a valid 10-digit phone number', 'error');
+                return;
+            }
+
+            // Password validation
+            const passwordValidation = validatePassword(data.password);
+            if (!passwordValidation.isValid) {
+                showFormMessage('Password does not meet requirements: ' + passwordValidation.issues.join(', '), 'error');
+                return;
+            }
+
+            // Confirm password
+            if (data.password !== formData.get('confirm_password')) {
+                showFormMessage('Passwords do not match', 'error');
+                return;
+            }
+
+            // Role-specific validation
+            if (data.role === 'police') {
+                if (!data.badge_number || !data.station || !data.state || !data.district) {
+                    showFormMessage('Please fill all police officer details', 'error');
+                    return;
+                }
             }
             
-            if (data.role === 'volunteer' && (!data.state || !data.district)) {
-                showError('Please fill all volunteer details');
+            if (data.role === 'volunteer') {
+                if (!data.state || !data.district) {
+                    showFormMessage('Please fill all volunteer details', 'error');
+                    return;
+                }
+            }
+
+            // Terms agreement
+            if (!formData.get('terms')) {
+                showFormMessage('Please agree to the Terms of Service and Privacy Policy', 'error');
                 return;
             }
+
+            const registerButton = document.getElementById('registerButton');
+            const registerText = document.getElementById('registerText');
+            const registerSpinner = document.getElementById('registerSpinner');
+
+            // Show loading state
+            registerButton.disabled = true;
+            registerText.style.display = 'none';
+            registerSpinner.style.display = 'inline';
+            hideFormMessage();
 
             try {
                 showLoading('Creating your account...');
-                const response = await authAPI.register(data);
+                const response = await registerUser(data);
                 
-                if (response.message) {
-                    showSuccess('Verification code sent to your email!');
-                    // Redirect to OTP verification page
+                showNotification('Registration successful!', 'success');
+                showFormMessage('Registration successful!', 'success');
+                
+                // Store user data if token is returned
+                if (response.token) {
+                    localStorage.setItem('authToken', response.token);
+                    localStorage.setItem('currentUser', JSON.stringify(response.user));
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else if (response.requires_verification) {
+                    // Redirect to OTP verification
                     setTimeout(() => {
                         window.location.href = `verify_otp.html?email=${encodeURIComponent(data.email)}`;
+                    }, 2000);
+                } else {
+                    // Generic success redirect
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
                     }, 2000);
                 }
                 
             } catch (error) {
-                showError(error.message || 'Registration failed');
+                console.error('Registration error:', error);
+                
+                let errorMessage = 'Registration failed. Please try again.';
+                
+                if (error.message.includes('400')) {
+                    errorMessage = 'Invalid registration data. Please check all fields.';
+                } else if (error.message.includes('409')) {
+                    errorMessage = 'An account with this email already exists.';
+                } else if (error.message.includes('Network') || error.message.includes('Failed to fetch')) {
+                    errorMessage = 'Network error. Please check your connection and try again.';
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+                
+                showFormMessage(errorMessage, 'error');
+                showNotification(errorMessage, 'error');
+                
             } finally {
+                // Reset loading state
+                registerButton.disabled = false;
+                registerText.style.display = 'inline';
+                registerSpinner.style.display = 'none';
                 hideLoading();
             }
         });
+
+        // Check if user is already logged in
+        document.addEventListener('DOMContentLoaded', function() {
+            if (authToken) {
+                showNotification('You are already logged in. Redirecting to dashboard...', 'info');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+            }
+        });
+
+        // Make register function available globally
+        window.registerUser = registerUser;
     </script>
 </body>
 </html>

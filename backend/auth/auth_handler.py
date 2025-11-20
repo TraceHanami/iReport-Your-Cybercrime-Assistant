@@ -6,6 +6,7 @@ from flask import current_app
 class Auth:
     @staticmethod
     def generate_token(user_id, role):
+        """Generate JWT token"""
         payload = {
             'exp': datetime.utcnow() + timedelta(days=1),
             'iat': datetime.utcnow(),
@@ -16,9 +17,9 @@ class Auth:
 
     @staticmethod
     def decode_token(token):
+        """Decode JWT token - returns dict with user_id and role"""
         try:
             payload = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
-            # FIXED: Return a dictionary instead of tuple
             return {
                 'user_id': payload['sub'],
                 'role': payload['role'],
@@ -26,13 +27,15 @@ class Auth:
             }
         except jwt.ExpiredSignatureError:
             return {"error": "Token expired"}
-        except jwt.InvalidTokenError:
-            return {"error": "Invalid token"}
+        except jwt.InvalidTokenError as e:
+            return {"error": f"Invalid token: {str(e)}"}
 
     @staticmethod
     def hash_password(password):
+        """Hash password using werkzeug security"""
         return generate_password_hash(password)
 
     @staticmethod
     def check_password(password_hash, password):
+        """Check password against hash"""
         return check_password_hash(password_hash, password)

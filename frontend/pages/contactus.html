@@ -1,0 +1,1029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iReport - Contact Us & About Us</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ffffff;
+            --secondary-color: #f0f0f0;
+            --accent-color: #000000;
+            --light-color: #ffffff;
+            --dark-color: #f5f5f5;
+            --text-color: #000000;
+            --bg-color: #ffffff;
+            --card-bg: #f9f9f9;
+            --header-bg: #ffffff;
+            --footer-bg: #ffffff;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+            --scamwatch-color: #ff3b30;
+            --women-crime-color: #e91e63;
+            --financial-fraud-color: #ff9800;
+            --other-crime-color: #2196f3;
+        }
+
+        .dark-theme {
+            --primary-color: #000000;
+            --secondary-color: #333333;
+            --accent-color: #ffffff;
+            --light-color: #f5f5f5;
+            --dark-color: #121212;
+            --text-color: #ffffff;
+            --bg-color: #000000;
+            --card-bg: #1a1a1a;
+            --header-bg: #000000;
+            --footer-bg: #000000;
+            --shadow: 0 4px 6px rgba(255,255,255,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            transition: var(--transition);
+        }
+
+        /* Header Top Styles */
+        .header-top {
+            background-color: var(--header-bg);
+            color: var(--text-color);
+            padding: 0.8rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .header-top .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .logo-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 50px;
+            margin-right: 15px;
+        }
+
+        .logo-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            line-height: 1.2;
+        }
+
+        .logo-text .ministry {
+            font-size: 0.9rem;
+            font-weight: normal;
+            display: block;
+        }
+
+        .logo-text .center-name {
+            font-size: 1.4rem;
+            display: block;
+            margin-top: 5px;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .links {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .links a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+        }
+
+        .links a:hover {
+            opacity: 0.8;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-report {
+            background: #ff3b30;
+            color: white;
+        }
+
+        .btn-report:hover {
+            background: #d32f2f;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-left: 1rem;
+            transition: var(--transition);
+            padding: 8px;
+            border-radius: 50%;
+            background-color: var(--secondary-color);
+        }
+
+        /* Main Navigation */
+        .main-nav {
+            background-color: var(--primary-color);
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .main-nav .container {
+            display: flex;
+            justify-content: center;
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .main-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .main-nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 0;
+            transition: opacity 0.3s;
+        }
+
+        .main-nav ul li a:hover {
+            opacity: 0.8;
+            border-bottom: 2px solid var(--text-color);
+        }
+
+        /* Content Sections */
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        section {
+            padding: 4rem 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--text-color);
+        }
+
+        /* Contact Us Section */
+        .contact-section {
+            padding: 4rem 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            margin: 2rem 0;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .contact-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+
+        .contact-info {
+            padding: 2.5rem;
+            background: var(--primary-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(to bottom, #ff3b30, #2196f3);
+        }
+
+        .contact-info h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-info h3 i {
+            color: #ff3b30;
+        }
+
+        .contact-info p {
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .contact-info i {
+            margin-top: 3px;
+            color: #ff3b30;
+            min-width: 20px;
+        }
+
+        .contact-info .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-info .social-links a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0.7rem 1.2rem;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            border-radius: 6px;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .contact-info .social-links a:hover {
+            background: var(--secondary-color);
+            transform: translateY(-3px);
+        }
+
+        .contact-form {
+            padding: 2.5rem;
+            background: var(--primary-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+        }
+
+        .contact-form h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .contact-form h3 i {
+            color: #2196f3;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2196f3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .contact-form button {
+            width: 100%;
+            padding: 1rem;
+            background: #2196f3;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .contact-form button:hover {
+            background: #1976d2;
+            transform: translateY(-3px);
+        }
+
+        /* Regional Offices Section */
+        .regional-offices {
+            margin-top: 3rem;
+        }
+
+        .offices-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .office-card {
+            background: var(--primary-color);
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--secondary-color);
+            position: relative;
+        }
+
+        .office-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .office-card h4 {
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .office-card h4 i {
+            color: #ff9800;
+        }
+
+        .office-card p {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .office-card i {
+            color: #ff9800;
+            margin-top: 3px;
+            min-width: 18px;
+        }
+
+        /* About Section */
+        .about-section {
+            background: #e6f2ff;
+            color: #000;
+            padding: 4rem 0;
+            text-align: center;
+            border-radius: 10px;
+            border: 1px solid var(--secondary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dark-theme .about-section {
+            background: #0b1b33;
+            color: #fff;
+        }
+
+        .about-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, #ff3b30, #2196f3, #4caf50);
+        }
+
+        .about-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: #0066cc;
+            position: relative;
+            display: inline-block;
+        }
+
+        .dark-theme .about-section h2 {
+            color: #00aaff;
+        }
+
+        .about-section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: #0066cc;
+            border-radius: 2px;
+        }
+
+        .dark-theme .about-section h2::after {
+            background: #00aaff;
+        }
+
+        .about-intro {
+            max-width: 900px;
+            margin: 0 auto 3rem;
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: #333;
+        }
+
+        .dark-theme .about-intro {
+            color: #cfd9e3;
+        }
+
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .about-card {
+            background: #f0f8ff;
+            border-radius: 12px;
+            padding: 2.5rem 2rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--secondary-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dark-theme .about-card {
+            background: #12284a;
+        }
+
+        .about-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: #0066cc;
+        }
+
+        .dark-theme .about-card::before {
+            background: #00aaff;
+        }
+
+        .about-card i {
+            font-size: 2.5rem;
+            color: #0066cc;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            padding: 1rem;
+            background: rgba(0, 102, 204, 0.1);
+            border-radius: 50%;
+        }
+
+        .dark-theme .about-card i {
+            color: #00aaff;
+            background: rgba(0, 170, 255, 0.1);
+        }
+
+        .about-card h3 {
+            color: #000;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .dark-theme .about-card h3 {
+            color: #fff;
+        }
+
+        .about-card p {
+            color: #333;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .dark-theme .about-card p {
+            color: #cfd9e3;
+        }
+
+        .about-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 102, 204, 0.2);
+        }
+
+        .dark-theme .about-card:hover {
+            box-shadow: 0 10px 25px rgba(0, 170, 255, 0.2);
+        }
+
+        /* Stats Section */
+        .stats-section {
+            padding: 3rem 0;
+            background: var(--card-bg);
+            border-radius: 10px;
+            margin: 2rem 0;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 2rem 1rem;
+            background: var(--primary-color);
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid var(--secondary-color);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #ff3b30;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: var(--text-color);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            color: var(--text-color);
+            padding: 3rem 0 1rem;
+            transition: var(--transition);
+            margin-top: 3rem;
+            border-radius: 10px 10px 0 0;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-section a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--scamwatch-color);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid var(--secondary-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-top .container {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .actions {
+                margin-top: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .links {
+                margin-bottom: 1rem;
+            }
+            
+            .main-nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-grid, .offices-grid, .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-section h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Top -->
+    <div class="header-top">
+        <div class="container">
+            <div class="logo-group">
+                <div class="logo">
+                    <svg width="50" height="50" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="30" cy="30" r="28" fill="currentColor" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="30" cy="30" r="20" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="M15 30 L45 30 M30 15 L30 45" stroke="currentColor" stroke-width="2"/>
+                        <circle cx="30" cy="30" r="8" fill="currentColor"/>
+                        <path d="M25 25 L35 35 M35 25 L25 35" stroke="#ffffff" stroke-width="2"/>
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <span class="ministry">INDIAN CYBER CRIME</span>
+                    <span class="center-name">iReport - Cyber Crime Assistant</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <div class="links">
+                    <a href="#">EN ▼</a>
+                    <a href="#contact-us">Contact us</a>
+                    <a href="#" onclick="window.open('Login.html', '_blank')">Login</a></li>
+                </div>
+
+                <button class="btn">🔍 Search</button>
+                <button class="btn btn-report" onclick="window.open('complaint.html')">🚨 Report</button>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <ul>
+                <li><a href="#about-us">About Us</a></li>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#" onclick="window.open('Dashboard.html', '_blank')">Dashboard</a></li>
+                <li><a href="#" onclick="window.open('CheckScams.html', '_blank')">CheckScams</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contact Us Section -->
+    <section id="contact-us" class="contact-section">
+        <div class="container">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3><i class="fas fa-headset"></i> Get In Touch</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>Headquarters:</strong> Indian Cyber Crime Coordination Centre (I4C), Ministry of Home Affairs, Janpath Road, New Delhi - 110001, India</p>
+                    <p><i class="fas fa-phone"></i> <strong>National Cyber Crime Helpline:</strong> 1930 (Toll-free, Available 24/7)</p>
+                    <p><i class="fas fa-envelope"></i> <strong>Email:</strong> support@cybercrime.gov.in</p>
+                    <p><i class="fas fa-globe"></i> <strong>Website:</strong> www.cybercrime.gov.in</p>
+                    <p><i class="fas fa-clock"></i> <strong>Operational Hours:</strong> 24/7 for emergencies, 9:00 AM - 6:00 PM for general inquiries</p>
+                    <p><i class="fas fa-fax"></i> <strong>Fax:</strong> +91-11-23456789</p>
+                    
+                    <h3 style="margin-top: 2rem;"><i class="fas fa-share-alt"></i> Follow Us</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i> Twitter</a>
+                        <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+                        <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                        <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+                        <a href="#"><i class="fab fa-youtube"></i> YouTube</a>
+                    </div>
+                </div>
+                
+                <div class="contact-form">
+                    <h3><i class="fas fa-envelope-open-text"></i> Send Us a Message</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="subject">Subject *</label>
+                            <select id="subject" name="subject" required>
+                                <option value="">Select a subject</option>
+                                <option value="complaint">File a Cyber Crime Complaint</option>
+                                <option value="information">Request Information</option>
+                                <option value="support">Technical Support</option>
+                                <option value="partnership">Partnership Opportunities</option>
+                                <option value="media">Media Inquiry</option>
+                                <option value="feedback">Feedback & Suggestions</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="urgency">Urgency Level</label>
+                            <select id="urgency" name="urgency">
+                                <option value="low">Low - General Inquiry</option>
+                                <option value="medium">Medium - Need information within 48 hours</option>
+                                <option value="high">High - Need immediate assistance</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="message">Message *</label>
+                            <textarea id="message" name="message" rows="6" placeholder="Please provide detailed information about your inquiry" required></textarea>
+                        </div>
+                        
+                        <button type="submit"><i class="fas fa-paper-plane"></i> Send Message</button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Regional Offices Section -->
+            <div class="regional-offices">
+                <h3 class="section-title">Our Regional Offices</h3>
+                <div class="offices-grid">
+                    <div class="office-card">
+                        <h4><i class="fas fa-building"></i> Northern Region</h4>
+                        <p><i class="fas fa-map-marker-alt"></i> Cyber Crime Cell, Delhi Police Headquarters, New Delhi</p>
+                        <p><i class="fas fa-phone"></i> +91-11-23456790</p>
+                        <p><i class="fas fa-envelope"></i> north@cybercrime.gov.in</p>
+                    </div>
+                    
+                    <div class="office-card">
+                        <h4><i class="fas fa-building"></i> Southern Region</h4>
+                        <p><i class="fas fa-map-marker-alt"></i> Cyber Crime Police Station, Bengaluru, Karnataka</p>
+                        <p><i class="fas fa-phone"></i> +91-80-22254678</p>
+                        <p><i class="fas fa-envelope"></i> south@cybercrime.gov.in</p>
+                    </div>
+                    
+                    <div class="office-card">
+                        <h4><i class="fas fa-building"></i> Eastern Region</h4>
+                        <p><i class="fas fa-map-marker-alt"></i> Cyber Crime Division, Kolkata Police, West Bengal</p>
+                        <p><i class="fas fa-phone"></i> +91-33-22487654</p>
+                        <p><i class="fas fa-envelope"></i> east@cybercrime.gov.in</p>
+                    </div>
+                    
+                    <div class="office-card">
+                        <h4><i class="fas fa-building"></i> Western Region</h4>
+                        <p><i class="fas fa-map-marker-alt"></i> Cyber Crime Investigation Cell, Mumbai, Maharashtra</p>
+                        <p><i class="fas fa-phone"></i> +91-22-22654321</p>
+                        <p><i class="fas fa-envelope"></i> west@cybercrime.gov.in</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <h2 class="section-title">Our Impact</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">50,000+</div>
+                    <div class="stat-label">Cyber Crimes Reported</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">35,000+</div>
+                    <div class="stat-label">Cases Resolved</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2.5M+</div>
+                    <div class="stat-label">Citizens Educated</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Cyber Criminals Apprehended</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about-us" class="about-section">
+        <div class="container">
+            <h2>About Us</h2>
+            <p class="about-intro">
+                We are India's premier digital safety initiative — dedicated to protecting citizens, businesses, and organizations from evolving cyber threats. 
+                Our mission is to build awareness, empower users, and promote a secure online environment across the nation through cutting-edge technology and collaborative efforts.
+            </p>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>Our Mission</h3>
+                    <p>
+                        To create a safe digital ecosystem for every Indian by spreading cybersecurity awareness, detecting cyber threats in real-time, 
+                        and enabling rapid response through seamless collaboration with national and international cybercrime agencies. We strive to make India a global leader in cybersecurity resilience.
+                    </p>
+                </div>
+
+                <div class="about-card">
+                    <i class="fas fa-eye"></i>
+                    <h3>Our Vision</h3>
+                    <p>
+                        To establish India as a global cybersecurity powerhouse where every citizen can connect, work, transact, and innovate online with absolute confidence and safety. 
+                        We envision a digitally empowered India protected against all forms of cyber threats through proactive measures and citizen awareness.
+                    </p>
+                </div>
+
+                <div class="about-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Who We Are</h3>
+                    <p>
+                        A specialized task force comprising cybersecurity experts, digital forensics professionals, legal advisors, law enforcement officers, and dedicated volunteers working in synergy 
+                        to combat online fraud, data theft, cyber harassment, and financial crimes. Our team operates 24/7 to ensure rapid response to cyber incidents.
+                    </p>
+                </div>
+
+                <div class="about-card">
+                    <i class="fas fa-handshake"></i>
+                    <h3>Our Partners</h3>
+                    <p>
+                        We collaborate with government departments, state police cyber cells, financial institutions, technology firms, academic institutions, and international cybersecurity organizations 
+                        to strengthen India's cyber defense infrastructure and share threat intelligence for a safer digital India.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#dashboard">Dashboard</a></li>
+                        <li><a href="#">CheckScams</a></li>
+                        <li><a href="#">Learning Space</a></li>
+                        <li><a href="#">File Complaint</a></li>
+                        <li><a href="#helpline">SOS</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <ul>
+                        <li><a href="#">Cyber Security Tips</a></li>
+                        <li><a href="#">Latest Alerts</a></li>
+                        <li><a href="#">Educational Materials</a></li>
+                        <li><a href="#">Legal Framework</a></li>
+                        <li><a href="#">Statistics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li>Helpline: 1930</li>
+                        <li>Email: support@cybercrime.gov.in</li>
+                        <li>Address: Indian Cyber Crime Coordination Centre, New Delhi</li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="#">Twitter</a></li>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Instagram</a></li>
+                        <li><a href="#">YouTube</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 iReport - Indian Cyber Crime Coordination Centre. All rights reserved.</p>
+                <p>An initiative of the Ministry of Home Affairs, Government of India.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or default to light
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply the saved theme on page load
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        });
+        
+        // Contact Form Submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message. We will get back to you soon.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

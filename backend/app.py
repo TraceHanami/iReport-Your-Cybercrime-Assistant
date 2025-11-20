@@ -17,7 +17,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 def register_blueprints(app):
-    """Register all blueprints with lazy imports to avoid circular imports"""
+    """Register all blueprints with proper error handling"""
     
     print("\n" + "="*80)
     print("🔍 DEBUG: STARTING BLUEPRINT REGISTRATION")
@@ -40,35 +40,49 @@ def register_blueprints(app):
         try:
             print(f"\n🔄 Attempting to load {bp_name} from {module_path}...")
             
-            # Try to import the module
+            # FIXED: Use proper import with error handling
+            module_parts = module_path.split('.')
+            module_name = '.'.join(module_parts[:-1]) if len(module_parts) > 1 else module_parts[0]
+            blueprint_name = module_parts[-1] if len(module_parts) > 1 else bp_name
+            
+            # Import the module
             module = __import__(module_path, fromlist=[bp_name])
-            print(f"   ✅ Module imported successfully")
             
-            # Try to get the blueprint
-            blueprint = getattr(module, bp_name)
-            print(f"   ✅ Blueprint found: {blueprint.name}")
+            # Get the blueprint - handle different naming patterns
+            blueprint = None
+            possible_names = [bp_name, f'{bp_name}', f'{blueprint_name}_bp', 'bp']
             
+            for name in possible_names:
+                if hasattr(module, name):
+                    blueprint = getattr(module, name)
+                    print(f"   ✅ Blueprint found as: {name}")
+                    break
+            
+            if not blueprint:
+                print(f"   ❌ Blueprint not found. Available attributes: {[attr for attr in dir(module) if not attr.startswith('_')]}")
+                continue
+                
             # Register the blueprint
             app.register_blueprint(blueprint, url_prefix=url_prefix)
             print(f"   ✅ Registered at: {url_prefix}")
             
-            # Special detailed debug for SMS blueprint
-            if bp_name == 'sms_bp':
-                print(f"\n🎯 SMS BLUEPRINT DETAILED DEBUG:")
-                print(f"   - Blueprint object: {blueprint}")
-                print(f"   - Blueprint name: {blueprint.name}")
-                print(f"   - URL prefix: {url_prefix}")
-                print(f"   - Registered in app: {'sms' in app.blueprints}")
-                
         except ImportError as e:
-            print(f"❌ IMPORT ERROR: {e}")
-            import traceback
-            traceback.print_exc()
-        except AttributeError as e:
-            print(f"❌ ATTRIBUTE ERROR: {e}")
-            print(f"   Available attributes in {module_path}: {[attr for attr in dir(module) if not attr.startswith('_')]}")
+            print(f"❌ IMPORT ERROR for {module_path}: {e}")
+            # Try alternative import method
+            try:
+                import importlib
+                module = importlib.import_module(module_path)
+                if hasattr(module, bp_name):
+                    blueprint = getattr(module, bp_name)
+                    app.register_blueprint(blueprint, url_prefix=url_prefix)
+                    print(f"   ✅ ALTERNATIVE IMPORT SUCCESS for {bp_name}")
+                else:
+                    print(f"   ❌ Blueprint {bp_name} not found in module")
+            except Exception as alt_e:
+                print(f"   ❌ ALTERNATIVE IMPORT FAILED: {alt_e}")
+                
         except Exception as e:
-            print(f"❌ UNEXPECTED ERROR: {e}")
+            print(f"❌ UNEXPECTED ERROR for {module_path}: {e}")
             import traceback
             traceback.print_exc()
 
@@ -96,7 +110,22 @@ def register_blueprints(app):
 def create_app():
     """Application factory pattern"""
     app = Flask(__name__)
-    CORS(app, origins=["http://localhost:3000", "http://127.0.0.1:3000"])
+    # Enhanced CORS configuration
+    CORS(app, origins=[
+        "http://localhost:3000", 
+        "http://127.0.0.1:3000",
+        "http://localhost:5000",
+        "http://127.0.0.1:5000"
+    ], supports_credentials=True)
+
+    # Add specific CORS for API routes
+    @app.after_request
+    def after_request(response):
+        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        return response
 
     # Configuration
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-secret-key')
@@ -314,6 +343,17 @@ def create_app():
             'total_blueprints': len(blueprints)
         })
 
+    @app.route('/api/debug/env')
+    def debug_env():
+        import os
+        return jsonify({
+            'MAIL_SERVER': os.getenv('MAIL_SERVER'),
+            'MAIL_USERNAME': os.getenv('MAIL_USERNAME'), 
+            'MAIL_PASSWORD_set': bool(os.getenv('MAIL_PASSWORD')),
+            'working_directory': os.getcwd(),
+            'env_file_exists': os.path.exists('.env')
+        })
+        
     return app
 
 # Create the app instance
@@ -325,23 +365,23 @@ if __name__ == '__main__':
     print("🌐 Host: http://0.0.0.0:5000")
     print("🔧 Debug Mode: True")
     
-    # Print registered routes
+    # Print registered routes - FIXED VERSION
     print("\n" + "="*70)
     print("🚀 iReport Backend Server - Registered API Routes")
     print("="*70)
     
-    with app.app_context():
-        api_routes = []
-        for rule in app.url_map.iter_rules():
-            if rule.rule.startswith('/api') or rule.rule == '/':
-                methods = ', '.join(sorted([m for m in rule.methods if m not in ['OPTIONS', 'HEAD']]))
-                api_routes.append((rule.rule, methods, rule.endpoint))
-        
-        # Sort routes for better readability
-        api_routes.sort(key=lambda x: x[0])
-        
-        for route, methods, endpoint in api_routes:
-            print(f"{route:50} {methods:25} {endpoint}")
+    # Direct route iteration without app context
+    api_routes = []
+    for rule in app.url_map.iter_rules():
+        if rule.rule.startswith('/api') or rule.rule == '/':
+            methods = ', '.join(sorted([m for m in rule.methods if m not in ['OPTIONS', 'HEAD']]))
+            api_routes.append((rule.rule, methods, rule.endpoint))
+    
+    # Sort routes for better readability
+    api_routes.sort(key=lambda x: x[0])
+    
+    for route, methods, endpoint in api_routes:
+        print(f"{route:50} {methods:25} {endpoint}")
     
     print("="*70)
     print("\n✅ Server ready! Test these endpoints:")
@@ -349,6 +389,7 @@ if __name__ == '__main__':
     print("   System Status:   http://localhost:5000/api/system/status")
     print("   SMS Debug:       http://localhost:5000/debug/sms-routes")
     print("   Frontend:        http://localhost:5000/")
+    print("   Environment Debug: http://localhost:5000/api/debug/env")
     print("\n")
     
     app.run(debug=True, host='0.0.0.0', port=5000)

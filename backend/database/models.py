@@ -1,3 +1,8 @@
+# File: backend/init_db.py
+"""
+Database initialization with all required tables:
+- users, complaints, cases, officers, notifications, analytics
+"""
 from datetime import datetime
 from database.connection import db
 from sqlalchemy import Text, Integer, String, DateTime, Boolean, Float, ForeignKey
@@ -5,57 +10,124 @@ from sqlalchemy.orm import relationship
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
 
-def generate_case_id():
-    timestamp = datetime.utcnow().strftime('%Y%m%d')
-    unique_id = uuid.uuid4().hex[:8].upper()
-    return f"IR{timestamp}{unique_id}"
-
 class User(db.Model):
     __tablename__ = 'users'
     
-    id = db.Column(Integer, primary_key=True)
-    email = db.Column(String(120), unique=True, nullable=False)
-    password_hash = db.Column(String(255), nullable=False)
-    full_name = db.Column(String(100), nullable=False)
-    phone = db.Column(String(15))
-    role = db.Column(String(20), nullable=False)  # 'public', 'volunteer', 'police', 'admin'
-    is_verified = db.Column(Boolean, default=False)
-    is_active = db.Column(Boolean, default=True)
-    created_at = db.Column(DateTime, default=datetime.utcnow)
-    language = db.Column(String(10), default='en')
+    id = db.Column(db.Integer, primary_key=True)
+    full_name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    phone = db.Column(db.String(15), nullable=False)
+    password_hash = db.Column(db.String(255), nullable=False)
+    role = db.Column(db.String(20), nullable=False)  # public, police, volunteer
+    is_verified = db.Column(db.Boolean, default=False)
+    verified_at = db.Column(db.DateTime)
     
-    # OTP Verification fields
-    otp_secret = db.Column(String(255))
-    otp_created_at = db.Column(DateTime)
+    # Role-specific fields
+    badge_number = db.Column(db.String(50), nullable=True)
+    station = db.Column(db.String(100), nullable=True)
+    state = db.Column(db.String(100), nullable=True)
+    district = db.Column(db.String(100), nullable=True)
     
-    # Relationships - FIXED: Specify foreign_keys to avoid ambiguity
-    complaints = relationship('Complaint', backref='user', lazy=True)
-    volunteer_profile = relationship('Volunteer', backref='user', uselist=False, lazy=True, foreign_keys='Volunteer.user_id')
-    police_profile = relationship('PoliceOfficer', backref='user', uselist=False, lazy=True, foreign_keys='PoliceOfficer.user_id')
-
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
     def set_password(self, password):
-        """Set password hash"""
         self.password_hash = generate_password_hash(password)
-
+    
     def check_password(self, password):
-        """Check password against hash"""
         return check_password_hash(self.password_hash, password)
-
+    
     def to_dict(self):
-        """Convert user to dictionary (exclude sensitive data)"""
         return {
             'id': self.id,
-            'email': self.email,
             'full_name': self.full_name,
+            'email': self.email,
+            'phone': self.phone,
             'role': self.role,
             'is_verified': self.is_verified,
-            'is_active': self.is_active,
-            'created_at': self.created_at.isoformat() if self.created_at else None,
-            'language': self.language
+            'badge_number': self.badge_number,
+            'station': self.station,
+            'state': self.state,
+            'district': self.district,
+            'created_at': self.created_at.isoformat() if self.created_at else None
         }
 
     def __repr__(self):
         return f'<User {self.email}>'
+
+class Complaint(db.Model):
+    __tablename__ = 'complaints'
+    
+    id = db.Column(Integer, primary_key=True)
+    case_id = db.Column(String(50), unique=True, nullable=False, default=lambda: Complaint.generate_case_id())
+    user_id = db.Column(Integer, ForeignKey('users.id'))
+    
+    # Anonymous Reporting
+    is_anonymous = db.Column(Boolean, default=False)
+    anonymous_email = db.Column(String(120))
+    
+    # Complaint Details (20 fields as required)
+    title = db.Column(String(255), nullable=False)
+    description = db.Column(Text, nullable=False)
+    incident_date = db.Column(DateTime, nullable=False)
+    report_date = db.Column(DateTime, default=datetime.utcnow)
+    state = db.Column(String(50), nullable=False)
+    district = db.Column(String(50), nullable=False)
+    location = db.Column(Text)
+    latitude = db.Column(Float)
+    longitude = db.Column(Float)
+    
+    # Crime Type Classification
+    crime_type = db.Column(String(100))
+    sub_category = db.Column(String(100))
+    
+    # Victim Information
+    victim_name = db.Column(String(100))
+    victim_age = db.Column(Integer)
+    victim_gender = db.Column(String(20))
+    victim_contact = db.Column(String(15))
+    
+    # Incident Specifics
+    is_missing_person = db.Column(Boolean, default=False)
+    is_injury_involved = db.Column(Boolean, default=False)
+    is_property_damage = db.Column(Boolean, default=False)
+    estimated_loss = db.Column(Float)
+    injury_severity = db.Column(String(50))
+    
+    # Police Complaint Details
+    police_complaint_filed = db.Column(Boolean, default=False)
+    police_station = db.Column(String(100))
+    police_complaint_number = db.Column(String(100))
+    police_complaint_date = db.Column(DateTime)
+    
+    # AI Classification
+    priority = db.Column(String(20), default='medium')  # low, medium, high, critical
+    ai_classification = db.Column(String(100))
+    confidence_score = db.Column(Float)
+    keywords = db.Column(Text)
+    
+    # Status Tracking
+    status = db.Column(String(50), default='pending')  # pending, assigned, in_progress, resolved, closed
+    resolution = db.Column(Text)
+    resolved_date = db.Column(DateTime)
+    
+    # Additional Fields
+    evidence_files = db.Column(Text)  # JSON string of file paths
+    witness_details = db.Column(Text)
+    suspect_description = db.Column(Text)
+    
+    created_at = db.Column(DateTime, default=datetime.utcnow)
+    updated_at = db.Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    
+    assignments = relationship('CaseAssignment', backref='complaint', lazy=True)
+    updates = relationship('CaseUpdate', backref='complaint', lazy=True)
+
+    @staticmethod
+    def generate_case_id():
+        """Generate unique case ID"""
+        timestamp = datetime.utcnow().strftime('%Y%m%d')
+        unique_id = uuid.uuid4().hex[:8].upper()
+        return f"IR{timestamp}{unique_id}"
 
 class Volunteer(db.Model):
     __tablename__ = 'volunteers'
@@ -109,77 +181,6 @@ class PoliceOfficer(db.Model):
     created_at = db.Column(DateTime, default=datetime.utcnow)
     
     assigned_cases = relationship('CaseAssignment', backref='police_officer', lazy=True)
-
-class Complaint(db.Model):
-    __tablename__ = 'complaints'
-    
-    id = db.Column(Integer, primary_key=True)
-    case_id = db.Column(String(50), unique=True, nullable=False, default=generate_case_id)
-    user_id = db.Column(Integer, ForeignKey('users.id'))
-    
-    # Anonymous Reporting
-    is_anonymous = db.Column(Boolean, default=False)
-    anonymous_email = db.Column(String(120))
-    
-    # Complaint Details (20 fields as required)
-    title = db.Column(String(255), nullable=False)
-    description = db.Column(Text, nullable=False)
-    incident_date = db.Column(DateTime, nullable=False)
-    report_date = db.Column(DateTime, default=datetime.utcnow)
-    state = db.Column(String(50), nullable=False)
-    district = db.Column(String(50), nullable=False)
-    location = db.Column(Text)
-    latitude = db.Column(Float)
-    longitude = db.Column(Float)
-    
-    # Crime Type Classification
-    crime_type = db.Column(String(100))
-    sub_category = db.Column(String(100))
-    
-    # Victim Information
-    victim_name = db.Column(String(100))
-    victim_age = db.Column(Integer)
-    victim_gender = db.Column(String(20))
-    victim_contact = db.Column(String(15))
-    
-    # Incident Specifics
-    is_missing_person = db.Column(Boolean, default=False)
-    is_injury_involved = db.Column(Boolean, default=False)
-    is_property_damage = db.Column(Boolean, default=False)
-    estimated_loss = db.Column(Float)
-    injury_severity = db.Column(String(50))
-    
-    # Police Complaint Details
-    police_complaint_filed = db.Column(Boolean, default=False)
-    police_station = db.Column(String(100))
-    police_complaint_number = db.Column(String(100))
-    police_complaint_date = db.Column(DateTime)
-    
-    # Anonymous Reporting
-    is_anonymous = db.Column(Boolean, default=False)
-    anonymous_email = db.Column(String(120))
-    
-    # AI Classification
-    priority = db.Column(String(20), default='medium')  # low, medium, high, critical
-    ai_classification = db.Column(String(100))
-    confidence_score = db.Column(Float)
-    keywords = db.Column(Text)
-    
-    # Status Tracking
-    status = db.Column(String(50), default='pending')  # pending, assigned, in_progress, resolved, closed
-    resolution = db.Column(Text)
-    resolved_date = db.Column(DateTime)
-    
-    # Additional Fields
-    evidence_files = db.Column(Text)  # JSON string of file paths
-    witness_details = db.Column(Text)
-    suspect_description = db.Column(Text)
-    
-    created_at = db.Column(DateTime, default=datetime.utcnow)
-    updated_at = db.Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    
-    assignments = relationship('CaseAssignment', backref='complaint', lazy=True)
-    updates = relationship('CaseUpdate', backref='complaint', lazy=True)
 
 class CaseAssignment(db.Model):
     __tablename__ = 'case_assignments'
@@ -368,6 +369,8 @@ class SMSLog(db.Model):
             "created_at": self.created_at.isoformat() if self.created_at else None
         }
 
+
+# Add this to your database models (init_db.py)
 class OTP(db.Model):
     """OTP model for email verification and password reset"""
     __tablename__ = 'otps'
@@ -379,8 +382,9 @@ class OTP(db.Model):
     expires_at = db.Column(db.DateTime, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     
+    def is_expired(self):
+        """Check if OTP has expired"""
+        return datetime.utcnow() > self.expires_at
+    
     def __repr__(self):
         return f'<OTP {self.email}>'
-    
-    def is_expired(self):
-        return datetime.utcnow() > self.expires_at

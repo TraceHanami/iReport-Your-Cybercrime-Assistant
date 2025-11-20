@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - iReport Cyber Crime Portal</title>
+    <title>Cyber Volunteers - iReport Cyber Crime Portal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -24,6 +24,8 @@
             --women-crime-color: #e91e63;
             --financial-fraud-color: #ff9800;
             --other-crime-color: #2196f3;
+            --volunteer-green: #2e7d32;
+            --volunteer-light-green: #4caf50;
         }
 
         .dark-theme {
@@ -38,6 +40,8 @@
             --header-bg: #000000;
             --footer-bg: #000000;
             --shadow: 0 4px 6px rgba(255,255,255,0.1);
+            --volunteer-green: #388e3c;
+            --volunteer-light-green: #4caf50;
         }
 
         * {
@@ -145,12 +149,21 @@
             transform: translateY(-2px);
         }
 
-        .btn-report {
-            background: #ff3b30;
+        .btn-volunteer {
+            background: var(--volunteer-green);
             color: white;
         }
 
-        .btn-report:hover {
+        .btn-volunteer:hover {
+            background: var(--volunteer-light-green);
+        }
+
+        .btn-logout {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-logout:hover {
             background: #d32f2f;
         }
 
@@ -169,7 +182,7 @@
 
         /* Main Navigation */
         .main-nav {
-            background-color: var(--primary-color);
+            background-color: var(--volunteer-green);
             padding: 1rem 0;
             border-bottom: 1px solid var(--secondary-color);
         }
@@ -190,7 +203,7 @@
         }
 
         .main-nav ul li a {
-            color: var(--text-color);
+            color: white;
             text-decoration: none;
             font-weight: 500;
             padding: 0.5rem 0;
@@ -199,7 +212,7 @@
 
         .main-nav ul li a:hover {
             opacity: 0.8;
-            border-bottom: 2px solid var(--text-color);
+            border-bottom: 2px solid white;
         }
 
         /* Dashboard Layout */
@@ -235,7 +248,7 @@
 
         .sidebar-menu a:hover, .sidebar-menu a.active {
             background: var(--secondary-color);
-            border-right: 3px solid var(--accent-color);
+            border-right: 3px solid var(--volunteer-green);
         }
 
         .sidebar-menu i {
@@ -260,6 +273,37 @@
         .dashboard-title {
             font-size: 1.8rem;
             color: var(--text-color);
+        }
+
+        .volunteer-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--card-bg);
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .volunteer-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--volunteer-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .volunteer-details h4 {
+            margin-bottom: 0.2rem;
+        }
+
+        .volunteer-details p {
+            font-size: 0.9rem;
+            opacity: 0.8;
         }
 
         .dashboard-stats {
@@ -442,34 +486,173 @@
             font-weight: 500;
         }
 
+        .status-new {
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
         .status-pending {
-            background: #fff3cd;
-            color: #856404;
+            background: #fff3e0;
+            color: #ef6c00;
         }
 
-        .status-investigating {
-            background: #d1ecf1;
-            color: #0c5460;
+        .status-in-progress {
+            background: #e8f5e8;
+            color: #2e7d32;
         }
 
-        .status-resolved {
+        .status-completed {
             background: #d4edda;
             color: #155724;
         }
 
-        .priority-high {
-            color: #f44336;
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
             font-weight: 600;
         }
 
-        .priority-medium {
-            color: #ff9800;
-            font-weight: 600;
+        .badge-primary {
+            background: var(--volunteer-green);
+            color: white;
         }
 
-        .priority-low {
-            color: #4caf50;
-            font-weight: 600;
+        .badge-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        .badge-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .badge-info {
+            background: #2196f3;
+            color: white;
+        }
+
+        .campaigns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .campaign-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+            transition: var(--transition);
+        }
+
+        .campaign-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .campaign-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .campaign-title {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .campaign-description {
+            color: var(--text-color);
+            opacity: 0.8;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .campaign-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .campaign-stat {
+            text-align: center;
+        }
+
+        .campaign-stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .campaign-stat-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--secondary-color);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--volunteer-green);
+            border-radius: 4px;
+        }
+
+        /* Logout Confirmation Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .modal-message {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
         }
 
         /* Footer */
@@ -524,6 +707,10 @@
             .dashboard-charts {
                 grid-template-columns: 1fr;
             }
+            
+            .campaigns-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
         }
 
         @media (max-width: 768px) {
@@ -563,10 +750,36 @@
             .dashboard-tables {
                 grid-template-columns: 1fr;
             }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .campaigns-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Confirm Logout</h3>
+            <p class="modal-message">Are you sure you want to logout from your Cyber Volunteer account?</p>
+            <div class="modal-actions">
+                <button class="btn btn-logout" id="confirmLogout">Yes, Logout</button>
+                <button class="btn" id="cancelLogout">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Header Top -->
     <div class="header-top">
         <div class="container">
@@ -620,16 +833,17 @@
                 </div>
                 <div class="logo-text">
                     <span class="ministry">Your Cyber Crime Assistant Portal</span>
-                    <span class="center-name">iReport - Admin Dashboard</span>
+                    <span class="center-name">iReport - Cyber Volunteers</span>
                 </div>
             </div>
 
             <div class="actions">
                 <div class="links">
                     <a href="index.html">Back to Portal</a>
-                    <a href="#" id="profile-link">Admin Profile</a>
+                    <a href="#" id="profile-link">My Profile</a>
                 </div>
-                <button class="btn btn-report" onclick="window.open('complaint.html')">🚨 Quick Report</button>
+                <button class="btn btn-volunteer" onclick="window.open('training.html')">🎓 Training</button>
+                <button class="btn btn-logout" id="logoutButton">🚪 Logout</button>
                 <button class="theme-toggle" id="themeToggle">
                     <i class="fas fa-moon"></i>
                 </button>
@@ -642,11 +856,11 @@
         <div class="container">
             <ul>
                 <li><a href="#" class="active">Dashboard</a></li>
-                <li><a href="#">Cases</a></li>
-                <li><a href="#">Reports</a></li>
-                <li><a href="#">Analytics</a></li>
-                <li><a href="#">Users</a></li>
-                <li><a href="#">Settings</a></li>
+                <li><a href="#">Awareness Campaigns</a></li>
+                <li><a href="#">Community Support</a></li>
+                <li><a href="#">Training</a></li>
+                <li><a href="#">Resources</a></li>
+                <li><a href="#">Volunteer Network</a></li>
             </ul>
         </div>
     </div>
@@ -657,13 +871,14 @@
         <div class="sidebar">
             <ul class="sidebar-menu">
                 <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="#"><i class="fas fa-exclamation-circle"></i> Pending Cases</a></li>
-                <li><a href="#"><i class="fas fa-search"></i> Investigations</a></li>
-                <li><a href="#"><i class="fas fa-check-circle"></i> Resolved Cases</a></li>
-                <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
-                <li><a href="#"><i class="fas fa-users"></i> User Management</a></li>
-                <li><a href="#"><i class="fas fa-file-alt"></i> Reports</a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="#"><i class="fas fa-bullhorn"></i> Awareness Campaigns</a></li>
+                <li><a href="#"><i class="fas fa-hands-helping"></i> Community Support</a></li>
+                <li><a href="#"><i class="fas fa-chalkboard-teacher"></i> Training Sessions</a></li>
+                <li><a href="#"><i class="fas fa-file-alt"></i> Resource Materials</a></li>
+                <li><a href="#"><i class="fas fa-users"></i> Volunteer Network</a></li>
+                <li><a href="#"><i class="fas fa-certificate"></i> Certifications</a></li>
+                <li><a href="#"><i class="fas fa-calendar-check"></i> Events</a></li>
+                <li><a href="#"><i class="fas fa-award"></i> Achievements</a></li>
                 <li><a href="#"><i class="fas fa-question-circle"></i> Help & Support</a></li>
             </ul>
         </div>
@@ -671,10 +886,13 @@
         <!-- Dashboard Content -->
         <div class="dashboard-content">
             <div class="dashboard-header">
-                <h1 class="dashboard-title">Admin Dashboard</h1>
-                <div class="dashboard-actions">
-                    <button class="btn"><i class="fas fa-download"></i> Export Data</button>
-                    <button class="btn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                <h1 class="dashboard-title">Cyber Volunteers Dashboard</h1>
+                <div class="volunteer-info">
+                    <div class="volunteer-avatar">PS</div>
+                    <div class="volunteer-details">
+                        <h4>Priya Sharma</h4>
+                        <p>Cyber Volunteer | Level: Advanced | ID: CV-4582</p>
+                    </div>
                 </div>
             </div>
 
@@ -682,117 +900,204 @@
             <div class="dashboard-stats">
                 <div class="stat-card">
                     <div class="stat-card-header">
-                        <div class="stat-card-title">Total Cases</div>
+                        <div class="stat-card-title">Campaigns Participated</div>
                         <div class="stat-card-icon" style="background: #2196f3;">
-                            <i class="fas fa-exclamation-circle"></i>
+                            <i class="fas fa-bullhorn"></i>
                         </div>
                     </div>
-                    <div class="stat-card-value">1,247</div>
+                    <div class="stat-card-value">24</div>
                     <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 12% from last month
+                        <i class="fas fa-arrow-up"></i> 3 active campaigns
                     </div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-card-header">
-                        <div class="stat-card-title">Pending Cases</div>
+                        <div class="stat-card-title">People Reached</div>
+                        <div class="stat-card-icon" style="background: #4caf50;">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">1,850</div>
+                    <div class="stat-card-change positive">
+                        <i class="fas fa-arrow-up"></i> 120 this month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-title">Training Hours</div>
                         <div class="stat-card-icon" style="background: #ff9800;">
                             <i class="fas fa-clock"></i>
                         </div>
                     </div>
-                    <div class="stat-card-value">342</div>
-                    <div class="stat-card-change negative">
+                    <div class="stat-card-value">86</div>
+                    <div class="stat-card-change positive">
+                        <i class="fas fa-arrow-up"></i> 12 this month
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-card-title">Volunteer Score</div>
+                        <div class="stat-card-icon" style="background: #9c27b0;">
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card-value">92%</div>
+                    <div class="stat-card-change positive">
                         <i class="fas fa-arrow-up"></i> 5% from last month
                     </div>
                 </div>
+            </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Resolved Cases</div>
-                        <div class="stat-card-icon" style="background: #4caf50;">
-                            <i class="fas fa-check-circle"></i>
+            <!-- Campaigns Section -->
+            <div class="campaigns-grid">
+                <div class="campaign-card">
+                    <div class="campaign-header">
+                        <div>
+                            <h3 class="campaign-title">Phishing Awareness</h3>
+                            <span class="badge badge-primary">Active</span>
                         </div>
                     </div>
-                    <div class="stat-card-value">785</div>
-                    <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 8% from last month
+                    <p class="campaign-description">Educate community about identifying and avoiding phishing attempts through workshops and digital materials.</p>
+                    <div class="campaign-stats">
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-value">850</div>
+                            <div class="campaign-stat-label">Reached</div>
+                        </div>
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-value">5</div>
+                            <div class="campaign-stat-label">Events</div>
+                        </div>
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-value">78%</div>
+                            <div class="campaign-stat-label">Progress</div>
+                        </div>
                     </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 78%"></div>
+                    </div>
+                    <button class="btn btn-volunteer" style="width: 100%;">Continue Campaign</button>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Active Users</div>
-                        <div class="stat-card-icon" style="background: #9c27b0;">
-                            <i class="fas fa-users"></i>
+                <div class="campaign-card">
+                    <div class="campaign-header">
+                        <div>
+                            <h3 class="campaign-title">Social Media Safety</h3>
+                            <span class="badge badge-success">Completed</span>
                         </div>
                     </div>
-                    <div class="stat-card-value">5,892</div>
-                    <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 15% from last month
+                    <p class="campaign-description">Raise awareness about privacy settings and safe practices on social media platforms.</p>
+                    <div class="campaign-stats">
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-value">1,200</div>
+                            <div class="campaign-stat-label">Reached</div>
+                        </div>
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-value">8</div>
+                            <div class="campaign-stat-label">Events</div>
+                        </div>
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-value">100%</div>
+                            <div class="campaign-stat-label">Progress</div>
+                        </div>
                     </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 100%"></div>
+                    </div>
+                    <button class="btn" style="width: 100%;">View Report</button>
+                </div>
+
+                <div class="campaign-card">
+                    <div class="campaign-header">
+                        <div>
+                            <h3 class="campaign-title">Senior Citizen Digital Safety</h3>
+                            <span class="badge badge-warning">Upcoming</span>
+                        </div>
+                    </div>
+                    <p class="campaign-description">Special program to educate senior citizens about online safety and common digital scams.</p>
+                    <div class="campaign-stats">
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-value">-</div>
+                            <div class="campaign-stat-label">Reached</div>
+                        </div>
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-value">3</div>
+                            <div class="campaign-stat-label">Planned</div>
+                        </div>
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-value">0%</div>
+                            <div class="campaign-stat-label">Progress</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 0%"></div>
+                    </div>
+                    <button class="btn" style="width: 100%;">Join Campaign</button>
                 </div>
             </div>
 
             <!-- Charts Section -->
             <div class="dashboard-charts">
                 <div class="chart-container">
-                    <h3 class="chart-title">Cases by Category</h3>
-                    <canvas id="casesByCategoryChart"></canvas>
+                    <h3 class="chart-title">My Volunteer Activities</h3>
+                    <canvas id="volunteerActivitiesChart"></canvas>
                 </div>
 
                 <div class="chart-container">
-                    <h3 class="chart-title">Case Status Distribution</h3>
-                    <canvas id="caseStatusChart"></canvas>
+                    <h3 class="chart-title">Skill Development</h3>
+                    <canvas id="skillsChart"></canvas>
                 </div>
             </div>
 
             <!-- Recent Activity -->
             <div class="recent-activity">
-                <h3 class="chart-title">Recent Activity</h3>
+                <h3 class="chart-title">Recent Activity & Opportunities</h3>
                 <ul class="activity-list">
                     <li class="activity-item">
                         <div class="activity-icon" style="background: #2196f3;">
-                            <i class="fas fa-plus"></i>
+                            <i class="fas fa-bullhorn"></i>
                         </div>
                         <div class="activity-content">
-                            <div class="activity-title">New case reported - Financial Fraud</div>
-                            <div class="activity-time">10 minutes ago</div>
+                            <div class="activity-title">Completed Phishing Awareness Workshop at Local College</div>
+                            <div class="activity-time">2 days ago | <span class="badge badge-success">125 participants</span></div>
                         </div>
                     </li>
                     <li class="activity-item">
                         <div class="activity-icon" style="background: #4caf50;">
-                            <i class="fas fa-check"></i>
+                            <i class="fas fa-certificate"></i>
                         </div>
                         <div class="activity-content">
-                            <div class="activity-title">Case #CR-2023-0452 resolved</div>
-                            <div class="activity-time">1 hour ago</div>
+                            <div class="activity-title">Earned Advanced Cyber Safety Certification</div>
+                            <div class="activity-time">5 days ago | <span class="badge badge-primary">Level Up!</span></div>
                         </div>
                     </li>
                     <li class="activity-item">
                         <div class="activity-icon" style="background: #ff9800;">
-                            <i class="fas fa-user"></i>
+                            <i class="fas fa-calendar-alt"></i>
                         </div>
                         <div class="activity-content">
-                            <div class="activity-title">New admin user registered</div>
-                            <div class="activity-time">2 hours ago</div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #f44336;">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">High priority case assigned - Identity Theft</div>
-                            <div class="activity-time">3 hours ago</div>
+                            <div class="activity-title">New Community Event: Digital Safety for Parents</div>
+                            <div class="activity-time">1 week ago | <span class="badge badge-info">Registration Open</span></div>
                         </div>
                     </li>
                     <li class="activity-item">
                         <div class="activity-icon" style="background: #9c27b0;">
-                            <i class="fas fa-chart-line"></i>
+                            <i class="fas fa-award"></i>
                         </div>
                         <div class="activity-content">
-                            <div class="activity-title">Monthly report generated</div>
-                            <div class="activity-time">5 hours ago</div>
+                            <div class="activity-title">Received Volunteer of the Month Award</div>
+                            <div class="activity-time">2 weeks ago | <span class="badge badge-warning">Congratulations!</span></div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background: #f44336;">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                        </div>
+                        <div class="activity-content">
+                            <div class="activity-title">Advanced Training: Social Engineering Prevention</div>
+                            <div class="activity-time">3 weeks ago | <span class="badge badge-danger">Mandatory</span></div>
                         </div>
                     </li>
                 </ul>
@@ -802,54 +1107,48 @@
             <div class="dashboard-tables">
                 <div class="table-container">
                     <div class="table-header">
-                        <h3 class="table-title">Recent Cases</h3>
-                        <a href="#" class="btn">View All</a>
+                        <h3 class="table-title">Upcoming Events</h3>
+                        <a href="#" class="btn btn-volunteer">View Calendar</a>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>Case ID</th>
-                                <th>Type</th>
-                                <th>Priority</th>
-                                <th>Status</th>
+                                <th>Event</th>
                                 <th>Date</th>
+                                <th>Type</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>CR-2023-0789</td>
-                                <td>Phishing</td>
-                                <td class="priority-high">High</td>
-                                <td><span class="status status-investigating">Investigating</span></td>
-                                <td>2023-11-15</td>
+                                <td>Senior Citizen Digital Safety Workshop</td>
+                                <td>2023-11-20</td>
+                                <td>Community Event</td>
+                                <td><span class="status status-new">Registered</span></td>
                             </tr>
                             <tr>
-                                <td>CR-2023-0788</td>
-                                <td>Financial Fraud</td>
-                                <td class="priority-high">High</td>
+                                <td>Advanced Social Media Safety Training</td>
+                                <td>2023-11-25</td>
+                                <td>Training</td>
                                 <td><span class="status status-pending">Pending</span></td>
-                                <td>2023-11-14</td>
                             </tr>
                             <tr>
-                                <td>CR-2023-0787</td>
-                                <td>Identity Theft</td>
-                                <td class="priority-medium">Medium</td>
-                                <td><span class="status status-investigating">Investigating</span></td>
-                                <td>2023-11-14</td>
+                                <td>College Cyber Awareness Campaign</td>
+                                <td>2023-12-05</td>
+                                <td>Awareness</td>
+                                <td><span class="status status-in-progress">Preparing</span></td>
                             </tr>
                             <tr>
-                                <td>CR-2023-0786</td>
-                                <td>Social Media Harassment</td>
-                                <td class="priority-medium">Medium</td>
-                                <td><span class="status status-resolved">Resolved</span></td>
-                                <td>2023-11-13</td>
+                                <td>Volunteer Network Meeting</td>
+                                <td>2023-12-10</td>
+                                <td>Meeting</td>
+                                <td><span class="status status-new">Confirmed</span></td>
                             </tr>
                             <tr>
-                                <td>CR-2023-0785</td>
-                                <td>Online Shopping Fraud</td>
-                                <td class="priority-low">Low</td>
-                                <td><span class="status status-resolved">Resolved</span></td>
-                                <td>2023-11-12</td>
+                                <td>Online Safety Webinar</td>
+                                <td>2023-12-15</td>
+                                <td>Webinar</td>
+                                <td><span class="status status-pending">Awaiting Confirmation</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -857,48 +1156,48 @@
 
                 <div class="table-container">
                     <div class="table-header">
-                        <h3 class="table-title">Top Investigators</h3>
-                        <a href="#" class="btn">View All</a>
+                        <h3 class="table-title">My Certifications</h3>
+                        <a href="#" class="btn btn-volunteer">View All</a>
                     </div>
                     <table>
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Department</th>
-                                <th>Active Cases</th>
-                                <th>Success Rate</th>
+                                <th>Certification</th>
+                                <th>Level</th>
+                                <th>Date Earned</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Rajesh Kumar</td>
-                                <td>Financial Crimes</td>
-                                <td>12</td>
-                                <td>92%</td>
+                                <td>Cyber Safety Basics</td>
+                                <td>Beginner</td>
+                                <td>2023-05-15</td>
+                                <td><span class="status status-completed">Completed</span></td>
                             </tr>
                             <tr>
-                                <td>Priya Sharma</td>
-                                <td>Cyber Harassment</td>
-                                <td>8</td>
-                                <td>88%</td>
+                                <td>Phishing Awareness</td>
+                                <td>Intermediate</td>
+                                <td>2023-07-22</td>
+                                <td><span class="status status-completed">Completed</span></td>
                             </tr>
                             <tr>
-                                <td>Anil Patel</td>
-                                <td>Identity Theft</td>
-                                <td>10</td>
-                                <td>85%</td>
+                                <td>Social Media Safety</td>
+                                <td>Intermediate</td>
+                                <td>2023-08-30</td>
+                                <td><span class="status status-completed">Completed</span></td>
                             </tr>
                             <tr>
-                                <td>Sunita Reddy</td>
-                                <td>Online Fraud</td>
-                                <td>7</td>
-                                <td>90%</td>
+                                <td>Advanced Cyber Safety</td>
+                                <td>Advanced</td>
+                                <td>2023-10-10</td>
+                                <td><span class="status status-completed">Completed</span></td>
                             </tr>
                             <tr>
-                                <td>Vikram Singh</td>
-                                <td>Data Breach</td>
-                                <td>9</td>
-                                <td>87%</td>
+                                <td>Social Engineering Prevention</td>
+                                <td>Advanced</td>
+                                <td>In Progress</td>
+                                <td><span class="status status-in-progress">85% Complete</span></td>
                             </tr>
                         </tbody>
                     </table>
@@ -915,45 +1214,46 @@
                     <h3>Quick Links</h3>
                     <ul>
                         <li><a href="index.html">Main Portal</a></li>
-                        <li><a href="#">Dashboard</a></li>
-                        <li><a href="#">Case Management</a></li>
-                        <li><a href="#">Reports</a></li>
+                        <li><a href="#">Volunteer Dashboard</a></li>
+                        <li><a href="#">Training Resources</a></li>
+                        <li><a href="#">Community Forum</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h3>Resources</h3>
+                    <h3>Volunteer Resources</h3>
                     <ul>
-                        <li><a href="#">Admin Guide</a></li>
-                        <li><a href="#">API Documentation</a></li>
-                        <li><a href="#">Security Protocols</a></li>
-                        <li><a href="#">Legal Framework</a></li>
+                        <li><a href="#">Training Materials</a></li>
+                        <li><a href="#">Campaign Toolkit</a></li>
+                        <li><a href="#">Presentation Templates</a></li>
+                        <li><a href="#">Event Guidelines</a></li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h3>Contact Admin</h3>
+                    <h3>Support</h3>
                     <ul>
-                        <li>Helpline: 1930</li>
-                        <li>Email: admin@cybercrime.gov.in</li>
-                        <li>Emergency: 24/7 Support</li>
+                        <li>Volunteer Helpline: 1930</li>
+                        <li>Email: volunteers@cybercrime.gov.in</li>
+                        <li>Mentor Support: Available</li>
+                        <li>Training Coordinator</li>
                     </ul>
                 </div>
                 
                 <div class="footer-section">
-                    <h3>System Info</h3>
+                    <h3>My Progress</h3>
                     <ul>
-                        <li>Version: 2.4.1</li>
-                        <li>Last Updated: 2023-11-15</li>
-                        <li>Server Status: Online</li>
-                        <li>Users Online: 142</li>
+                        <li>Volunteer Since: March 2023</li>
+                        <li>Total Hours: 86</li>
+                        <li>Campaigns: 24</li>
+                        <li>Current Level: Advanced</li>
                     </ul>
                 </div>
             </div>
             
             <div class="copyright">
                 <p>&copy; 2023 iReport - Your Cyber Crime Assistant Portal Coordination Centre. All rights reserved.</p>
-                <p>Admin Dashboard - Restricted Access</p>
+                <p>Cyber Volunteers Dashboard | Making India Cyber Safe Together</p>
             </div>
         </div>
     </footer>
@@ -988,33 +1288,60 @@
             }
         });
 
+        // Logout Functionality
+        const logoutButton = document.getElementById('logoutButton');
+        const logoutModal = document.getElementById('logoutModal');
+        const confirmLogout = document.getElementById('confirmLogout');
+        const cancelLogout = document.getElementById('cancelLogout');
+
+        // Show logout confirmation modal
+        logoutButton.addEventListener('click', () => {
+            logoutModal.style.display = 'flex';
+        });
+
+        // Confirm logout
+        confirmLogout.addEventListener('click', () => {
+            // Clear user session data
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('rememberMe');
+            localStorage.removeItem('userEmail');
+            
+            // Redirect to login page
+            window.location.href = 'login.html';
+        });
+
+        // Cancel logout
+        cancelLogout.addEventListener('click', () => {
+            logoutModal.style.display = 'none';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            if (event.target === logoutModal) {
+                logoutModal.style.display = 'none';
+            }
+        });
+
         // Charts Initialization
         document.addEventListener('DOMContentLoaded', function() {
-            // Cases by Category Chart
-            const casesByCategoryCtx = document.getElementById('casesByCategoryChart').getContext('2d');
-            const casesByCategoryChart = new Chart(casesByCategoryCtx, {
+            // Volunteer Activities Chart
+            const activitiesCtx = document.getElementById('volunteerActivitiesChart').getContext('2d');
+            const activitiesChart = new Chart(activitiesCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Phishing', 'Financial Fraud', 'Identity Theft', 'Social Media', 'Online Shopping', 'Ransomware'],
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
                     datasets: [{
-                        label: 'Number of Cases',
-                        data: [320, 280, 195, 175, 150, 127],
-                        backgroundColor: [
-                            '#ff3b30',
-                            '#ff9800',
-                            '#2196f3',
-                            '#e91e63',
-                            '#4caf50',
-                            '#9c27b0'
-                        ],
-                        borderColor: [
-                            '#ff3b30',
-                            '#ff9800',
-                            '#2196f3',
-                            '#e91e63',
-                            '#4caf50',
-                            '#9c27b0'
-                        ],
+                        label: 'Training Hours',
+                        data: [5, 7, 6, 8, 10, 12, 8, 9, 7, 8, 6],
+                        backgroundColor: '#4caf50',
+                        borderColor: '#4caf50',
+                        borderWidth: 1
+                    }, {
+                        label: 'People Reached',
+                        data: [80, 120, 150, 180, 200, 250, 180, 220, 160, 190, 120],
+                        backgroundColor: '#2196f3',
+                        borderColor: '#2196f3',
                         borderWidth: 1
                     }]
                 },
@@ -1022,7 +1349,10 @@
                     responsive: true,
                     plugins: {
                         legend: {
-                            display: false
+                            position: 'top',
+                            labels: {
+                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
+                            }
                         }
                     },
                     scales: {
@@ -1047,33 +1377,50 @@
                 }
             });
 
-            // Case Status Distribution Chart
-            const caseStatusCtx = document.getElementById('caseStatusChart').getContext('2d');
-            const caseStatusChart = new Chart(caseStatusCtx, {
-                type: 'doughnut',
+            // Skills Development Chart
+            const skillsCtx = document.getElementById('skillsChart').getContext('2d');
+            const skillsChart = new Chart(skillsCtx, {
+                type: 'radar',
                 data: {
-                    labels: ['Pending', 'Investigating', 'Resolved'],
+                    labels: ['Phishing Awareness', 'Social Media Safety', 'Digital Literacy', 'Public Speaking', 'Community Engagement', 'Technical Knowledge'],
                     datasets: [{
-                        data: [342, 120, 785],
-                        backgroundColor: [
-                            '#ff9800',
-                            '#2196f3',
-                            '#4caf50'
-                        ],
-                        borderColor: [
-                            '#ff9800',
-                            '#2196f3',
-                            '#4caf50'
-                        ],
-                        borderWidth: 1
+                        label: 'Current Skills',
+                        data: [85, 80, 75, 90, 85, 70],
+                        backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                        borderColor: '#4caf50',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#4caf50'
+                    }, {
+                        label: 'Target Skills',
+                        data: [95, 90, 85, 95, 90, 85],
+                        backgroundColor: 'rgba(33, 150, 243, 0.2)',
+                        borderColor: '#2196f3',
+                        borderWidth: 2,
+                        pointBackgroundColor: '#2196f3'
                     }]
                 },
                 options: {
                     responsive: true,
                     plugins: {
                         legend: {
-                            position: 'bottom',
+                            position: 'top',
                             labels: {
+                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
+                            }
+                        }
+                    },
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: document.body.classList.contains('dark-theme') ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            },
+                            grid: {
+                                color: document.body.classList.contains('dark-theme') ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            },
+                            pointLabels: {
+                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
+                            },
+                            ticks: {
                                 color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
                             }
                         }
@@ -1084,8 +1431,8 @@
             // Update charts when theme changes
             themeToggle.addEventListener('click', function() {
                 setTimeout(function() {
-                    casesByCategoryChart.update();
-                    caseStatusChart.update();
+                    activitiesChart.update();
+                    skillsChart.update();
                 }, 100);
             });
         });
