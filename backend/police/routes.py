@@ -1,21 +1,60 @@
-# Create fixed police/routes.py
+# police/routes.py - COMPLETE FIXED VERSION
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from database.connection import db
 from database.models import PoliceOfficer, Complaint, CaseAssignment, CaseUpdate, User
-from auth.auth_handler import Auth
-from auth.utils import police_required, token_required 
 from datetime import datetime
-import json
 import logging
 
+# Create blueprint
 police_bp = Blueprint('police', __name__)
 
-logging = logging.getLogger(__name__)
+# Setup logging
+logger = logging.getLogger(__name__)
 
-@police_bp.route('/dashboard', methods=['GET'])
-@police_required
-def police_dashboard(current_user):
+# Public test endpoint
+@police_bp.route('/test-public', methods=['GET'])
+def test_public():
+    """Public test endpoint to verify police blueprint is accessible"""
+    return jsonify({
+        "message": "Police blueprint is accessible!",
+        "status": "success",
+        "timestamp": datetime.utcnow().isoformat()
+    }), 200
+
+# Test endpoint with auth
+@police_bp.route('/test', methods=['GET'])
+@jwt_required()
+def test_auth():
+    """Test endpoint with authentication"""
     try:
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+        
+        return jsonify({
+            "message": "Police authenticated route is working!",
+            "user_id": current_user_id,
+            "user_role": current_user.role if current_user else "Unknown",
+            "status": "success"
+        }), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+# Police Dashboard
+@police_bp.route('/dashboard', methods=['GET'])
+@jwt_required()
+def police_dashboard():
+    try:
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+        
+        if not current_user:
+            return jsonify({"error": "User not found"}), 404
+            
+        # Check if user is police
+        if current_user.role != 'police':
+            return jsonify({"error": "Access denied. Police role required."}), 403
+            
         police_user = PoliceOfficer.query.filter_by(user_id=current_user.id).first()
         if not police_user:
             return jsonify({"error": "Police officer profile not found"}), 404
@@ -78,69 +117,24 @@ def police_dashboard(current_user):
         }), 200
         
     except Exception as e:
+        logger.error(f"Dashboard error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
-@police_bp.route('/update-case/<case_id>', methods=['POST'])
-@police_required
-def update_case(current_user, case_id):
-    try:
-        police_user = PoliceOfficer.query.filter_by(user_id=current_user.id).first()
-        if not police_user:
-            return jsonify({"error": "Police officer profile not found"}), 404
-        
-        data = request.get_json()
-        
-        complaint = Complaint.query.filter_by(case_id=case_id).first()
-        if not complaint:
-            return jsonify({"error": "Case not found"}), 404
-        
-        # Check if officer is assigned to this case
-        assignment = CaseAssignment.query.filter_by(
-            complaint_id=complaint.id,
-            police_officer_id=police_user.id
-        ).first()
-        
-        if not assignment:
-            return jsonify({"error": "Not assigned to this case"}), 403
-        
-        # Update case status if provided
-        if 'status' in data:
-            old_status = complaint.status
-            complaint.status = data['status']
-            complaint.updated_at = datetime.utcnow()
-            
-            if data['status'] == 'resolved':
-                complaint.resolved_date = datetime.utcnow()
-        
-        # Add case update
-        case_update = CaseUpdate(
-            complaint_id=complaint.id,
-            updated_by=current_user.id,
-            update_type=data.get('update_type', 'status_update'),
-            title=data.get('title', 'Case Update'),
-            description=data.get('description', ''),
-            internal_notes=data.get('internal_notes'),
-            evidence_files=data.get('evidence_files')
-        )
-        
-        db.session.add(case_update)
-        db.session.commit()
-        
-        return jsonify({
-            "message": "Case updated successfully",
-            "case_id": case_id,
-            "new_status": data.get('status', complaint.status),
-            "update_id": case_update.id
-        }), 200
-        
-    except Exception as e:
-        db.session.rollback()
-        return jsonify({"error": str(e)}), 500
-
+# Get Police Cases
 @police_bp.route('/cases', methods=['GET'])
-@police_required
-def get_police_cases(current_user):
+@jwt_required()
+def get_police_cases():
     try:
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+        
+        if not current_user:
+            return jsonify({"error": "User not found"}), 404
+            
+        # Check if user is police
+        if current_user.role != 'police':
+            return jsonify({"error": "Access denied. Police role required."}), 403
+            
         police_user = PoliceOfficer.query.filter_by(user_id=current_user.id).first()
         if not police_user:
             return jsonify({"error": "Police officer profile not found"}), 404
@@ -199,12 +193,93 @@ def get_police_cases(current_user):
         }), 200
         
     except Exception as e:
+        logger.error(f"Get cases error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
-@police_bp.route('/case-details/<case_id>', methods=['GET'])
-@police_required
-def get_case_details(current_user, case_id):
+# Update Case
+@police_bp.route('/update-case/<case_id>', methods=['POST'])
+@jwt_required()
+def update_case(case_id):
     try:
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+        
+        if not current_user:
+            return jsonify({"error": "User not found"}), 404
+            
+        # Check if user is police
+        if current_user.role != 'police':
+            return jsonify({"error": "Access denied. Police role required."}), 403
+            
+        police_user = PoliceOfficer.query.filter_by(user_id=current_user.id).first()
+        if not police_user:
+            return jsonify({"error": "Police officer profile not found"}), 404
+        
+        data = request.get_json()
+        
+        complaint = Complaint.query.filter_by(case_id=case_id).first()
+        if not complaint:
+            return jsonify({"error": "Case not found"}), 404
+        
+        # Check if officer is assigned to this case
+        assignment = CaseAssignment.query.filter_by(
+            complaint_id=complaint.id,
+            police_officer_id=police_user.id
+        ).first()
+        
+        if not assignment:
+            return jsonify({"error": "Not assigned to this case"}), 403
+        
+        # Update case status if provided
+        if 'status' in data:
+            old_status = complaint.status
+            complaint.status = data['status']
+            complaint.updated_at = datetime.utcnow()
+            
+            if data['status'] == 'resolved':
+                complaint.resolved_date = datetime.utcnow()
+        
+        # Add case update
+        case_update = CaseUpdate(
+            complaint_id=complaint.id,
+            updated_by=current_user.id,
+            update_type=data.get('update_type', 'status_update'),
+            title=data.get('title', 'Case Update'),
+            description=data.get('description', ''),
+            internal_notes=data.get('internal_notes'),
+            evidence_files=data.get('evidence_files')
+        )
+        
+        db.session.add(case_update)
+        db.session.commit()
+        
+        return jsonify({
+            "message": "Case updated successfully",
+            "case_id": case_id,
+            "new_status": data.get('status', complaint.status),
+            "update_id": case_update.id
+        }), 200
+        
+    except Exception as e:
+        db.session.rollback()
+        logger.error(f"Update case error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+# Get Case Details
+@police_bp.route('/case-details/<case_id>', methods=['GET'])
+@jwt_required()
+def get_case_details(case_id):
+    try:
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+        
+        if not current_user:
+            return jsonify({"error": "User not found"}), 404
+            
+        # Check if user is police
+        if current_user.role != 'police':
+            return jsonify({"error": "Access denied. Police role required."}), 403
+            
         police_user = PoliceOfficer.query.filter_by(user_id=current_user.id).first()
         if not police_user:
             return jsonify({"error": "Police officer profile not found"}), 404
@@ -276,17 +351,29 @@ def get_case_details(current_user, case_id):
         return jsonify(case_data), 200
         
     except Exception as e:
+        logger.error(f"Case details error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+# Get Officer Performance
 @police_bp.route('/performance', methods=['GET'])
-@police_required
-def get_officer_performance(current_user):
+@jwt_required()
+def get_officer_performance():
     try:
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+        
+        if not current_user:
+            return jsonify({"error": "User not found"}), 404
+            
+        # Check if user is police
+        if current_user.role != 'police':
+            return jsonify({"error": "Access denied. Police role required."}), 403
+            
         police_user = PoliceOfficer.query.filter_by(user_id=current_user.id).first()
         if not police_user:
             return jsonify({"error": "Police officer profile not found"}), 404
         
-        # Basic performance calculation (replace with actual performance tracker)
+        # Basic performance calculation
         assigned_cases = CaseAssignment.query.filter_by(police_officer_id=police_user.id).count()
         resolved_cases = Complaint.query.join(CaseAssignment).filter(
             CaseAssignment.police_officer_id == police_user.id,
@@ -309,12 +396,24 @@ def get_officer_performance(current_user):
         return jsonify(performance), 200
         
     except Exception as e:
+        logger.error(f"Performance error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+# Get Team Performance
 @police_bp.route('/team-performance', methods=['GET'])
-@police_required
-def get_team_performance(current_user):
+@jwt_required()
+def get_team_performance():
     try:
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+        
+        if not current_user:
+            return jsonify({"error": "User not found"}), 404
+            
+        # Check if user is police
+        if current_user.role != 'police':
+            return jsonify({"error": "Access denied. Police role required."}), 403
+            
         police_user = PoliceOfficer.query.filter_by(user_id=current_user.id).first()
         if not police_user:
             return jsonify({"error": "Police officer profile not found"}), 404
@@ -351,12 +450,24 @@ def get_team_performance(current_user):
         }), 200
         
     except Exception as e:
+        logger.error(f"Team performance error: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
+# Update Availability
 @police_bp.route('/availability', methods=['PUT'])
-@police_required
-def update_availability(current_user):
+@jwt_required()
+def update_availability():
     try:
+        current_user_id = get_jwt_identity()
+        current_user = User.query.get(current_user_id)
+        
+        if not current_user:
+            return jsonify({"error": "User not found"}), 404
+            
+        # Check if user is police
+        if current_user.role != 'police':
+            return jsonify({"error": "Access denied. Police role required."}), 403
+            
         police_user = PoliceOfficer.query.filter_by(user_id=current_user.id).first()
         if not police_user:
             return jsonify({"error": "Police officer profile not found"}), 404
@@ -379,13 +490,5 @@ def update_availability(current_user):
         
     except Exception as e:
         db.session.rollback()
+        logger.error(f"Availability update error: {str(e)}")
         return jsonify({"error": str(e)}), 500
-
-@police_bp.route('/test-public', methods=['GET'])
-def test_public():
-    """Public test endpoint to verify police blueprint is accessible"""
-    return jsonify({
-        "message": "Police blueprint is accessible!",
-        "status": "success",
-        "timestamp": datetime.utcnow().isoformat()
-    }), 200

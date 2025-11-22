@@ -334,9 +334,11 @@ class CaseAssigner:
         try:
             print(f"📝 Creating assignment for case {complaint.case_id} to {assignee_type}")
             
+            # Create assignment with ALL required fields
             assignment = CaseAssignment(
                 complaint_id=complaint.id,
                 assigned_date=datetime.utcnow(),
+                assignment_type=assignee_type,  # REQUIRED FIELD: 'police' or 'volunteer'
                 status='assigned'
             )
             
@@ -419,7 +421,7 @@ class CaseAssigner:
             
             if current_assignment:
                 current_assignment.status = 'reassigned'
-                current_assignment.notes = reason
+                current_assignment.assignment_reason = reason  # Use assignment_reason field
                 
                 # Decrement case load for police officer
                 if current_assignment.police_officer_id:
@@ -427,6 +429,13 @@ class CaseAssigner:
                     if officer and officer.current_case_load > 0:
                         officer.current_case_load -= 1
                         print(f"👮 Decremented officer case load: {officer.current_case_load}")
+                
+                # Decrement cases handled for volunteer
+                if current_assignment.volunteer_id:
+                    volunteer = Volunteer.query.get(current_assignment.volunteer_id)
+                    if volunteer and volunteer.cases_handled > 0:
+                        volunteer.cases_handled -= 1
+                        print(f"🤝 Decremented volunteer cases handled: {volunteer.cases_handled}")
             
             # Find new assignee
             new_assignee, assignee_type = self.auto_assign_case(complaint)
@@ -443,6 +452,75 @@ class CaseAssigner:
             db.session.rollback()
             print(f"❌ Reassignment error: {e}")
             return None, None
+
+    def manual_assign_case(self, complaint, assignee_id, assignee_type, assigned_by_user_id, reason=None):
+        """Manually assign a case to specific officer/volunteer"""
+        try:
+            print(f"👤 Manual assignment for case {complaint.case_id} to {assignee_type} ID: {assignee_id}")
+            
+            if assignee_type == 'police':
+                assignee = PoliceOfficer.query.get(assignee_id)
+                if not assignee or not assignee.is_active:
+                    print("❌ Invalid or inactive police officer")
+                    return None
+            elif assignee_type == 'volunteer':
+                assignee = Volunteer.query.get(assignee_id)
+                if not assignee or assignee.status != 'approved':
+                    print("❌ Invalid or unapproved volunteer")
+                    return None
+            else:
+                print("❌ Invalid assignee type")
+                return None
+            
+            # Create assignment with all required fields
+            assignment = CaseAssignment(
+                complaint_id=complaint.id,
+                police_officer_id=assignee_id if assignee_type == 'police' else None,
+                volunteer_id=assignee_id if assignee_type == 'volunteer' else None,
+                assigned_by=assigned_by_user_id,
+                assignment_type=assignee_type,
+                assignment_reason=reason,
+                assigned_date=datetime.utcnow(),
+                status='assigned'
+            )
+            
+            # Update assignee's case count
+            if assignee_type == 'police':
+                assignee.current_case_load = (assignee.current_case_load or 0) + 1
+            else:
+                assignee.cases_handled = (assignee.cases_handled or 0) + 1
+            
+            db.session.add(assignment)
+            db.session.commit()
+            
+            print(f"✅ Manual assignment successful: {assignee.user.full_name if assignee.user else 'Unknown'}")
+            return assignment
+            
+        except Exception as e:
+            db.session.rollback()
+            print(f"❌ Manual assignment error: {e}")
+            return None
+
+    def get_case_assignments(self, complaint_id=None, officer_id=None, volunteer_id=None, status='assigned'):
+        """Get case assignments with filters"""
+        try:
+            query = CaseAssignment.query
+            
+            if complaint_id:
+                query = query.filter_by(complaint_id=complaint_id)
+            if officer_id:
+                query = query.filter_by(police_officer_id=officer_id)
+            if volunteer_id:
+                query = query.filter_by(volunteer_id=volunteer_id)
+            if status:
+                query = query.filter_by(status=status)
+            
+            assignments = query.all()
+            return assignments
+            
+        except Exception as e:
+            print(f"❌ Error getting assignments: {e}")
+            return []
 
 # Global assigner instance
 case_assigner = CaseAssigner()

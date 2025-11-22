@@ -25,6 +25,7 @@
             --other-crime-color: #2196f3;
             --success-color: #4CAF50;
             --error-color: #f44336;
+            --demo-color: #9C27B0;
         }
 
         .dark-theme {
@@ -394,6 +395,10 @@
             background-color: var(--other-crime-color);
         }
 
+        .notification.demo {
+            background-color: var(--demo-color);
+        }
+
         .loading {
             opacity: 0.6;
             pointer-events: none;
@@ -474,6 +479,28 @@
 
         .dark-theme .demo-btn {
             box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* Demo Mode Indicator */
+        .demo-indicator {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--demo-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 999;
+            box-shadow: var(--shadow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         /* Footer */
@@ -564,12 +591,24 @@
             .demo-buttons {
                 grid-template-columns: 1fr;
             }
+
+            .demo-indicator {
+                top: 120px;
+                right: 10px;
+                left: 10px;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
     <!-- Notification -->
     <div class="notification" id="notification"></div>
+
+    <!-- Demo Mode Indicator (will be shown when in demo mode) -->
+    <div class="demo-indicator" id="demoIndicator" style="display: none;">
+        🚀 DEMO MODE - Test Data
+    </div>
 
     <!-- Header Top -->
     <div class="header-top">
@@ -631,7 +670,6 @@
 
             <div class="actions">
                 <div class="links">
-                    <a href="#">EN ▼</a>
                     <a href="contactus.html">Contact us</a>
                     <a href="index.html">Back to Home</a>
                 </div>
@@ -699,9 +737,9 @@
                             <div>👮 Police</div>
                             <small>police.delhi.1@ireport.com</small>
                         </button>
-                        <button onclick="fillCredentials('volunteer.maharashtra.1@ireport.com', 'volunteer123')" class="demo-btn" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2);">
+                        <button onclick="fillCredentials('volunteer.delhi.1@ireport.com', 'volunteer123')" class="demo-btn" style="background: linear-gradient(135deg, #9C27B0, #7B1FA2);">
                             <div>🤝 Volunteer</div>
-                            <small>volunteer.maharashtra.1@ireport.com</small>
+                            <small>volunteer.delhi.1@ireport.com</small>
                         </button>
                         <button onclick="fillCredentials('user@ireport.com', 'user123')" class="demo-btn" style="background: linear-gradient(135deg, #2196F3, #1976D2);">
                             <div>👤 Public User</div>
@@ -781,8 +819,18 @@
     <script>
         // API Configuration
         const API_BASE_URL = 'http://localhost:5000/api';
-        let authToken = localStorage.getItem('authToken');
-        let currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        
+        // Demo users configuration
+        const DEMO_USERS = {
+            'admin@ireport.com': 'admin123',
+            'police.delhi.1@ireport.com': 'police123',
+            'volunteer.delhi.1@ireport.com': 'volunteer123',
+            'user@ireport.com': 'user123'
+        };
+
+        let authToken = localStorage.getItem('token');
+        let currentUser = JSON.parse(localStorage.getItem('user') || '{}');
+        let isDemoMode = false;
 
         // Show notification
         function showNotification(message, type = 'info') {
@@ -793,6 +841,20 @@
             setTimeout(() => {
                 notification.classList.remove('show');
             }, 5000);
+        }
+
+        // Show/hide demo indicator
+        function toggleDemoIndicator(show) {
+            const indicator = document.getElementById('demoIndicator');
+            indicator.style.display = show ? 'block' : 'none';
+            isDemoMode = show;
+            
+            // Store demo mode in localStorage so dashboards can detect it
+            if (show) {
+                localStorage.setItem('demoMode', 'true');
+            } else {
+                localStorage.removeItem('demoMode');
+            }
         }
 
         // Enhanced API Request Helper
@@ -845,185 +907,219 @@
                 console.error('❌ API Request Failed:', error);
                 
                 if (error.name === 'TypeError' && error.message.includes('fetch')) {
-                    throw new Error('Network error: Cannot connect to server. Make sure backend is running on localhost:5000');
+                    throw new Error('Network error: Cannot connect to server. Make sure backend is running.');
                 }
                 
                 throw error;
             }
         }
 
-        // Get dashboard URL based on user role
-        function getDashboardUrl(user) {
+        // Check if user is a demo user
+        function isDemoUser(email, password) {
+            return DEMO_USERS[email] === password;
+        }
+
+        // Get dashboard URL based on user role and mode
+        function getDashboardUrl(user, isDemo = false) {
             const role = user.role ? user.role.toLowerCase() : 'user';
             
-            console.log(`🎯 Determining dashboard for role: ${role}`, user);
+            console.log(`🎯 Determining dashboard for role: ${role}`, { user, isDemo });
             
+            let baseUrl;
             switch(role) {
                 case 'admin':
-                    return 'admin-dashboard.html';
+                    baseUrl = 'admin-dashboard.html';
+                    break;
                 case 'police':
                 case 'police_officer':
                 case 'officer':
-                    return 'police-dashboard.html';
+                    baseUrl = 'police-dashboard.html';
+                    break;
                 case 'volunteer':
-                    return 'volunteer-dashboard.html';
+                    baseUrl = 'volunteer-dashboard.html';
+                    break;
                 case 'user':
                 case 'public':
                 case 'citizen':
                 default:
-                    return 'dashboard.html';
+                    baseUrl = 'dashboard.html';
             }
+            
+            // Add demo mode parameter if it's a demo user
+            if (isDemo) {
+                baseUrl += '?demo=true';
+            }
+            
+            return baseUrl;
         }
 
-        // Login function with role-based redirect
+        // Main login function
         async function loginUser(email, password) {
             try {
                 console.log('🔄 Attempting login with:', { email });
                 
-                // Simulate API call for demo purposes
-                // In a real implementation, this would be an actual API call
-                const demoUsers = {
-                    'admin@ireport.com': { 
-                        token: 'demo_admin_token_12345', 
-                        user: { 
-                            id: 1, 
-                            email: 'admin@ireport.com', 
-                            full_name: 'Admin User', 
-                            role: 'admin' 
-                        } 
-                    },
-                    'police.delhi.1@ireport.com': { 
-                        token: 'demo_police_token_12345', 
-                        user: { 
-                            id: 2, 
-                            email: 'police.delhi.1@ireport.com', 
-                            full_name: 'Police Officer', 
-                            role: 'police' 
-                        } 
-                    },
-                    'volunteer.maharashtra.1@ireport.com': { 
-                        token: 'demo_volunteer_token_12345', 
-                        user: { 
-                            id: 3, 
-                            email: 'volunteer.maharashtra.1@ireport.com', 
-                            full_name: 'Volunteer User', 
-                            role: 'volunteer' 
-                        } 
-                    },
-                    'user@ireport.com': { 
-                        token: 'demo_user_token_12345', 
-                        user: { 
-                            id: 4, 
-                            email: 'user@ireport.com', 
-                            full_name: 'Regular User', 
-                            role: 'user' 
-                        } 
-                    }
-                };
+                // First, try real API login
+                const data = await apiRequest('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({ 
+                        email: email, 
+                        password: password 
+                    })
+                });
                 
-                // Check if it's a demo user
-                if (demoUsers[email] && password === getDemoPassword(email)) {
-                    // Simulate API delay
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    
-                    const data = demoUsers[email];
+                console.log('✅ Real API Login Successful:', data);
+                
+                if (data.token && data.user) {
+                    // Real user login successful
                     authToken = data.token;
                     currentUser = data.user;
                     
-                    // Store in localStorage
-                    localStorage.setItem('authToken', authToken);
-                    localStorage.setItem('currentUser', JSON.stringify(currentUser));
+                    // Store user data
+                    localStorage.setItem('token', authToken);
+                    localStorage.setItem('user', JSON.stringify(currentUser));
+                    localStorage.setItem('lastLogin', new Date().toISOString());
                     
-                    // Get appropriate dashboard URL based on role
-                    const dashboardUrl = getDashboardUrl(currentUser);
+                    console.log('🔐 Real user data stored');
                     
-                    console.log(`🎯 Redirecting ${currentUser.role} user to: ${dashboardUrl}`);
+                    // Hide demo indicator for real users
+                    toggleDemoIndicator(false);
                     
-                    const welcomeName = currentUser.full_name || currentUser.email;
+                    // Get dashboard URL for real user
+                    const dashboardUrl = getDashboardUrl(currentUser, false);
+                    
+                    console.log(`🎯 Redirecting REAL ${currentUser.role} user to: ${dashboardUrl}`);
+                    
+                    const welcomeName = currentUser.name || currentUser.full_name || currentUser.email;
                     showNotification(`Login successful! Welcome ${welcomeName}. Redirecting to ${currentUser.role} dashboard...`, 'success');
                     
-                    // Redirect to appropriate dashboard after successful login
+                    // Redirect to appropriate dashboard
                     setTimeout(() => {
                         window.location.href = dashboardUrl;
                     }, 1500);
                     
                     return data;
                 } else {
-                    // For non-demo users, make actual API call
-                    const data = await apiRequest('/auth/login', {
-                        method: 'POST',
-                        body: JSON.stringify({ 
-                            email: email, 
-                            password: password 
-                        })
-                    });
-                    
-                    console.log('✅ Login API Response:', data);
-                    
-                    if (data.token && data.user) {
-                        authToken = data.token;
-                        currentUser = data.user;
-                        
-                        // Store in localStorage
-                        localStorage.setItem('authToken', authToken);
-                        localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                        
-                        // Get appropriate dashboard URL based on role
-                        const dashboardUrl = getDashboardUrl(currentUser);
-                        
-                        console.log(`🎯 Redirecting ${currentUser.role} user to: ${dashboardUrl}`);
-                        
-                        const welcomeName = currentUser.full_name || currentUser.email;
-                        showNotification(`Login successful! Welcome ${welcomeName}. Redirecting to ${currentUser.role} dashboard...`, 'success');
-                        
-                        // Redirect to appropriate dashboard after successful login
-                        setTimeout(() => {
-                            window.location.href = dashboardUrl;
-                        }, 1500);
-                        
-                        return data;
-                    } else {
-                        throw new Error('Invalid response format: Missing token or user data');
-                    }
+                    throw new Error('Invalid response format: Missing token or user data');
                 }
+                
             } catch (error) {
-                console.error('❌ Login failed:', error);
-                throw error;
+                console.error('❌ Real API login failed:', error);
+                
+                // If real login fails, check if it's a demo user
+                if (isDemoUser(email, password)) {
+                    console.log('🔄 Switching to demo login for:', email);
+                    return await demoLogin(email, password);
+                } else {
+                    // If not a demo user and real login failed, throw the original error
+                    throw error;
+                }
             }
         }
 
-        // Helper function to get demo password based on email
-        function getDemoPassword(email) {
-            const demoPasswords = {
-                'admin@ireport.com': 'admin123',
-                'police.delhi.1@ireport.com': 'police123',
-                'volunteer.maharashtra.1@ireport.com': 'volunteer123',
-                'user@ireport.com': 'user123'
+        // Demo login function
+        async function demoLogin(email, password) {
+            console.log('🎭 Starting demo login for:', email);
+            
+            const demoUsersData = {
+                'admin@ireport.com': { 
+                    token: 'demo_admin_token_12345', 
+                    user: { 
+                        id: 1, 
+                        email: 'admin@ireport.com', 
+                        full_name: 'Admin User',
+                        name: 'Admin User',
+                        role: 'admin',
+                        isDemo: true
+                    } 
+                },
+                'police.delhi.1@ireport.com': { 
+                    token: 'demo_police_token_12345', 
+                    user: { 
+                        id: 2, 
+                        email: 'police.delhi.1@ireport.com', 
+                        full_name: 'Police Officer',
+                        name: 'Police Officer',
+                        role: 'police',
+                        isDemo: true
+                    } 
+                },
+                'volunteer.delhi.1@ireport.com': { 
+                    token: 'demo_volunteer_token_12345', 
+                    user: { 
+                        id: 3, 
+                        email: 'volunteer.delhi.1@ireport.com', 
+                        full_name: 'Volunteer User',
+                        name: 'Volunteer User',
+                        role: 'volunteer',
+                        isDemo: true
+                    } 
+                },
+                'user@ireport.com': { 
+                    token: 'demo_user_token_12345', 
+                    user: { 
+                        id: 4, 
+                        email: 'user@ireport.com', 
+                        full_name: 'Regular User',
+                        name: 'Regular User',
+                        role: 'user',
+                        isDemo: true
+                    } 
+                }
             };
-            return demoPasswords[email];
+            
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            const data = demoUsersData[email];
+            if (!data) {
+                throw new Error('Demo user not found');
+            }
+            
+            authToken = data.token;
+            currentUser = data.user;
+            
+            // Store demo user data with demo flag
+            localStorage.setItem('token', authToken);
+            localStorage.setItem('user', JSON.stringify(currentUser));
+            localStorage.setItem('lastLogin', new Date().toISOString());
+            localStorage.setItem('isDemoUser', 'true');
+            
+            console.log('🔐 Demo user data stored');
+            
+            // Show demo indicator
+            toggleDemoIndicator(true);
+            
+            // Get dashboard URL for demo user
+            const dashboardUrl = getDashboardUrl(currentUser, true);
+            
+            console.log(`🎯 Redirecting DEMO ${currentUser.role} user to: ${dashboardUrl}`);
+            
+            const welcomeName = currentUser.name || currentUser.full_name || currentUser.email;
+            showNotification(`Demo login successful! Welcome ${welcomeName}. You are in demo mode with sample data.`, 'demo');
+            
+            // Redirect to appropriate dashboard with demo mode
+            setTimeout(() => {
+                window.location.href = dashboardUrl;
+            }, 2000);
+            
+            return data;
         }
 
-    
-        // Add this function to test backend connectivity
-async function testBackendConnection() {
-    try {
-        console.log('🔗 Testing backend connection...');
-        const response = await fetch(`${API_BASE_URL}/health`);
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        const data = await response.json();
-        console.log('✅ Backend connection successful:', data);
-        return true;
-    } catch (error) {
-        console.error('❌ Backend connection failed:', error);
-        showNotification('⚠️ Backend server is not running. Using demo mode.', 'info');
-        return false;
-    }
-}
-
-// Call this on page load
-document.addEventListener('DOMContentLoaded', function() {
-    testBackendConnection();
-});
+        // Test backend connectivity
+        async function testBackendConnection() {
+            try {
+                console.log('🔗 Testing backend connection...');
+                const response = await fetch(`${API_BASE_URL}/health`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const data = await response.json();
+                console.log('✅ Backend connection successful:', data);
+                return true;
+            } catch (error) {
+                console.error('❌ Backend connection failed:', error);
+                showNotification('⚠️ Backend server is not running. Demo mode will be used for test accounts.', 'info');
+                return false;
+            }
+        }
 
         // Theme Toggle Functionality
         const themeToggle = document.getElementById('themeToggle');
@@ -1119,7 +1215,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (error.message.includes('Invalid credentials') || error.message.includes('401')) {
                     errorMessage = 'Invalid email or password. Please check your credentials.';
                 } else if (error.message.includes('Network error') || error.message.includes('fetch')) {
-                    errorMessage = 'Cannot connect to server. Please ensure the backend is running on localhost:5000';
+                    errorMessage = 'Cannot connect to server. Please ensure the backend is running.';
                 } else if (error.message.includes('JSON')) {
                     errorMessage = 'Server response error. Please check backend logs.';
                 } else if (error.message.includes('Account is deactivated')) {
@@ -1184,12 +1280,13 @@ document.addEventListener('DOMContentLoaded', function() {
         window.testBackendConnection = testBackendConnection;
         window.apiRequest = apiRequest;
         window.getDashboardUrl = getDashboardUrl;
+        window.isDemoUser = isDemoUser;
 
         console.log('🔧 Login script loaded successfully!');
         console.log('📧 Available demo accounts:');
         console.log('   👑 Admin: admin@ireport.com (admin123)');
         console.log('   👮 Police: police.delhi.1@ireport.com (police123)');
-        console.log('   🤝 Volunteer: volunteer.maharashtra.1@ireport.com (volunteer123)');
+        console.log('   🤝 Volunteer: volunteer.delhi.1@ireport.com (volunteer123)');
         console.log('   👤 Public: user@ireport.com (user123)');
     </script>
 </body>

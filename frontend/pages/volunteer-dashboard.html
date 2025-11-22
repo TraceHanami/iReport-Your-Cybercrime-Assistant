@@ -26,6 +26,9 @@
             --other-crime-color: #2196f3;
             --volunteer-green: #2e7d32;
             --volunteer-light-green: #4caf50;
+            --success-color: #4CAF50;
+            --error-color: #f44336;
+            --demo-color: #9C27B0;
         }
 
         .dark-theme {
@@ -56,6 +59,28 @@
             color: var(--text-color);
             line-height: 1.6;
             transition: var(--transition);
+        }
+
+        /* Demo Mode Indicator */
+        .demo-indicator {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--demo-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 999;
+            box-shadow: var(--shadow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         /* Header Top Styles */
@@ -273,6 +298,16 @@
         .dashboard-title {
             font-size: 1.8rem;
             color: var(--text-color);
+        }
+
+        .demo-badge {
+            background: var(--demo-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            vertical-align: middle;
         }
 
         .volunteer-info {
@@ -655,6 +690,41 @@
             justify-content: center;
         }
 
+        /* Notification Styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: var(--error-color);
+        }
+
+        .notification.info {
+            background-color: var(--other-crime-color);
+        }
+
+        .notification.demo {
+            background-color: var(--demo-color);
+        }
+
         /* Footer */
         footer {
             background: var(--footer-bg);
@@ -764,10 +834,25 @@
             .modal-actions {
                 flex-direction: column;
             }
+
+            .demo-indicator {
+                top: 120px;
+                right: 10px;
+                left: 10px;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Demo Mode Indicator -->
+    <div class="demo-indicator" id="demoIndicator" style="display: none;">
+        🚀 DEMO MODE - Test Data
+    </div>
+
     <!-- Logout Confirmation Modal -->
     <div class="modal" id="logoutModal">
         <div class="modal-content">
@@ -886,12 +971,15 @@
         <!-- Dashboard Content -->
         <div class="dashboard-content">
             <div class="dashboard-header">
-                <h1 class="dashboard-title">Cyber Volunteers Dashboard</h1>
-                <div class="volunteer-info">
-                    <div class="volunteer-avatar">PS</div>
+                <h1 class="dashboard-title" id="dashboardTitle">
+                    Cyber Volunteers Dashboard
+                    <span class="demo-badge" id="demoBadge" style="display: none;">DEMO</span>
+                </h1>
+                <div class="volunteer-info" id="volunteerInfo">
+                    <div class="volunteer-avatar" id="volunteerAvatar">PS</div>
                     <div class="volunteer-details">
-                        <h4>Priya Sharma</h4>
-                        <p>Cyber Volunteer | Level: Advanced | ID: CV-4582</p>
+                        <h4 id="volunteerName">Priya Sharma</h4>
+                        <p id="volunteerDetails">Cyber Volunteer | Level: Advanced | ID: CV-4582</p>
                     </div>
                 </div>
             </div>
@@ -905,9 +993,9 @@
                             <i class="fas fa-bullhorn"></i>
                         </div>
                     </div>
-                    <div class="stat-card-value">24</div>
+                    <div class="stat-card-value" id="campaignsCount">0</div>
                     <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 3 active campaigns
+                        <i class="fas fa-arrow-up"></i> <span id="activeCampaigns">0</span> active campaigns
                     </div>
                 </div>
 
@@ -918,9 +1006,9 @@
                             <i class="fas fa-users"></i>
                         </div>
                     </div>
-                    <div class="stat-card-value">1,850</div>
+                    <div class="stat-card-value" id="peopleReached">0</div>
                     <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 120 this month
+                        <i class="fas fa-arrow-up"></i> <span id="monthlyReached">0</span> this month
                     </div>
                 </div>
 
@@ -931,9 +1019,9 @@
                             <i class="fas fa-clock"></i>
                         </div>
                     </div>
-                    <div class="stat-card-value">86</div>
+                    <div class="stat-card-value" id="trainingHours">0</div>
                     <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 12 this month
+                        <i class="fas fa-arrow-up"></i> <span id="monthlyTraining">0</span> this month
                     </div>
                 </div>
 
@@ -944,98 +1032,16 @@
                             <i class="fas fa-star"></i>
                         </div>
                     </div>
-                    <div class="stat-card-value">92%</div>
+                    <div class="stat-card-value" id="volunteerScore">0%</div>
                     <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 5% from last month
+                        <i class="fas fa-arrow-up"></i> <span id="scoreChange">0%</span> from last month
                     </div>
                 </div>
             </div>
 
             <!-- Campaigns Section -->
-            <div class="campaigns-grid">
-                <div class="campaign-card">
-                    <div class="campaign-header">
-                        <div>
-                            <h3 class="campaign-title">Phishing Awareness</h3>
-                            <span class="badge badge-primary">Active</span>
-                        </div>
-                    </div>
-                    <p class="campaign-description">Educate community about identifying and avoiding phishing attempts through workshops and digital materials.</p>
-                    <div class="campaign-stats">
-                        <div class="campaign-stat">
-                            <div class="campaign-stat-value">850</div>
-                            <div class="campaign-stat-label">Reached</div>
-                        </div>
-                        <div class="campaign-stat">
-                            <div class="campaign-stat-value">5</div>
-                            <div class="campaign-stat-label">Events</div>
-                        </div>
-                        <div class="campaign-stat">
-                            <div class="campaign-stat-value">78%</div>
-                            <div class="campaign-stat-label">Progress</div>
-                        </div>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 78%"></div>
-                    </div>
-                    <button class="btn btn-volunteer" style="width: 100%;">Continue Campaign</button>
-                </div>
-
-                <div class="campaign-card">
-                    <div class="campaign-header">
-                        <div>
-                            <h3 class="campaign-title">Social Media Safety</h3>
-                            <span class="badge badge-success">Completed</span>
-                        </div>
-                    </div>
-                    <p class="campaign-description">Raise awareness about privacy settings and safe practices on social media platforms.</p>
-                    <div class="campaign-stats">
-                        <div class="campaign-stat">
-                            <div class="campaign-stat-value">1,200</div>
-                            <div class="campaign-stat-label">Reached</div>
-                        </div>
-                        <div class="campaign-stat">
-                            <div class="campaign-stat-value">8</div>
-                            <div class="campaign-stat-label">Events</div>
-                        </div>
-                        <div class="campaign-stat">
-                            <div class="campaign-stat-value">100%</div>
-                            <div class="campaign-stat-label">Progress</div>
-                        </div>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 100%"></div>
-                    </div>
-                    <button class="btn" style="width: 100%;">View Report</button>
-                </div>
-
-                <div class="campaign-card">
-                    <div class="campaign-header">
-                        <div>
-                            <h3 class="campaign-title">Senior Citizen Digital Safety</h3>
-                            <span class="badge badge-warning">Upcoming</span>
-                        </div>
-                    </div>
-                    <p class="campaign-description">Special program to educate senior citizens about online safety and common digital scams.</p>
-                    <div class="campaign-stats">
-                        <div class="campaign-stat">
-                            <div class="campaign-stat-value">-</div>
-                            <div class="campaign-stat-label">Reached</div>
-                        </div>
-                        <div class="campaign-stat">
-                            <div class="campaign-stat-value">3</div>
-                            <div class="campaign-stat-label">Planned</div>
-                        </div>
-                        <div class="campaign-stat">
-                            <div class="campaign-stat-value">0%</div>
-                            <div class="campaign-stat-label">Progress</div>
-                        </div>
-                    </div>
-                    <div class="progress-bar">
-                        <div class="progress-fill" style="width: 0%"></div>
-                    </div>
-                    <button class="btn" style="width: 100%;">Join Campaign</button>
-                </div>
+            <div class="campaigns-grid" id="campaignsGrid">
+                <!-- Campaigns will be loaded dynamically -->
             </div>
 
             <!-- Charts Section -->
@@ -1054,50 +1060,14 @@
             <!-- Recent Activity -->
             <div class="recent-activity">
                 <h3 class="chart-title">Recent Activity & Opportunities</h3>
-                <ul class="activity-list">
+                <ul class="activity-list" id="activityList">
                     <li class="activity-item">
                         <div class="activity-icon" style="background: #2196f3;">
-                            <i class="fas fa-bullhorn"></i>
+                            <i class="fas fa-plus"></i>
                         </div>
                         <div class="activity-content">
-                            <div class="activity-title">Completed Phishing Awareness Workshop at Local College</div>
-                            <div class="activity-time">2 days ago | <span class="badge badge-success">125 participants</span></div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #4caf50;">
-                            <i class="fas fa-certificate"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Earned Advanced Cyber Safety Certification</div>
-                            <div class="activity-time">5 days ago | <span class="badge badge-primary">Level Up!</span></div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #ff9800;">
-                            <i class="fas fa-calendar-alt"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">New Community Event: Digital Safety for Parents</div>
-                            <div class="activity-time">1 week ago | <span class="badge badge-info">Registration Open</span></div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #9c27b0;">
-                            <i class="fas fa-award"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Received Volunteer of the Month Award</div>
-                            <div class="activity-time">2 weeks ago | <span class="badge badge-warning">Congratulations!</span></div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #f44336;">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Advanced Training: Social Engineering Prevention</div>
-                            <div class="activity-time">3 weeks ago | <span class="badge badge-danger">Mandatory</span></div>
+                            <div class="activity-title">Loading recent activity...</div>
+                            <div class="activity-time">Just now</div>
                         </div>
                     </li>
                 </ul>
@@ -1119,36 +1089,9 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="upcomingEventsTable">
                             <tr>
-                                <td>Senior Citizen Digital Safety Workshop</td>
-                                <td>2023-11-20</td>
-                                <td>Community Event</td>
-                                <td><span class="status status-new">Registered</span></td>
-                            </tr>
-                            <tr>
-                                <td>Advanced Social Media Safety Training</td>
-                                <td>2023-11-25</td>
-                                <td>Training</td>
-                                <td><span class="status status-pending">Pending</span></td>
-                            </tr>
-                            <tr>
-                                <td>College Cyber Awareness Campaign</td>
-                                <td>2023-12-05</td>
-                                <td>Awareness</td>
-                                <td><span class="status status-in-progress">Preparing</span></td>
-                            </tr>
-                            <tr>
-                                <td>Volunteer Network Meeting</td>
-                                <td>2023-12-10</td>
-                                <td>Meeting</td>
-                                <td><span class="status status-new">Confirmed</span></td>
-                            </tr>
-                            <tr>
-                                <td>Online Safety Webinar</td>
-                                <td>2023-12-15</td>
-                                <td>Webinar</td>
-                                <td><span class="status status-pending">Awaiting Confirmation</span></td>
+                                <td colspan="4" style="text-align: center;">Loading events...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1168,36 +1111,9 @@
                                 <th>Status</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="certificationsTable">
                             <tr>
-                                <td>Cyber Safety Basics</td>
-                                <td>Beginner</td>
-                                <td>2023-05-15</td>
-                                <td><span class="status status-completed">Completed</span></td>
-                            </tr>
-                            <tr>
-                                <td>Phishing Awareness</td>
-                                <td>Intermediate</td>
-                                <td>2023-07-22</td>
-                                <td><span class="status status-completed">Completed</span></td>
-                            </tr>
-                            <tr>
-                                <td>Social Media Safety</td>
-                                <td>Intermediate</td>
-                                <td>2023-08-30</td>
-                                <td><span class="status status-completed">Completed</span></td>
-                            </tr>
-                            <tr>
-                                <td>Advanced Cyber Safety</td>
-                                <td>Advanced</td>
-                                <td>2023-10-10</td>
-                                <td><span class="status status-completed">Completed</span></td>
-                            </tr>
-                            <tr>
-                                <td>Social Engineering Prevention</td>
-                                <td>Advanced</td>
-                                <td>In Progress</td>
-                                <td><span class="status status-in-progress">85% Complete</span></td>
+                                <td colspan="4" style="text-align: center;">Loading certifications...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1243,52 +1159,618 @@
                 <div class="footer-section">
                     <h3>My Progress</h3>
                     <ul>
-                        <li>Volunteer Since: March 2023</li>
-                        <li>Total Hours: 86</li>
-                        <li>Campaigns: 24</li>
-                        <li>Current Level: Advanced</li>
+                        <li>Volunteer Since: <span id="volunteerSince">March 2023</span></li>
+                        <li>Total Hours: <span id="totalHours">86</span></li>
+                        <li>Campaigns: <span id="totalCampaigns">24</span></li>
+                        <li>Current Level: <span id="currentLevel">Advanced</span></li>
                     </ul>
                 </div>
             </div>
             
             <div class="copyright">
                 <p>&copy; 2023 iReport - Your Cyber Crime Assistant Portal Coordination Centre. All rights reserved.</p>
-                <p>Cyber Volunteers Dashboard | Making India Cyber Safe Together</p>
+                <p id="footerUserInfo">Cyber Volunteers Dashboard | Making India Cyber Safe Together</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Theme Toggle Functionality
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
-        
-        // Check for saved theme preference or default to light
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        
-        // Apply the saved theme on page load
-        if (currentTheme === 'dark') {
-            document.body.classList.add('dark-theme');
-            themeIcon.classList.remove('fa-moon');
-            themeIcon.classList.add('fa-sun');
-        }
-        
-        // Toggle theme when button is clicked
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            
-            if (document.body.classList.contains('dark-theme')) {
-                localStorage.setItem('theme', 'dark');
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            } else {
-                localStorage.setItem('theme', 'light');
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            }
-        });
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:5000/api';
+        let authToken = localStorage.getItem('authToken') || localStorage.getItem('token');
+        let currentUser = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('user') || '{}');
+        let isDemoMode = localStorage.getItem('isDemoUser') === 'true' || localStorage.getItem('demoMode') === 'true';
+        let charts = {};
 
-        // Logout Functionality
+        // Debug authentication state
+        function debugAuthState() {
+            const token = authToken;
+            const user = currentUser;
+            
+            console.log('🔐 VOLUNTEER AUTH DEBUG:');
+            console.log('  Token exists:', !!token);
+            console.log('  Token length:', token ? token.length : 0);
+            console.log('  User data:', user);
+            console.log('  Demo mode:', isDemoMode);
+            
+            if (!token) {
+                console.error('❌ CRITICAL: No auth token found');
+                showNotification('No authentication token found. Redirecting to login...', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Check if user is authenticated and is volunteer
+        function checkVolunteerAuth() {
+            // Get fresh data from localStorage
+            const freshToken = localStorage.getItem('authToken') || localStorage.getItem('token');
+            const freshUser = localStorage.getItem('currentUser') || localStorage.getItem('user');
+            
+            if (!freshToken) {
+                console.log('❌ No auth token found, redirecting to login');
+                showNotification('Please login to access volunteer dashboard', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return false;
+            }
+            
+            // Update global variables with fresh data
+            authToken = freshToken;
+            if (freshUser) {
+                try {
+                    currentUser = JSON.parse(freshUser);
+                    isDemoMode = currentUser.isDemo || localStorage.getItem('isDemoUser') === 'true' || localStorage.getItem('demoMode') === 'true';
+                    console.log('🔄 Updated volunteer user data:', currentUser);
+                    console.log('🔄 Demo mode:', isDemoMode);
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+            
+            // Check if user is volunteer
+            const userRole = currentUser.role ? currentUser.role.toLowerCase() : '';
+            if (!userRole.includes('volunteer') && !isDemoMode) {
+                console.log('❌ User is not volunteer, redirecting to appropriate dashboard');
+                showNotification('Access denied. Volunteer privileges required.', 'error');
+                setTimeout(() => {
+                    if (userRole === 'admin') {
+                        window.location.href = 'admin-dashboard.html';
+                    } else if (userRole.includes('police')) {
+                        window.location.href = 'police-dashboard.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                }, 2000);
+                return false;
+            }
+            
+            console.log('✅ Volunteer user authenticated:', currentUser);
+            updateUserInfo();
+            return true;
+        }
+
+        // Update user information in the header
+        function updateUserInfo() {
+            const profileLink = document.getElementById('profile-link');
+            const dashboardTitle = document.getElementById('dashboardTitle');
+            const demoBadge = document.getElementById('demoBadge');
+            const demoIndicator = document.getElementById('demoIndicator');
+            const volunteerName = document.getElementById('volunteerName');
+            const volunteerDetails = document.getElementById('volunteerDetails');
+            const volunteerAvatar = document.getElementById('volunteerAvatar');
+            const footerUserInfo = document.getElementById('footerUserInfo');
+            
+            if (currentUser.full_name || currentUser.name) {
+                const userName = currentUser.full_name || currentUser.name;
+                const userInitials = getUserInitials(userName);
+                
+                if (profileLink) profileLink.textContent = userName;
+                if (volunteerName) volunteerName.textContent = userName;
+                if (volunteerAvatar) volunteerAvatar.textContent = userInitials;
+                
+                // Update volunteer details
+                if (volunteerDetails) {
+                    const volunteerId = currentUser.volunteer_id || currentUser.id || 'CV-4582';
+                    const level = currentUser.level || 'Advanced';
+                    volunteerDetails.textContent = `Cyber Volunteer | Level: ${level} | ID: ${volunteerId}`;
+                }
+                
+                // Update footer
+                if (footerUserInfo) {
+                    footerUserInfo.textContent = `Cyber Volunteers Dashboard | Making India Cyber Safe Together | Logged in as: ${userName}`;
+                }
+                
+                if (dashboardTitle) {
+                    if (isDemoMode) {
+                        dashboardTitle.innerHTML = `Cyber Volunteers Dashboard - Welcome, ${userName} <span class="demo-badge">DEMO</span>`;
+                        demoBadge.style.display = 'inline';
+                        demoIndicator.style.display = 'block';
+                    } else {
+                        dashboardTitle.textContent = `Cyber Volunteers Dashboard - Welcome, ${userName}`;
+                        demoBadge.style.display = 'none';
+                        demoIndicator.style.display = 'none';
+                    }
+                }
+            }
+        }
+
+        // Get user initials for avatar
+        function getUserInitials(name) {
+            return name.split(' ').map(word => word[0]).join('').toUpperCase().substring(0, 2);
+        }
+
+        // API Request Helper
+        async function apiRequest(endpoint, options = {}) {
+            // If in demo mode, use demo data
+            if (isDemoMode) {
+                console.log('🎭 Using demo data for:', endpoint);
+                return await getDemoData(endpoint);
+            }
+
+            const url = `${API_BASE_URL}${endpoint}`;
+            
+            // ALWAYS get fresh token from localStorage for each request
+            const freshToken = localStorage.getItem('authToken') || localStorage.getItem('token');
+            
+            console.log('🔐 Token check:', {
+                hasToken: !!freshToken,
+                tokenLength: freshToken ? freshToken.length : 0,
+                endpoint: endpoint
+            });
+
+            if (!freshToken) {
+                console.error('❌ No auth token found in localStorage');
+                showNotification('Authentication required. Please login again.', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return null;
+            }
+
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${freshToken}`,
+                    ...options.headers
+                },
+                ...options
+            };
+
+            try {
+                console.log(`🌐 Making API request to: ${url}`, {
+                    headers: config.headers
+                });
+                
+                const response = await fetch(url, config);
+                
+                console.log(`📥 Response for ${endpoint}:`, {
+                    status: response.status,
+                    statusText: response.statusText,
+                    ok: response.ok
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    showNotification('Session expired. Please login again.', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                    return null;
+                }
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`❌ HTTP error! status: ${response.status}`, errorText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log(`✅ API Success from ${endpoint}:`, data);
+                return data;
+            } catch (error) {
+                console.error(`❌ API Request to ${endpoint} failed:`, error);
+                showNotification('API request failed. Using demo data.', 'error');
+                // Fallback to demo data
+                return await getDemoData(endpoint);
+            }
+        }
+
+        // Get demo data for different endpoints
+        async function getDemoData(endpoint) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            const demoData = {
+                '/volunteer/dashboard': {
+                    stats: {
+                        campaigns_count: 24,
+                        people_reached: 1850,
+                        training_hours: 86,
+                        volunteer_score: 92,
+                        active_campaigns: 3,
+                        monthly_reached: 120,
+                        monthly_training: 12,
+                        score_change: 5
+                    },
+                    campaigns: [
+                        {
+                            title: 'Phishing Awareness',
+                            status: 'active',
+                            description: 'Educate community about identifying and avoiding phishing attempts through workshops and digital materials.',
+                            reached: 850,
+                            events: 5,
+                            progress: 78
+                        },
+                        {
+                            title: 'Social Media Safety',
+                            status: 'completed',
+                            description: 'Raise awareness about privacy settings and safe practices on social media platforms.',
+                            reached: 1200,
+                            events: 8,
+                            progress: 100
+                        },
+                        {
+                            title: 'Senior Citizen Digital Safety',
+                            status: 'upcoming',
+                            description: 'Special program to educate senior citizens about online safety and common digital scams.',
+                            reached: 0,
+                            events: 3,
+                            progress: 0
+                        }
+                    ],
+                    activities: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+                        training_hours: [5, 7, 6, 8, 10, 12, 8, 9, 7, 8, 6],
+                        people_reached: [80, 120, 150, 180, 200, 250, 180, 220, 160, 190, 120]
+                    }
+                },
+                '/volunteer/events': {
+                    events: [
+                        { event: 'Senior Citizen Digital Safety Workshop', date: '2023-11-20', type: 'Community Event', status: 'new' },
+                        { event: 'Advanced Social Media Safety Training', date: '2023-11-25', type: 'Training', status: 'pending' },
+                        { event: 'College Cyber Awareness Campaign', date: '2023-12-05', type: 'Awareness', status: 'in-progress' },
+                        { event: 'Volunteer Network Meeting', date: '2023-12-10', type: 'Meeting', status: 'new' },
+                        { event: 'Online Safety Webinar', date: '2023-12-15', type: 'Webinar', status: 'pending' }
+                    ]
+                },
+                '/volunteer/certifications': {
+                    certifications: [
+                        { name: 'Cyber Safety Basics', level: 'Beginner', date_earned: '2023-05-15', status: 'completed' },
+                        { name: 'Phishing Awareness', level: 'Intermediate', date_earned: '2023-07-22', status: 'completed' },
+                        { name: 'Social Media Safety', level: 'Intermediate', date_earned: '2023-08-30', status: 'completed' },
+                        { name: 'Advanced Cyber Safety', level: 'Advanced', date_earned: '2023-10-10', status: 'completed' },
+                        { name: 'Social Engineering Prevention', level: 'Advanced', date_earned: 'In Progress', status: 'in-progress' }
+                    ]
+                }
+            };
+            
+            return demoData[endpoint] || {};
+        }
+
+        // Load volunteer dashboard data
+        async function loadVolunteerDashboard() {
+            if (!checkVolunteerAuth()) return;
+
+            try {
+                console.log('🔄 Loading volunteer dashboard data...');
+                showNotification(isDemoMode ? 'Loading demo dashboard data...' : 'Loading dashboard data...', 'info');
+                
+                // Load dashboard stats
+                const dashboardData = await apiRequest('/volunteer/dashboard');
+                if (dashboardData) {
+                    updateDashboardStats(dashboardData);
+                    updateCampaigns(dashboardData);
+                    updateRecentActivity(dashboardData);
+                    updateChartsWithData(dashboardData);
+                }
+                
+                // Load events
+                const eventsData = await apiRequest('/volunteer/events');
+                if (eventsData) {
+                    updateUpcomingEvents(eventsData);
+                }
+                
+                // Load certifications
+                const certificationsData = await apiRequest('/volunteer/certifications');
+                if (certificationsData) {
+                    updateCertifications(certificationsData);
+                }
+                
+                console.log('✅ Volunteer dashboard loaded successfully');
+                showNotification(isDemoMode ? 'Demo dashboard loaded successfully' : 'Dashboard data loaded successfully', 'success');
+                
+            } catch (error) {
+                console.error('❌ Failed to load volunteer dashboard:', error);
+                showNotification('Failed to load dashboard data.', 'error');
+            }
+        }
+
+        // Update dashboard statistics
+        function updateDashboardStats(data) {
+            if (!data.stats) return;
+            
+            const stats = data.stats;
+            
+            // Update stat cards
+            document.getElementById('campaignsCount').textContent = stats.campaigns_count || 0;
+            document.getElementById('peopleReached').textContent = stats.people_reached || 0;
+            document.getElementById('trainingHours').textContent = stats.training_hours || 0;
+            document.getElementById('volunteerScore').textContent = (stats.volunteer_score || 0) + '%';
+            
+            // Update additional stats
+            document.getElementById('activeCampaigns').textContent = stats.active_campaigns || 0;
+            document.getElementById('monthlyReached').textContent = stats.monthly_reached || 0;
+            document.getElementById('monthlyTraining').textContent = stats.monthly_training || 0;
+            document.getElementById('scoreChange').textContent = (stats.score_change || 0) + '%';
+            
+            // Update footer progress
+            document.getElementById('totalHours').textContent = stats.training_hours || 0;
+            document.getElementById('totalCampaigns').textContent = stats.campaigns_count || 0;
+        }
+
+        // Update campaigns grid
+        function updateCampaigns(data) {
+            const campaignsGrid = document.getElementById('campaignsGrid');
+            if (!campaignsGrid || !data.campaigns) return;
+            
+            campaignsGrid.innerHTML = '';
+            
+            if (data.campaigns.length === 0) {
+                campaignsGrid.innerHTML = '<div class="campaign-card"><p>No campaigns available</p></div>';
+                return;
+            }
+            
+            data.campaigns.forEach(campaign => {
+                const campaignCard = document.createElement('div');
+                campaignCard.className = 'campaign-card';
+                
+                const statusClass = getCampaignStatusClass(campaign.status);
+                const statusText = getCampaignStatusText(campaign.status);
+                
+                campaignCard.innerHTML = `
+                    <div class="campaign-header">
+                        <div>
+                            <h3 class="campaign-title">${campaign.title}</h3>
+                            <span class="badge ${statusClass}">${statusText}</span>
+                        </div>
+                    </div>
+                    <p class="campaign-description">${campaign.description}</p>
+                    <div class="campaign-stats">
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-value">${campaign.reached}</div>
+                            <div class="campaign-stat-label">Reached</div>
+                        </div>
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-value">${campaign.events}</div>
+                            <div class="campaign-stat-label">Events</div>
+                        </div>
+                        <div class="campaign-stat">
+                            <div class="campaign-stat-value">${campaign.progress}%</div>
+                            <div class="campaign-stat-label">Progress</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${campaign.progress}%"></div>
+                    </div>
+                    <button class="btn ${campaign.status === 'active' ? 'btn-volunteer' : ''}" style="width: 100%;">
+                        ${getCampaignButtonText(campaign.status)}
+                    </button>
+                `;
+                
+                campaignsGrid.appendChild(campaignCard);
+            });
+        }
+
+        // Update charts with data
+        function updateChartsWithData(data) {
+            // Volunteer Activities Chart
+            if (data.activities && charts.volunteerActivities) {
+                const activities = data.activities;
+                
+                charts.volunteerActivities.data.labels = activities.labels;
+                charts.volunteerActivities.data.datasets[0].data = activities.training_hours;
+                charts.volunteerActivities.data.datasets[1].data = activities.people_reached;
+                charts.volunteerActivities.update();
+            }
+        }
+
+        // Update upcoming events table
+        function updateUpcomingEvents(data) {
+            const tbody = document.getElementById('upcomingEventsTable');
+            if (!tbody || !data.events) return;
+            
+            tbody.innerHTML = '';
+            
+            if (data.events.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No upcoming events found</td></tr>';
+                return;
+            }
+            
+            data.events.forEach(event => {
+                const row = document.createElement('tr');
+                const statusClass = getStatusClass(event.status);
+                
+                row.innerHTML = `
+                    <td>${event.event || 'N/A'}</td>
+                    <td>${formatDate(event.date)}</td>
+                    <td>${event.type || 'N/A'}</td>
+                    <td><span class="status ${statusClass}">${formatStatus(event.status)}</span></td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update certifications table
+        function updateCertifications(data) {
+            const tbody = document.getElementById('certificationsTable');
+            if (!tbody || !data.certifications) return;
+            
+            tbody.innerHTML = '';
+            
+            if (data.certifications.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No certifications found</td></tr>';
+                return;
+            }
+            
+            data.certifications.forEach(cert => {
+                const row = document.createElement('tr');
+                const statusClass = getStatusClass(cert.status);
+                
+                row.innerHTML = `
+                    <td>${cert.name || 'N/A'}</td>
+                    <td>${cert.level || 'N/A'}</td>
+                    <td>${formatDate(cert.date_earned)}</td>
+                    <td><span class="status ${statusClass}">${formatStatus(cert.status)}</span></td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update recent activity
+        function updateRecentActivity(data) {
+            const activityList = document.getElementById('activityList');
+            if (!activityList) return;
+            
+            // Clear loading message
+            activityList.innerHTML = '';
+            
+            // Add activities based on data
+            const activities = [
+                {
+                    icon: 'fa-bullhorn',
+                    color: '#2196f3',
+                    title: `Completed Phishing Awareness Workshop at Local College`,
+                    time: '2 days ago',
+                    badge: 'badge-success',
+                    badgeText: '125 participants'
+                },
+                {
+                    icon: 'fa-certificate',
+                    color: '#4caf50',
+                    title: `Earned Advanced Cyber Safety Certification`,
+                    time: '5 days ago',
+                    badge: 'badge-primary',
+                    badgeText: 'Level Up!'
+                },
+                {
+                    icon: 'fa-calendar-alt',
+                    color: '#ff9800',
+                    title: `New Community Event: Digital Safety for Parents`,
+                    time: '1 week ago',
+                    badge: 'badge-info',
+                    badgeText: 'Registration Open'
+                },
+                {
+                    icon: 'fa-award',
+                    color: '#9c27b0',
+                    title: `Received Volunteer of the Month Award`,
+                    time: '2 weeks ago',
+                    badge: 'badge-warning',
+                    badgeText: 'Congratulations!'
+                },
+                {
+                    icon: 'fa-chalkboard-teacher',
+                    color: '#f44336',
+                    title: `Advanced Training: Social Engineering Prevention`,
+                    time: '3 weeks ago',
+                    badge: 'badge-danger',
+                    badgeText: 'Mandatory'
+                }
+            ];
+            
+            // Render activities
+            activities.forEach(activity => {
+                const item = document.createElement('li');
+                item.className = 'activity-item';
+                item.innerHTML = `
+                    <div class="activity-icon" style="background: ${activity.color};">
+                        <i class="fas ${activity.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-time">${activity.time} | <span class="badge ${activity.badge}">${activity.badgeText}</span></div>
+                    </div>
+                `;
+                activityList.appendChild(item);
+            });
+        }
+
+        // Utility functions
+        function getCampaignStatusClass(status) {
+            const statusMap = {
+                'active': 'badge-primary',
+                'completed': 'badge-success',
+                'upcoming': 'badge-warning'
+            };
+            return statusMap[status] || 'badge-info';
+        }
+
+        function getCampaignStatusText(status) {
+            const statusMap = {
+                'active': 'Active',
+                'completed': 'Completed',
+                'upcoming': 'Upcoming'
+            };
+            return statusMap[status] || status;
+        }
+
+        function getCampaignButtonText(status) {
+            const buttonMap = {
+                'active': 'Continue Campaign',
+                'completed': 'View Report',
+                'upcoming': 'Join Campaign'
+            };
+            return buttonMap[status] || 'View Details';
+        }
+
+        function getStatusClass(status) {
+            const statusMap = {
+                'new': 'status-new',
+                'pending': 'status-pending',
+                'in-progress': 'status-in-progress',
+                'completed': 'status-completed'
+            };
+            return statusMap[status] || 'status-pending';
+        }
+
+        function formatStatus(status) {
+            const statusMap = {
+                'new': 'New',
+                'pending': 'Pending',
+                'in-progress': 'In Progress',
+                'completed': 'Completed'
+            };
+            return statusMap[status] || status;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString || dateString === 'In Progress') return dateString;
+            return new Date(dateString).toLocaleDateString();
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // Logout functionality
         const logoutButton = document.getElementById('logoutButton');
         const logoutModal = document.getElementById('logoutModal');
         const confirmLogout = document.getElementById('confirmLogout');
@@ -1301,14 +1783,7 @@
 
         // Confirm logout
         confirmLogout.addEventListener('click', () => {
-            // Clear user session data
-            localStorage.removeItem('authToken');
-            localStorage.removeItem('currentUser');
-            localStorage.removeItem('rememberMe');
-            localStorage.removeItem('userEmail');
-            
-            // Redirect to login page
-            window.location.href = 'login.html';
+            logout();
         });
 
         // Cancel logout
@@ -1323,23 +1798,37 @@
             }
         });
 
-        // Charts Initialization
-        document.addEventListener('DOMContentLoaded', function() {
+        // Logout function
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('isDemoUser');
+            localStorage.removeItem('demoMode');
+            showNotification('Logged out successfully', 'info');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
+        }
+
+        // Initialize charts
+        function initializeCharts() {
             // Volunteer Activities Chart
             const activitiesCtx = document.getElementById('volunteerActivitiesChart').getContext('2d');
-            const activitiesChart = new Chart(activitiesCtx, {
+            charts.volunteerActivities = new Chart(activitiesCtx, {
                 type: 'bar',
                 data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+                    labels: ['Loading...'],
                     datasets: [{
                         label: 'Training Hours',
-                        data: [5, 7, 6, 8, 10, 12, 8, 9, 7, 8, 6],
+                        data: [0],
                         backgroundColor: '#4caf50',
                         borderColor: '#4caf50',
                         borderWidth: 1
                     }, {
                         label: 'People Reached',
-                        data: [80, 120, 150, 180, 200, 250, 180, 220, 160, 190, 120],
+                        data: [0],
                         backgroundColor: '#2196f3',
                         borderColor: '#2196f3',
                         borderWidth: 1
@@ -1379,13 +1868,13 @@
 
             // Skills Development Chart
             const skillsCtx = document.getElementById('skillsChart').getContext('2d');
-            const skillsChart = new Chart(skillsCtx, {
+            charts.skills = new Chart(skillsCtx, {
                 type: 'radar',
                 data: {
                     labels: ['Phishing Awareness', 'Social Media Safety', 'Digital Literacy', 'Public Speaking', 'Community Engagement', 'Technical Knowledge'],
                     datasets: [{
                         label: 'Current Skills',
-                        data: [85, 80, 75, 90, 85, 70],
+                        data: [0, 0, 0, 0, 0, 0],
                         backgroundColor: 'rgba(76, 175, 80, 0.2)',
                         borderColor: '#4caf50',
                         borderWidth: 2,
@@ -1427,15 +1916,68 @@
                     }
                 }
             });
+        }
 
-            // Update charts when theme changes
-            themeToggle.addEventListener('click', function() {
-                setTimeout(function() {
-                    activitiesChart.update();
-                    skillsChart.update();
-                }, 100);
-            });
+        // Initialize volunteer dashboard when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Volunteer dashboard initializing...');
+            
+            // Debug auth state first
+            if (!debugAuthState()) {
+                return;
+            }
+            
+            // Initialize charts
+            initializeCharts();
+            
+            // Check volunteer authentication
+            if (!checkVolunteerAuth()) {
+                return;
+            }
+            
+            // Load dashboard data
+            loadVolunteerDashboard();
+            
+            console.log('✅ Volunteer dashboard initialized successfully');
         });
+
+        // Theme Toggle Functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = themeToggle.querySelector('i');
+        
+        // Check for saved theme preference or default to light
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        
+        // Apply the saved theme on page load
+        if (currentTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+            themeIcon.classList.remove('fa-moon');
+            themeIcon.classList.add('fa-sun');
+        }
+        
+        // Toggle theme when button is clicked
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-theme');
+            
+            if (document.body.classList.contains('dark-theme')) {
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+            
+            // Update charts for theme change
+            if (charts.volunteerActivities) charts.volunteerActivities.update();
+            if (charts.skills) charts.skills.update();
+        });
+
+        // Make functions available globally for debugging
+        window.loadVolunteerDashboard = loadVolunteerDashboard;
+        window.logout = logout;
+        window.debugAuthState = debugAuthState;
     </script>
 </body>
 </html>

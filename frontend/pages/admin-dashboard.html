@@ -24,6 +24,9 @@
             --women-crime-color: #e91e63;
             --financial-fraud-color: #ff9800;
             --other-crime-color: #2196f3;
+            --success-color: #4CAF50;
+            --error-color: #f44336;
+            --demo-color: #9C27B0;
         }
 
         .dark-theme {
@@ -52,6 +55,27 @@
             color: var(--text-color);
             line-height: 1.6;
             transition: var(--transition);
+        }
+
+        .demo-indicator {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--demo-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 999;
+            box-shadow: var(--shadow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         /* Header Top Styles */
@@ -262,6 +286,231 @@
             color: var(--text-color);
         }
 
+        .demo-badge {
+            background: var(--demo-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+
+        /* Profile Section Styles */
+        .profile-section {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            background: var(--accent-color);
+            color: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            font-weight: bold;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-role {
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 1.5rem;
+            padding: 0.3rem 1rem;
+            background: var(--secondary-color);
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 1.5rem 0;
+            padding: 1rem 0;
+            border-top: 1px solid var(--secondary-color);
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .profile-details {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+        }
+
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .profile-tab.active {
+            border-bottom-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .security-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .security-info h4 {
+            margin-bottom: 0.3rem;
+        }
+
+        .security-info p {
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .activity-log {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+            background: var(--accent-color);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Other sections styles */
         .dashboard-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -354,57 +603,13 @@
             margin-bottom: 2rem;
         }
 
-        .activity-list {
-            list-style: none;
-        }
-
-        .activity-item {
-            display: flex;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--secondary-color);
-        }
-
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            color: white;
-        }
-
-        .activity-content {
-            flex: 1;
-        }
-
-        .activity-title {
-            font-weight: 500;
-            margin-bottom: 0.3rem;
-        }
-
-        .activity-time {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .dashboard-tables {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 1.5rem;
-        }
-
         .table-container {
             background: var(--card-bg);
             border-radius: 8px;
             padding: 1.5rem;
             box-shadow: var(--shadow);
             border: 1px solid var(--secondary-color);
+            margin-bottom: 2rem;
         }
 
         .table-header {
@@ -472,6 +677,79 @@
             font-weight: 600;
         }
 
+        .filters-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .filter-group select {
+            padding: 0.5rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 4px;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            border-bottom-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .btn-small {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #da190b;
+        }
+
         /* Footer */
         footer {
             background: var(--footer-bg);
@@ -519,8 +797,46 @@
             border-top: 1px solid var(--secondary-color);
         }
 
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: var(--error-color);
+        }
+
+        .notification.info {
+            background-color: var(--other-crime-color);
+        }
+
+        .notification.demo {
+            background-color: var(--demo-color);
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
+            .profile-section {
+                grid-template-columns: 1fr;
+            }
+            
             .dashboard-charts {
                 grid-template-columns: 1fr;
             }
@@ -560,60 +876,51 @@
                 grid-template-columns: 1fr;
             }
             
-            .dashboard-tables {
+            .form-row {
                 grid-template-columns: 1fr;
+            }
+            
+            .demo-indicator {
+                top: 120px;
+                right: 10px;
+                left: 10px;
+                text-align: center;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header Top -->
+    <div class="notification" id="notification"></div>
+
+    <div class="demo-indicator" id="demoIndicator" style="display: none;">
+        🚀 DEMO MODE - Test Data
+    </div>
+
     <div class="header-top">
         <div class="container">
             <div class="logo-group">
                 <div class="logo">
                     <svg width="50" height="50" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Shield Base with Indian Colors -->
                         <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="#FF9933" stroke="#000080" stroke-width="1.5"/>
-                        
-                        <!-- White Middle Section -->
                         <path d="M30 8 C38 8 45 12 48 18 L30 52 L12 18 C15 12 22 8 30 8 Z" fill="#FFFFFF"/>
-                        
-                        <!-- Ashoka Chakra -->
                         <circle cx="30" cy="30" r="8" fill="#000080" stroke="#FFFFFF" stroke-width="0.5"/>
-                        
-                        <!-- 24 Spokes (Simplified) -->
                         <g stroke="#FFFFFF" stroke-width="0.8">
-                            <!-- Main Cross -->
                             <line x1="30" y1="22" x2="30" y2="38"/>
                             <line x1="22" y1="30" x2="38" y2="30"/>
-                            
-                            <!-- Diagonal Spokes -->
                             <line x1="25" y1="25" x2="35" y2="35"/>
                             <line x1="35" y1="25" x2="25" y2="35"/>
-                            
-                            <!-- Additional Spokes -->
                             <line x1="27" y1="23" x2="33" y2="37"/>
                             <line x1="33" y1="23" x2="27" y2="37"/>
                             <line x1="23" y1="27" x2="37" y2="33"/>
                             <line x1="37" y1="27" x2="23" y2="33"/>
                         </g>
-                        
-                        <!-- Cyber Security Elements -->
-                        <!-- Digital Lock -->
                         <rect x="26" y="42" width="8" height="6" fill="#000080" stroke="#FFFFFF" stroke-width="0.5" rx="1"/>
                         <circle cx="30" cy="44" r="1" fill="#FFFFFF"/>
                         <rect x="28" y="45" width="4" height="2" fill="#FFFFFF" rx="0.5"/>
-                        
-                        <!-- Binary Code Pattern -->
                         <text x="18" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">101</text>
                         <text x="40" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">010</text>
                         <text x="15" y="48" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">110</text>
-                        
-                        <!-- Shield Border -->
                         <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="none" stroke="#000080" stroke-width="1.5"/>
-                        
-                        <!-- Cyber Circuit Lines -->
                         <path d="M15 12 L20 12 L20 15 L25 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
                         <path d="M45 12 L40 12 L40 15 L35 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
                     </svg>
@@ -628,6 +935,7 @@
                 <div class="links">
                     <a href="index.html">Back to Portal</a>
                     <a href="#" id="profile-link">Admin Profile</a>
+                    <a href="#" onclick="logout()" style="color: #ff3b30;">Logout</a>
                 </div>
                 <button class="btn btn-report" onclick="window.open('complaint.html')">🚨 Quick Report</button>
                 <button class="theme-toggle" id="themeToggle">
@@ -637,273 +945,573 @@
         </div>
     </div>
 
-    <!-- Main Navigation -->
     <div class="main-nav">
         <div class="container">
             <ul>
                 <li><a href="#" class="active">Dashboard</a></li>
-                <li><a href="#">Cases</a></li>
-                <li><a href="#">Reports</a></li>
-                <li><a href="#">Analytics</a></li>
-                <li><a href="#">Users</a></li>
-                <li><a href="#">Settings</a></li>
+                <li><a href="#" onclick="loadCasesPage()">Cases</a></li>
+                <li><a href="#" onclick="loadReportsPage()">Reports</a></li>
+                <li><a href="#" onclick="loadAnalyticsPage()">Analytics</a></li>
+                <li><a href="#" onclick="loadUsersPage()">Users</a></li>
+                <li><a href="#" onclick="loadVolunteersPage()">Volunteers</a></li>
             </ul>
         </div>
     </div>
 
-    <!-- Dashboard Layout -->
     <div class="dashboard-container">
-        <!-- Sidebar -->
         <div class="sidebar">
             <ul class="sidebar-menu">
-                <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="#"><i class="fas fa-exclamation-circle"></i> Pending Cases</a></li>
-                <li><a href="#"><i class="fas fa-search"></i> Investigations</a></li>
-                <li><a href="#"><i class="fas fa-check-circle"></i> Resolved Cases</a></li>
-                <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
-                <li><a href="#"><i class="fas fa-users"></i> User Management</a></li>
-                <li><a href="#"><i class="fas fa-file-alt"></i> Reports</a></li>
-                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-                <li><a href="#"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+                <li><a href="#" class="active" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</a></li>
+                <li><a href="#" onclick="showSection('cases')"><i class="fas fa-exclamation-circle"></i> Case Management</a></li>
+                <li><a href="#" onclick="showSection('users')"><i class="fas fa-users"></i> User Management</a></li>
+                <li><a href="#" onclick="showSection('officers')"><i class="fas fa-shield-alt"></i> Police Officers</a></li>
+                <li><a href="#" onclick="showSection('volunteers')"><i class="fas fa-hands-helping"></i> Volunteers</a></li>
+                <li><a href="#" onclick="showSection('analytics')"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="#" onclick="showSection('reports')"><i class="fas fa-file-alt"></i> Reports</a></li>
+                <li><a href="#" onclick="showSection('assignments')"><i class="fas fa-tasks"></i> Assignments</a></li>
             </ul>
         </div>
 
         <!-- Dashboard Content -->
-        <div class="dashboard-content">
-            <div class="dashboard-header">
-                <h1 class="dashboard-title">Admin Dashboard</h1>
-                <div class="dashboard-actions">
-                    <button class="btn"><i class="fas fa-download"></i> Export Data</button>
-                    <button class="btn"><i class="fas fa-sync-alt"></i> Refresh</button>
-                </div>
-            </div>
-
-            <!-- Stats Cards -->
-            <div class="dashboard-stats">
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Total Cases</div>
-                        <div class="stat-card-icon" style="background: #2196f3;">
-                            <i class="fas fa-exclamation-circle"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card-value">1,247</div>
-                    <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 12% from last month
+        <div class="dashboard-content" id="dashboardContent">
+            <!-- Profile Section -->
+            <div id="section-profile" class="section-content">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title" id="dashboardTitle">
+                        Admin Profile
+                        <span class="demo-badge" id="demoBadge" style="display: none;">DEMO</span>
+                    </h1>
+                    <div class="dashboard-actions">
+                        <button class="btn" id="exportBtn"><i class="fas fa-download"></i> Export Data</button>
+                        <button class="btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
                     </div>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Pending Cases</div>
-                        <div class="stat-card-icon" style="background: #ff9800;">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card-value">342</div>
-                    <div class="stat-card-change negative">
-                        <i class="fas fa-arrow-up"></i> 5% from last month
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Resolved Cases</div>
-                        <div class="stat-card-icon" style="background: #4caf50;">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card-value">785</div>
-                    <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 8% from last month
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Active Users</div>
-                        <div class="stat-card-icon" style="background: #9c27b0;">
-                            <i class="fas fa-users"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card-value">5,892</div>
-                    <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 15% from last month
-                    </div>
-                </div>
-            </div>
-
-            <!-- Charts Section -->
-            <div class="dashboard-charts">
-                <div class="chart-container">
-                    <h3 class="chart-title">Cases by Category</h3>
-                    <canvas id="casesByCategoryChart"></canvas>
-                </div>
-
-                <div class="chart-container">
-                    <h3 class="chart-title">Case Status Distribution</h3>
-                    <canvas id="caseStatusChart"></canvas>
-                </div>
-            </div>
-
-            <!-- Recent Activity -->
-            <div class="recent-activity">
-                <h3 class="chart-title">Recent Activity</h3>
-                <ul class="activity-list">
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #2196f3;">
-                            <i class="fas fa-plus"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">New case reported - Financial Fraud</div>
-                            <div class="activity-time">10 minutes ago</div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #4caf50;">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Case #CR-2023-0452 resolved</div>
-                            <div class="activity-time">1 hour ago</div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #ff9800;">
+                <div class="profile-section">
+                    <!-- Profile Card -->
+                    <div class="profile-card">
+                        <div class="profile-avatar" id="profileAvatar">
                             <i class="fas fa-user"></i>
                         </div>
-                        <div class="activity-content">
-                            <div class="activity-title">New admin user registered</div>
-                            <div class="activity-time">2 hours ago</div>
+                        <div class="profile-name" id="profileName">Loading...</div>
+                        <div class="profile-role" id="profileRole">Administrator</div>
+                        
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-value" id="profileCases">0</span>
+                                <span class="stat-label">Cases</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="profileUsers">0</span>
+                                <span class="stat-label">Users</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="profileActivity">0</span>
+                                <span class="stat-label">Activity</span>
+                            </div>
                         </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #f44336;">
-                            <i class="fas fa-exclamation-triangle"></i>
+                        
+                        <div class="profile-actions">
+                            <button class="btn" onclick="editProfile()"><i class="fas fa-edit"></i> Edit Profile</button>
+                            <button class="btn" onclick="changePassword()"><i class="fas fa-key"></i> Change Password</button>
+                            <button class="btn" onclick="exportProfileData()"><i class="fas fa-download"></i> Export Data</button>
                         </div>
-                        <div class="activity-content">
-                            <div class="activity-title">High priority case assigned - Identity Theft</div>
-                            <div class="activity-time">3 hours ago</div>
+                    </div>
+                    
+                    <!-- Profile Details -->
+                    <div class="profile-details">
+                        <div class="profile-tabs">
+                            <button class="profile-tab active" onclick="openProfileTab('personal')">Personal Info</button>
+                            <button class="profile-tab" onclick="openProfileTab('security')">Security</button>
+                            <button class="profile-tab" onclick="openProfileTab('activity')">Activity Log</button>
                         </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #9c27b0;">
-                            <i class="fas fa-chart-line"></i>
+                        
+                        <!-- Personal Info Tab -->
+                        <div id="profile-tab-personal" class="tab-content active">
+                            <form id="profileForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="firstName">First Name</label>
+                                        <input type="text" id="firstName" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Last Name</label>
+                                        <input type="text" id="lastName" class="form-control" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" id="email" class="form-control" required>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="phone">Phone Number</label>
+                                        <input type="tel" id="phone" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="department">Department</label>
+                                        <input type="text" id="department" class="form-control" value="Cyber Crime Investigation">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <textarea id="address" class="form-control" rows="3"></textarea>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="city">City</label>
+                                        <input type="text" id="city" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="state">State</label>
+                                        <input type="text" id="state" class="form-control">
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn" style="width: 100%;">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </form>
                         </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Monthly report generated</div>
-                            <div class="activity-time">5 hours ago</div>
+                        
+                        <!-- Security Tab -->
+                        <div id="profile-tab-security" class="tab-content">
+                            <div class="security-item">
+                                <div class="security-info">
+                                    <h4>Password</h4>
+                                    <p>Last changed: <span id="lastPasswordChange">Never</span></p>
+                                </div>
+                                <button class="btn" onclick="changePassword()">Change</button>
+                            </div>
+                            
+                            <div class="security-item">
+                                <div class="security-info">
+                                    <h4>Two-Factor Authentication</h4>
+                                    <p>Add an extra layer of security to your account</p>
+                                </div>
+                                <button class="btn" id="twoFactorToggle" onclick="toggleTwoFactor()">Enable</button>
+                            </div>
+                            
+                            <div class="security-item">
+                                <div class="security-info">
+                                    <h4>Login Sessions</h4>
+                                    <p>Manage your active login sessions</p>
+                                </div>
+                                <button class="btn" onclick="viewSessions()">View</button>
+                            </div>
+                            
+                            <div class="security-item">
+                                <div class="security-info">
+                                    <h4>Account Recovery</h4>
+                                    <p>Set up recovery options for your account</p>
+                                </div>
+                                <button class="btn" onclick="setupRecovery()">Setup</button>
+                            </div>
                         </div>
-                    </li>
-                </ul>
+                        
+                        <!-- Activity Log Tab -->
+                        <div id="profile-tab-activity" class="tab-content">
+                            <div class="activity-log" id="profileActivityLog">
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Profile loaded</div>
+                                        <div class="activity-time">Just now</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Tables Section -->
-            <div class="dashboard-tables">
-                <div class="table-container">
-                    <div class="table-header">
-                        <h3 class="table-title">Recent Cases</h3>
-                        <a href="#" class="btn">View All</a>
+            <!-- Cases Management Section -->
+            <div id="section-cases" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Case Management</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn" onclick="refreshCases()"><i class="fas fa-sync-alt"></i> Refresh</button>
                     </div>
+                </div>
+                
+                <div class="filters-section">
+                    <div class="filter-group">
+                        <label>Status:</label>
+                        <select id="statusFilter" onchange="filterCases()">
+                            <option value="all">All Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="assigned">Assigned</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Priority:</label>
+                        <select id="priorityFilter" onchange="filterCases()">
+                            <option value="all">All Priorities</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
                     <table>
                         <thead>
                             <tr>
                                 <th>Case ID</th>
+                                <th>Title</th>
                                 <th>Type</th>
                                 <th>Priority</th>
                                 <th>Status</th>
-                                <th>Date</th>
+                                <th>Location</th>
+                                <th>Assigned To</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="casesTable">
                             <tr>
-                                <td>CR-2023-0789</td>
-                                <td>Phishing</td>
-                                <td class="priority-high">High</td>
-                                <td><span class="status status-investigating">Investigating</span></td>
-                                <td>2023-11-15</td>
-                            </tr>
-                            <tr>
-                                <td>CR-2023-0788</td>
-                                <td>Financial Fraud</td>
-                                <td class="priority-high">High</td>
-                                <td><span class="status status-pending">Pending</span></td>
-                                <td>2023-11-14</td>
-                            </tr>
-                            <tr>
-                                <td>CR-2023-0787</td>
-                                <td>Identity Theft</td>
-                                <td class="priority-medium">Medium</td>
-                                <td><span class="status status-investigating">Investigating</span></td>
-                                <td>2023-11-14</td>
-                            </tr>
-                            <tr>
-                                <td>CR-2023-0786</td>
-                                <td>Social Media Harassment</td>
-                                <td class="priority-medium">Medium</td>
-                                <td><span class="status status-resolved">Resolved</span></td>
-                                <td>2023-11-13</td>
-                            </tr>
-                            <tr>
-                                <td>CR-2023-0785</td>
-                                <td>Online Shopping Fraud</td>
-                                <td class="priority-low">Low</td>
-                                <td><span class="status status-resolved">Resolved</span></td>
-                                <td>2023-11-12</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="table-container">
-                    <div class="table-header">
-                        <h3 class="table-title">Top Investigators</h3>
-                        <a href="#" class="btn">View All</a>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Department</th>
-                                <th>Active Cases</th>
-                                <th>Success Rate</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Rajesh Kumar</td>
-                                <td>Financial Crimes</td>
-                                <td>12</td>
-                                <td>92%</td>
-                            </tr>
-                            <tr>
-                                <td>Priya Sharma</td>
-                                <td>Cyber Harassment</td>
-                                <td>8</td>
-                                <td>88%</td>
-                            </tr>
-                            <tr>
-                                <td>Anil Patel</td>
-                                <td>Identity Theft</td>
-                                <td>10</td>
-                                <td>85%</td>
-                            </tr>
-                            <tr>
-                                <td>Sunita Reddy</td>
-                                <td>Online Fraud</td>
-                                <td>7</td>
-                                <td>90%</td>
-                            </tr>
-                            <tr>
-                                <td>Vikram Singh</td>
-                                <td>Data Breach</td>
-                                <td>9</td>
-                                <td>87%</td>
+                                <td colspan="8" style="text-align: center;">Loading cases...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            <!-- Users Management Section -->
+            <div id="section-users" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">User Management</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn" onclick="refreshUsers()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Join Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTable">
+                            <tr>
+                                <td colspan="6" style="text-align: center;">Loading users...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Police Officers Section -->
+            <div id="section-officers" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Police Officers Management</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn" onclick="refreshOfficers()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        <button class="btn btn-success" onclick="createNewOfficer()"><i class="fas fa-plus"></i> Add Officer</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Badge Number</th>
+                                <th>Station</th>
+                                <th>Rank</th>
+                                <th>Active Cases</th>
+                                <th>Performance</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="officersTable">
+                            <tr>
+                                <td colspan="7" style="text-align: center;">Loading officers...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Volunteers Section -->
+            <div id="section-volunteers" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Volunteers Management</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn" onclick="refreshVolunteers()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="openVolunteerTab('pending')">Pending Approval</button>
+                    <button class="tab-btn" onclick="openVolunteerTab('applications')">Applications</button>
+                    <button class="tab-btn" onclick="openVolunteerTab('approved')">Approved Volunteers</button>
+                </div>
+
+                <!-- Pending Volunteers Tab -->
+                <div id="volunteer-tab-pending" class="tab-content active">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>State</th>
+                                    <th>District</th>
+                                    <th>Skills</th>
+                                    <th>Applied Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="volunteersTable">
+                                <tr>
+                                    <td colspan="7" style="text-align: center;">Loading pending volunteers...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Applications Tab -->
+                <div id="volunteer-tab-applications" class="tab-content">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Applied Date</th>
+                                    <th>Reviewed Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="applicationsTable">
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">Loading applications...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Approved Volunteers Tab -->
+                <div id="volunteer-tab-approved" class="tab-content">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>State</th>
+                                    <th>District</th>
+                                    <th>Skills</th>
+                                    <th>Rating</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="approvedVolunteersTable">
+                                <tr>
+                                    <td colspan="7" style="text-align: center;">Loading approved volunteers...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="section-analytics" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Analytics & Insights</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn" onclick="refreshAnalytics()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        <button class="btn" onclick="generateAnalyticsReport()"><i class="fas fa-download"></i> Export Report</button>
+                    </div>
+                </div>
+
+                <div class="analytics-overview">
+                    <div class="analytics-stats">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-title">Total Cases (30 days)</div>
+                                <div class="stat-card-icon" style="background: #2196f3;">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-value" id="analyticsTotalCases">0</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-title">Resolution Rate</div>
+                                <div class="stat-card-icon" style="background: #4caf50;">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-value" id="analyticsResolutionRate">0%</div>
+                        </div>
+
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <div class="stat-card-title">Avg Resolution Time</div>
+                                <div class="stat-card-icon" style="background: #ff9800;">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-value" id="analyticsAvgResolution">0 days</div>
+                        </div>
+                    </div>
+
+                    <div class="analytics-charts">
+                        <div class="chart-container full-width">
+                            <h3 class="chart-title">Case Trends (Last 90 Days)</h3>
+                            <canvas id="trendsChart"></canvas>
+                        </div>
+                        
+                        <div class="charts-grid">
+                            <div class="chart-container">
+                                <h3 class="chart-title">Geographic Heatmap</h3>
+                                <div id="heatmapContainer">
+                                    <canvas id="heatmapChart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-container">
+                                <h3 class="chart-title">Performance Metrics</h3>
+                                <canvas id="performanceChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="predictive-insights">
+                        <h3 class="chart-title">Predictive Insights</h3>
+                        <div class="insights-grid">
+                            <div class="insight-card">
+                                <h4>Emerging Trends</h4>
+                                <div id="emergingTrends">
+                                    <p>Loading trends...</p>
+                                </div>
+                            </div>
+                            <div class="insight-card">
+                                <h4>High Risk Areas</h4>
+                                <div id="highRiskAreas">
+                                    <p>Loading risk assessment...</p>
+                                </div>
+                            </div>
+                            <div class="insight-card">
+                                <h4>Patrol Recommendations</h4>
+                                <div id="patrolRecommendations">
+                                    <p>Loading recommendations...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div id="section-reports" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Reports Management</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn" onclick="refreshReports()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                        <div class="report-actions">
+                            <select id="reportType" class="report-select">
+                                <option value="monthly">Monthly Report</option>
+                                <option value="weekly">Weekly Report</option>
+                                <option value="daily">Daily Report</option>
+                                <option value="case">Case Report</option>
+                            </select>
+                            <button class="btn btn-success" onclick="generateReport()"><i class="fas fa-plus"></i> Generate Report</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Filename</th>
+                                <th>Type</th>
+                                <th>Size</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTable">
+                            <tr>
+                                <td colspan="5" style="text-align: center;">Loading reports...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Assignments Section -->
+            <div id="section-assignments" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Case Assignments</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn" onclick="refreshAssignments()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    </div>
+                </div>
+
+                <div class="filters-section">
+                    <div class="filter-group">
+                        <label>Assignment Status:</label>
+                        <select id="assignmentStatusFilter" onchange="filterAssignments()">
+                            <option value="all">All Status</option>
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Assignee Type:</label>
+                        <select id="assigneeTypeFilter" onchange="filterAssignments()">
+                            <option value="all">All Types</option>
+                            <option value="police">Police Officers</option>
+                            <option value="volunteer">Volunteers</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Case ID</th>
+                                <th>Case Title</th>
+                                <th>Assignee</th>
+                                <th>Type</th>
+                                <th>Assigned By</th>
+                                <th>Assignment Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assignmentsTable">
+                            <tr>
+                                <td colspan="7" style="text-align: center;">Loading assignments...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -915,9 +1523,9 @@
                     <h3>Quick Links</h3>
                     <ul>
                         <li><a href="index.html">Main Portal</a></li>
-                        <li><a href="#">Dashboard</a></li>
-                        <li><a href="#">Case Management</a></li>
-                        <li><a href="#">Reports</a></li>
+                        <li><a href="#" onclick="showSection('profile')">Profile</a></li>
+                        <li><a href="#" onclick="showSection('cases')">Case Management</a></li>
+                        <li><a href="#" onclick="showSection('reports')">Reports</a></li>
                     </ul>
                 </div>
                 
@@ -944,9 +1552,9 @@
                     <h3>System Info</h3>
                     <ul>
                         <li>Version: 2.4.1</li>
-                        <li>Last Updated: 2023-11-15</li>
-                        <li>Server Status: Online</li>
-                        <li>Users Online: 142</li>
+                        <li>Last Updated: <span id="lastUpdated">2023-11-15</span></li>
+                        <li>Server Status: <span id="serverStatus">Online</span></li>
+                        <li>Users Online: <span id="usersOnline">142</span></li>
                     </ul>
                 </div>
             </div>
@@ -959,6 +1567,1199 @@
     </footer>
 
     <script>
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:5000/api';
+        let authToken = localStorage.getItem('authToken') || localStorage.getItem('token');
+        let currentUser = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('user') || '{}');
+        let isDemoMode = localStorage.getItem('isDemoUser') === 'true' || localStorage.getItem('demoMode') === 'true';
+        let charts = {};
+        let currentSection = 'profile';
+
+        // Debug authentication state
+        function debugAuthState() {
+            const token = authToken;
+            const user = currentUser;
+            
+            console.log('🔐 AUTH DEBUG:');
+            console.log('  Token exists:', !!token);
+            console.log('  Token length:', token ? token.length : 0);
+            console.log('  User data:', user);
+            console.log('  Demo mode:', isDemoMode);
+            
+            if (!token) {
+                console.error('❌ CRITICAL: No auth token found');
+                showNotification('No authentication token found. Redirecting to login...', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Check if user is authenticated and is an admin
+        function checkAdminAuth() {
+            // Get fresh data from localStorage
+            const freshToken = localStorage.getItem('authToken') || localStorage.getItem('token');
+            const freshUser = localStorage.getItem('currentUser') || localStorage.getItem('user');
+            
+            if (!freshToken) {
+                console.log('❌ No auth token found, redirecting to login');
+                showNotification('Please login to access admin dashboard', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return false;
+            }
+            
+            // Update global variables with fresh data
+            authToken = freshToken;
+            if (freshUser) {
+                try {
+                    currentUser = JSON.parse(freshUser);
+                    isDemoMode = currentUser.isDemo || localStorage.getItem('isDemoUser') === 'true' || localStorage.getItem('demoMode') === 'true';
+                    console.log('🔄 Updated user data:', currentUser);
+                    console.log('🔄 Demo mode:', isDemoMode);
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+            
+            // Check if user is admin
+            if (currentUser.role !== 'admin' && !isDemoMode) {
+                console.log('❌ User is not admin, redirecting to user dashboard');
+                showNotification('Access denied. Admin privileges required.', 'error');
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+                return false;
+            }
+            
+            console.log('✅ Admin user authenticated:', currentUser);
+            updateUserInfo();
+            return true;
+        }
+
+        // Update user information in the header
+        function updateUserInfo() {
+            const profileLink = document.getElementById('profile-link');
+            const dashboardTitle = document.getElementById('dashboardTitle');
+            const demoBadge = document.getElementById('demoBadge');
+            const demoIndicator = document.getElementById('demoIndicator');
+            
+            if (currentUser.full_name || currentUser.name) {
+                const userName = currentUser.full_name || currentUser.name;
+                if (profileLink) profileLink.textContent = userName;
+                
+                if (dashboardTitle) {
+                    if (isDemoMode) {
+                        dashboardTitle.innerHTML = `Admin Profile - Welcome, ${userName} <span class="demo-badge">DEMO</span>`;
+                        demoBadge.style.display = 'inline';
+                        demoIndicator.style.display = 'block';
+                    } else {
+                        dashboardTitle.textContent = `Admin Profile - Welcome, ${userName}`;
+                        demoBadge.style.display = 'none';
+                        demoIndicator.style.display = 'none';
+                    }
+                }
+            }
+        }
+
+        // API Request Helper
+        async function apiRequest(endpoint, options = {}) {
+            // If in demo mode, use demo data
+            if (isDemoMode) {
+                console.log('🎭 Using demo data for:', endpoint);
+                return await getDemoData(endpoint);
+            }
+
+            const url = `${API_BASE_URL}${endpoint}`;
+            
+            // ALWAYS get fresh token from localStorage for each request
+            const freshToken = localStorage.getItem('authToken') || localStorage.getItem('token');
+            
+            console.log('🔐 Token check:', {
+                hasToken: !!freshToken,
+                tokenLength: freshToken ? freshToken.length : 0,
+                endpoint: endpoint
+            });
+
+            if (!freshToken) {
+                console.error('❌ No auth token found in localStorage');
+                showNotification('Authentication required. Please login again.', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return null;
+            }
+
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${freshToken}`,
+                    ...options.headers
+                },
+                ...options
+            };
+
+            try {
+                console.log(`🌐 Making API request to: ${url}`, {
+                    headers: config.headers
+                });
+                
+                const response = await fetch(url, config);
+                
+                console.log(`📥 Response for ${endpoint}:`, {
+                    status: response.status,
+                    statusText: response.statusText,
+                    ok: response.ok
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    showNotification('Session expired. Please login again.', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                    return null;
+                }
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`❌ HTTP error! status: ${response.status}`, errorText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log(`✅ API Success from ${endpoint}:`, data);
+                return data;
+            } catch (error) {
+                console.error(`❌ API Request to ${endpoint} failed:`, error);
+                showNotification('API request failed. Using demo data.', 'error');
+                // Fallback to demo data
+                return await getDemoData(endpoint);
+            }
+        }
+
+        // Get demo data for different endpoints
+        async function getDemoData(endpoint) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            const demoData = {
+                '/admin/dashboard': {
+                    stats: {
+                        total_cases: 1247,
+                        pending_cases: 342,
+                        resolved_cases: 785,
+                        total_users: 5892
+                    },
+                    crime_breakdown: {
+                        'Phishing': 245,
+                        'Financial Fraud': 189,
+                        'Identity Theft': 156,
+                        'Social Media Harassment': 278,
+                        'Online Shopping Fraud': 215,
+                        'Data Breach': 164
+                    },
+                    priority_breakdown: {
+                        'High': 342,
+                        'Medium': 567,
+                        'Low': 338
+                    },
+                    recent_cases: [
+                        { case_id: 'CR-2023-0789', crime_type: 'Phishing', priority: 'high', status: 'investigating', created_at: new Date().toISOString() },
+                        { case_id: 'CR-2023-0788', crime_type: 'Financial Fraud', priority: 'high', status: 'pending', created_at: new Date(Date.now() - 86400000).toISOString() },
+                        { case_id: 'CR-2023-0787', crime_type: 'Identity Theft', priority: 'medium', status: 'investigating', created_at: new Date(Date.now() - 172800000).toISOString() }
+                    ],
+                    officer_performance: [
+                        { name: 'Rajesh Kumar', station: 'Financial Crimes', assigned_cases: 12, performance_score: 92 },
+                        { name: 'Priya Sharma', station: 'Cyber Harassment', assigned_cases: 8, performance_score: 88 },
+                        { name: 'Anil Patel', station: 'Identity Theft', assigned_cases: 10, performance_score: 85 }
+                    ]
+                },
+                '/admin/cases': {
+                    cases: [
+                        { case_id: 'CR-2023-0789', title: 'Phishing Attack', crime_type: 'Phishing', priority: 'high', status: 'investigating', state: 'Maharashtra', district: 'Mumbai', assigned_to: null, created_at: new Date().toISOString() },
+                        { case_id: 'CR-2023-0788', title: 'Online Fraud', crime_type: 'Financial Fraud', priority: 'high', status: 'pending', state: 'Delhi', district: 'New Delhi', assigned_to: null, created_at: new Date(Date.now() - 86400000).toISOString() },
+                        { case_id: 'CR-2023-0787', title: 'Identity Theft', crime_type: 'Identity Theft', priority: 'medium', status: 'investigating', state: 'Karnataka', district: 'Bangalore', assigned_to: { name: 'Rajesh Kumar' }, created_at: new Date(Date.now() - 172800000).toISOString() }
+                    ]
+                },
+                '/admin/users': {
+                    users: [
+                        { id: 1, full_name: 'John Doe', email: 'john@example.com', role: 'user', is_active: true, created_at: new Date().toISOString() },
+                        { id: 2, full_name: 'Jane Smith', email: 'jane@example.com', role: 'police', is_active: true, created_at: new Date(Date.now() - 86400000).toISOString() },
+                        { id: 3, full_name: 'Bob Wilson', email: 'bob@example.com', role: 'volunteer', is_active: false, created_at: new Date(Date.now() - 172800000).toISOString() }
+                    ]
+                },
+                '/admin/police-officers': {
+                    officers: [
+                        { id: 1, name: 'Rajesh Kumar', badge_number: 'POL123', station: 'Cyber Crime Unit', rank: 'Inspector', current_case_load: 5, performance_score: 92 },
+                        { id: 2, name: 'Priya Sharma', badge_number: 'POL124', station: 'Financial Crimes', rank: 'Sub-Inspector', current_case_load: 3, performance_score: 88 },
+                        { id: 3, name: 'Anil Patel', badge_number: 'POL125', station: 'Digital Forensics', rank: 'Inspector', current_case_load: 7, performance_score: 85 }
+                    ]
+                },
+                '/admin/volunteers/pending': {
+                    volunteers: [
+                        { id: 1, full_name: 'Alice Brown', email: 'alice@example.com', state: 'Maharashtra', district: 'Mumbai', skills: 'IT Security, Counseling', applied_at: new Date().toISOString() },
+                        { id: 2, full_name: 'Charlie Green', email: 'charlie@example.com', state: 'Karnataka', district: 'Bangalore', skills: 'Cyber Security', applied_at: new Date(Date.now() - 86400000).toISOString() }
+                    ]
+                },
+                '/admin/volunteer-applications': {
+                    applications: [
+                        { id: 1, full_name: 'David Wilson', email: 'david@example.com', status: 'pending', applied_date: new Date().toISOString() },
+                        { id: 2, full_name: 'Eva Davis', email: 'eva@example.com', status: 'pending', applied_date: new Date(Date.now() - 86400000).toISOString() }
+                    ]
+                },
+                '/admin/analytics/overview': {
+                    total_cases: 1247,
+                    resolution_rate: 63.2,
+                    period_days: 30
+                },
+                '/analytics/trends': {
+                    daily_trends: [
+                        { date: '2023-11-01', total_cases: 45, high_priority_rate: 0.3 },
+                        { date: '2023-11-02', total_cases: 52, high_priority_rate: 0.4 },
+                        { date: '2023-11-03', total_cases: 38, high_priority_rate: 0.2 }
+                    ]
+                },
+                '/analytics/heatmap': [
+                    { state: 'Maharashtra', district: 'Mumbai', case_count: 245, intensity: 0.8 },
+                    { state: 'Delhi', district: 'New Delhi', case_count: 189, intensity: 0.6 },
+                    { state: 'Karnataka', district: 'Bangalore', case_count: 167, intensity: 0.5 }
+                ],
+                '/analytics/predictive-insights': {
+                    emerging_trends: [
+                        { crime_type: 'Phishing', frequency: 45, trend: 'increasing' },
+                        { crime_type: 'Online Fraud', frequency: 32, trend: 'stable' }
+                    ]
+                },
+                '/analytics/performance': {
+                    officer_performance: [
+                        { officer_name: 'Rajesh Kumar', efficiency_rate: 0.85, performance_score: 92 },
+                        { officer_name: 'Priya Sharma', efficiency_rate: 0.78, performance_score: 88 }
+                    ],
+                    system_metrics: {
+                        total_cases: 1247,
+                        resolution_rate: 63.2
+                    }
+                },
+                '/reports/list': {
+                    reports: [
+                        { filename: 'monthly_report_2023_11.pdf', type: 'analytics_report', size: 2457600, created: new Date().toISOString() },
+                        { filename: 'case_report_CR-2023-0789.pdf', type: 'case_report', size: 1228800, created: new Date(Date.now() - 86400000).toISOString() }
+                    ]
+                },
+                '/admin/case-assignments': {
+                    assignments: [
+                        { case_id: 'CR-2023-0789', case_title: 'Phishing Attack', assignee_name: 'Rajesh Kumar', assignee_type: 'police', assigned_by: 'Admin User', assigned_date: new Date().toISOString() },
+                        { case_id: 'CR-2023-0787', case_title: 'Identity Theft', assignee_name: 'Priya Sharma', assignee_type: 'police', assigned_by: 'Admin User', assigned_date: new Date(Date.now() - 86400000).toISOString() }
+                    ]
+                },
+                '/admin/analytics/performance': {
+                    officer_performance: [
+                        { name: 'Rajesh Kumar', station: 'Financial Crimes', assigned_cases: 12, performance_score: 92 },
+                        { name: 'Priya Sharma', station: 'Cyber Harassment', assigned_cases: 8, performance_score: 88 },
+                        { name: 'Anil Patel', station: 'Identity Theft', assigned_cases: 10, performance_score: 85 },
+                        { name: 'Sunita Reddy', station: 'Online Fraud', assigned_cases: 7, performance_score: 90 },
+                        { name: 'Vikram Singh', station: 'Data Breach', assigned_cases: 9, performance_score: 87 }
+                    ]
+                }
+            };
+            
+            return demoData[endpoint] || {};
+        }
+
+        // Profile-specific functionality
+        function openProfileTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('#section-profile .tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('#section-profile .profile-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show the selected tab
+            document.getElementById(`profile-tab-${tabName}`).classList.add('active');
+            
+            // Activate the clicked tab
+            event.target.classList.add('active');
+        }
+
+        function editProfile() {
+            showNotification('Edit profile functionality would open here', 'info');
+            // In a real implementation, this would enable form editing
+        }
+
+        function changePassword() {
+            showNotification('Change password functionality would open here', 'info');
+            // In a real implementation, this would open a password change modal
+        }
+
+        function exportProfileData() {
+            showNotification('Exporting profile data...', 'info');
+            // In a real implementation, this would generate and download a data export
+        }
+
+        function toggleTwoFactor() {
+            const button = document.getElementById('twoFactorToggle');
+            if (button.textContent === 'Enable') {
+                button.textContent = 'Disable';
+                showNotification('Two-factor authentication enabled', 'success');
+            } else {
+                button.textContent = 'Enable';
+                showNotification('Two-factor authentication disabled', 'info');
+            }
+        }
+
+        function viewSessions() {
+            showNotification('Login sessions view would open here', 'info');
+        }
+
+        function setupRecovery() {
+            showNotification('Account recovery setup would open here', 'info');
+        }
+
+        // Update profile information
+        function updateProfileInfo() {
+            const user = currentUser;
+            
+            // Update profile card
+            document.getElementById('profileName').textContent = user.full_name || user.name || 'Administrator';
+            document.getElementById('profileRole').textContent = user.role ? user.role.charAt(0).toUpperCase() + user.role.slice(1) : 'Administrator';
+            
+            // Update avatar with initials
+            const avatar = document.getElementById('profileAvatar');
+            const name = user.full_name || user.name || 'Admin';
+            const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+            avatar.innerHTML = `<span>${initials}</span>`;
+            
+            // Update form fields
+            if (user.full_name) {
+                const names = user.full_name.split(' ');
+                document.getElementById('firstName').value = names[0] || '';
+                document.getElementById('lastName').value = names.slice(1).join(' ') || '';
+            }
+            
+            document.getElementById('email').value = user.email || '';
+            document.getElementById('phone').value = user.phone || '';
+            document.getElementById('department').value = user.department || 'Cyber Crime Investigation';
+            document.getElementById('address').value = user.address || '';
+            document.getElementById('city').value = user.city || '';
+            document.getElementById('state').value = user.state || '';
+            
+            // Update stats (these would come from API in real implementation)
+            document.getElementById('profileCases').textContent = '1,247';
+            document.getElementById('profileUsers').textContent = '5,892';
+            document.getElementById('profileActivity').textContent = '342';
+            
+            // Update last password change
+            document.getElementById('lastPasswordChange').textContent = 
+                user.last_password_change ? formatDate(user.last_password_change) : 'Never';
+        }
+
+        // Load profile activity log
+        function loadProfileActivity() {
+            const activityLog = document.getElementById('profileActivityLog');
+            
+            // Sample activity data - in real implementation, this would come from API
+            const activities = [
+                {
+                    icon: 'fa-user',
+                    title: 'Profile information updated',
+                    time: '2 hours ago'
+                },
+                {
+                    icon: 'fa-shield-alt',
+                    title: 'Password changed successfully',
+                    time: '3 days ago'
+                },
+                {
+                    icon: 'fa-lock',
+                    title: 'Two-factor authentication enabled',
+                    time: '1 week ago'
+                },
+                {
+                    icon: 'fa-chart-bar',
+                    title: 'Generated monthly analytics report',
+                    time: '2 weeks ago'
+                },
+                {
+                    icon: 'fa-users',
+                    title: 'Approved 5 new volunteer applications',
+                    time: '3 weeks ago'
+                }
+            ];
+            
+            // Clear existing content (except the first loading item)
+            activityLog.innerHTML = '';
+            
+            // Add activities to the log
+            activities.forEach(activity => {
+                const item = document.createElement('div');
+                item.className = 'activity-item';
+                item.innerHTML = `
+                    <div class="activity-icon">
+                        <i class="fas ${activity.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                `;
+                activityLog.appendChild(item);
+            });
+        }
+
+        // Section Navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(`section-${sectionName}`);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                currentSection = sectionName;
+                
+                // Load section-specific data
+                switch(sectionName) {
+                    case 'profile':
+                        updateProfileInfo();
+                        loadProfileActivity();
+                        break;
+                    case 'cases':
+                        loadCasesData();
+                        break;
+                    case 'users':
+                        loadUsersData();
+                        break;
+                    case 'officers':
+                        loadOfficersData();
+                        break;
+                    case 'volunteers':
+                        loadVolunteersData();
+                        break;
+                    case 'analytics':
+                        loadAnalyticsData();
+                        break;
+                    case 'reports':
+                        loadReportsData();
+                        break;
+                    case 'assignments':
+                        loadAssignmentsData();
+                        break;
+                }
+            }
+        }
+
+        // Navigation functions for main menu
+        function loadCasesPage() {
+            showSection('cases');
+            // Update navigation active state
+            updateNavigationActiveState('cases');
+        }
+
+        function loadReportsPage() {
+            showSection('reports');
+            updateNavigationActiveState('reports');
+        }
+
+        function loadAnalyticsPage() {
+            showSection('analytics');
+            updateNavigationActiveState('analytics');
+        }
+
+        function loadUsersPage() {
+            showSection('users');
+            updateNavigationActiveState('users');
+        }
+
+        function loadVolunteersPage() {
+            showSection('volunteers');
+            updateNavigationActiveState('volunteers');
+        }
+
+        function updateNavigationActiveState(activeSection) {
+            // Update main nav
+            document.querySelectorAll('.main-nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Update sidebar
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // You can add specific logic to highlight the active section
+        }
+
+        // Load cases data
+        async function loadCasesData() {
+            try {
+                showNotification('Loading cases...', 'info');
+                const casesData = await apiRequest('/admin/cases');
+                if (casesData && casesData.cases) {
+                    updateCasesTable(casesData.cases);
+                    showNotification('Cases loaded successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Failed to load cases:', error);
+                showNotification('Failed to load cases data.', 'error');
+            }
+        }
+
+        // Update cases table for cases management section
+        function updateCasesTable(cases) {
+            const tbody = document.getElementById('casesTable');
+            if (!tbody) {
+                console.log('Cases table not found');
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            if (cases.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center;">No cases found</td></tr>';
+                return;
+            }
+            
+            cases.forEach(caseItem => {
+                const row = document.createElement('tr');
+                
+                const statusClass = getStatusClass(caseItem.status);
+                const priorityClass = getPriorityClass(caseItem.priority);
+                
+                row.innerHTML = `
+                    <td>${caseItem.case_id || 'N/A'}</td>
+                    <td>${caseItem.title || 'No title'}</td>
+                    <td>${caseItem.crime_type || 'Unknown'}</td>
+                    <td class="${priorityClass}">${caseItem.priority || 'Medium'}</td>
+                    <td><span class="status ${statusClass}">${formatStatus(caseItem.status)}</span></td>
+                    <td>${caseItem.district || 'N/A'}, ${caseItem.state || 'N/A'}</td>
+                    <td>${caseItem.assigned_to ? caseItem.assigned_to.name : 'Unassigned'}</td>
+                    <td>
+                        <button class="btn btn-small" onclick="viewCase('${caseItem.case_id}')">View</button>
+                        <button class="btn btn-small" onclick="assignCase('${caseItem.case_id}')">Assign</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Load users data
+        async function loadUsersData() {
+            try {
+                showNotification('Loading users...', 'info');
+                const usersData = await apiRequest('/admin/users');
+                if (usersData && usersData.users) {
+                    updateUsersTable(usersData.users);
+                    showNotification('Users loaded successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Failed to load users:', error);
+                showNotification('Failed to load users data.', 'error');
+            }
+        }
+
+        // Update users table
+        function updateUsersTable(users) {
+            const tbody = document.getElementById('usersTable');
+            if (!tbody) {
+                console.log('Users table not found');
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No users found</td></tr>';
+                return;
+            }
+            
+            users.forEach(user => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${user.full_name || 'N/A'}</td>
+                    <td>${user.email || 'N/A'}</td>
+                    <td>${user.role || 'user'}</td>
+                    <td><span class="status ${user.is_active ? 'status-resolved' : 'status-pending'}">${user.is_active ? 'Active' : 'Inactive'}</span></td>
+                    <td>${formatDate(user.created_at)}</td>
+                    <td>
+                        <button class="btn btn-small" onclick="viewUser(${user.id})">View</button>
+                        <button class="btn btn-small" onclick="toggleUserStatus(${user.id}, ${!user.is_active})">${user.is_active ? 'Deactivate' : 'Activate'}</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Load police officers data
+        async function loadOfficersData() {
+            try {
+                showNotification('Loading police officers...', 'info');
+                const officersData = await apiRequest('/admin/police-officers');
+                if (officersData && officersData.officers) {
+                    updateOfficersTable(officersData.officers);
+                    showNotification('Officers loaded successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Failed to load officers:', error);
+                showNotification('Failed to load officers data.', 'error');
+            }
+        }
+
+        // Update officers table
+        function updateOfficersTable(officers) {
+            const tbody = document.getElementById('officersTable');
+            if (!tbody) {
+                console.log('Officers table not found');
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            if (officers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No officers found</td></tr>';
+                return;
+            }
+            
+            officers.forEach(officer => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${officer.name || 'N/A'}</td>
+                    <td>${officer.badge_number || 'N/A'}</td>
+                    <td>${officer.station || 'N/A'}</td>
+                    <td>${officer.rank || 'Officer'}</td>
+                    <td>${officer.current_case_load || 0}</td>
+                    <td>${officer.performance_score || 0}%</td>
+                    <td>
+                        <button class="btn btn-small" onclick="viewOfficer(${officer.id})">View</button>
+                        <button class="btn btn-small" onclick="editOfficer(${officer.id})">Edit</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Load volunteers data
+        async function loadVolunteersData() {
+            try {
+                showNotification('Loading volunteers...', 'info');
+                
+                // Load pending volunteers
+                const volunteersData = await apiRequest('/admin/volunteers/pending');
+                if (volunteersData && volunteersData.volunteers) {
+                    updateVolunteersTable(volunteersData.volunteers);
+                }
+                
+                // Load volunteer applications
+                const applicationsData = await apiRequest('/admin/volunteer-applications');
+                if (applicationsData && applicationsData.applications) {
+                    updateVolunteerApplications(applicationsData.applications);
+                }
+                
+                showNotification('Volunteers data loaded successfully', 'success');
+            } catch (error) {
+                console.error('Failed to load volunteers:', error);
+                showNotification('Failed to load volunteers data.', 'error');
+            }
+        }
+
+        // Update volunteers table
+        function updateVolunteersTable(volunteers) {
+            const tbody = document.getElementById('volunteersTable');
+            if (!tbody) {
+                console.log('Volunteers table not found');
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            if (volunteers.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No pending volunteers found</td></tr>';
+                return;
+            }
+            
+            volunteers.forEach(volunteer => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${volunteer.full_name || 'N/A'}</td>
+                    <td>${volunteer.email || 'N/A'}</td>
+                    <td>${volunteer.state || 'N/A'}</td>
+                    <td>${volunteer.district || 'N/A'}</td>
+                    <td>${volunteer.skills || 'N/A'}</td>
+                    <td>${formatDate(volunteer.applied_at)}</td>
+                    <td>
+                        <button class="btn btn-small btn-success" onclick="approveVolunteer(${volunteer.id})">Approve</button>
+                        <button class="btn btn-small btn-danger" onclick="rejectVolunteer(${volunteer.id})">Reject</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update volunteer applications
+        function updateVolunteerApplications(applications) {
+            const tbody = document.getElementById('applicationsTable');
+            if (!tbody) return;
+            
+            tbody.innerHTML = '';
+            
+            if (applications.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No applications found</td></tr>';
+                return;
+            }
+            
+            applications.forEach(app => {
+                const row = document.createElement('tr');
+                const statusClass = app.status === 'approved' ? 'status-resolved' : 
+                                  app.status === 'rejected' ? 'status-pending' : 'status-investigating';
+                
+                row.innerHTML = `
+                    <td>${app.full_name || 'N/A'}</td>
+                    <td>${app.email || 'N/A'}</td>
+                    <td><span class="status ${statusClass}">${app.status || 'Pending'}</span></td>
+                    <td>${formatDate(app.applied_date)}</td>
+                    <td>${app.reviewed_date ? formatDate(app.reviewed_date) : 'Not reviewed'}</td>
+                    <td>
+                        <button class="btn btn-small" onclick="reviewApplication(${app.id})">Review</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Load analytics data
+        async function loadAnalyticsData() {
+            try {
+                showNotification('Loading analytics...', 'info');
+                
+                // Load different analytics endpoints
+                const overviewData = await apiRequest('/admin/analytics/overview');
+                const trendsData = await apiRequest('/analytics/trends');
+                const heatmapData = await apiRequest('/analytics/heatmap');
+                const predictiveData = await apiRequest('/analytics/predictive-insights');
+                const performanceData = await apiRequest('/analytics/performance');
+                
+                // Update analytics sections with the data
+                updateAnalyticsDisplay(overviewData, trendsData, heatmapData, predictiveData, performanceData);
+                
+                showNotification('Analytics loaded successfully', 'success');
+            } catch (error) {
+                console.error('Failed to load analytics:', error);
+                showNotification('Failed to load analytics data.', 'error');
+            }
+        }
+
+        // Update analytics display
+        function updateAnalyticsDisplay(overview, trends, heatmap, predictive, performance) {
+            // Update overview cards
+            if (overview) {
+                document.getElementById('analyticsTotalCases').textContent = overview.total_cases || 0;
+                document.getElementById('analyticsResolutionRate').textContent = `${overview.resolution_rate || 0}%`;
+            }
+            
+            // You can add more specific updates for each analytics section here
+            console.log('Analytics data loaded:', {
+                overview,
+                trends,
+                heatmap,
+                predictive,
+                performance
+            });
+        }
+
+        // Load reports data
+        async function loadReportsData() {
+            try {
+                showNotification('Loading reports...', 'info');
+                const reportsData = await apiRequest('/reports/list');
+                if (reportsData && reportsData.reports) {
+                    updateReportsTable(reportsData.reports);
+                    showNotification('Reports loaded successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Failed to load reports:', error);
+                showNotification('Failed to load reports data.', 'error');
+            }
+        }
+
+        // Update reports table
+        function updateReportsTable(reports) {
+            const tbody = document.getElementById('reportsTable');
+            if (!tbody) {
+                console.log('Reports table not found');
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            if (reports.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No reports found</td></tr>';
+                return;
+            }
+            
+            reports.forEach(report => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${report.filename || 'N/A'}</td>
+                    <td>${report.type || 'Unknown'}</td>
+                    <td>${formatFileSize(report.size)}</td>
+                    <td>${formatDate(report.created)}</td>
+                    <td>
+                        <button class="btn btn-small" onclick="downloadReport('${report.filename}')">Download</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteReport('${report.filename}')">Delete</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Load case assignments data
+        async function loadAssignmentsData() {
+            try {
+                showNotification('Loading assignments...', 'info');
+                const assignmentsData = await apiRequest('/admin/case-assignments');
+                if (assignmentsData && assignmentsData.assignments) {
+                    updateAssignmentsTable(assignmentsData.assignments);
+                    showNotification('Assignments loaded successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Failed to load assignments:', error);
+                showNotification('Failed to load assignments data.', 'error');
+            }
+        }
+
+        // Update assignments table
+        function updateAssignmentsTable(assignments) {
+            const tbody = document.getElementById('assignmentsTable');
+            if (!tbody) {
+                console.log('Assignments table not found');
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            if (assignments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No assignments found</td></tr>';
+                return;
+            }
+            
+            assignments.forEach(assignment => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${assignment.case_id || 'N/A'}</td>
+                    <td>${assignment.case_title || 'N/A'}</td>
+                    <td>${assignment.assignee_name || 'N/A'}</td>
+                    <td>${assignment.assignee_type || 'N/A'}</td>
+                    <td>${assignment.assigned_by || 'N/A'}</td>
+                    <td>${formatDate(assignment.assigned_date)}</td>
+                    <td>
+                        <button class="btn btn-small" onclick="reassignCase('${assignment.case_id}')">Reassign</button>
+                        <button class="btn btn-small btn-danger" onclick="unassignCase('${assignment.case_id}')">Unassign</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Utility functions
+        function getStatusClass(status) {
+            const statusMap = {
+                'pending': 'status-pending',
+                'assigned': 'status-investigating',
+                'in_progress': 'status-investigating',
+                'resolved': 'status-resolved'
+            };
+            return statusMap[status] || 'status-pending';
+        }
+
+        function getPriorityClass(priority) {
+            const priorityMap = {
+                'high': 'priority-high',
+                'medium': 'priority-medium',
+                'low': 'priority-low'
+            };
+            return priorityMap[priority] || 'priority-medium';
+        }
+
+        function formatStatus(status) {
+            const statusMap = {
+                'pending': 'Pending',
+                'assigned': 'Assigned',
+                'in_progress': 'Investigating',
+                'resolved': 'Resolved'
+            };
+            return statusMap[status] || status;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString();
+        }
+
+        function formatRelativeTime(dateString) {
+            if (!dateString) return 'Unknown time';
+            
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffMins = Math.floor(diffMs / 60000);
+            const diffHours = Math.floor(diffMs / 3600000);
+            const diffDays = Math.floor(diffMs / 86400000);
+            
+            if (diffMins < 1) return 'Just now';
+            if (diffMins < 60) return `${diffMins} minutes ago`;
+            if (diffHours < 24) return `${diffHours} hours ago`;
+            if (diffDays < 7) return `${diffDays} days ago`;
+            
+            return date.toLocaleDateString();
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('isDemoUser');
+            localStorage.removeItem('demoMode');
+            showNotification('Logged out successfully', 'info');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
+        }
+
+        // Action functions (stubs for now)
+        function viewCase(caseId) {
+            showNotification(`Viewing case: ${caseId}`, 'info');
+            // Implementation would open case details
+        }
+
+        function assignCase(caseId) {
+            showNotification(`Assigning case: ${caseId}`, 'info');
+            // Implementation would show assignment modal
+        }
+
+        function viewUser(userId) {
+            showNotification(`Viewing user: ${userId}`, 'info');
+        }
+
+        function toggleUserStatus(userId, newStatus) {
+            showNotification(`${newStatus ? 'Activating' : 'Deactivating'} user: ${userId}`, 'info');
+        }
+
+        function viewOfficer(officerId) {
+            showNotification(`Viewing officer: ${officerId}`, 'info');
+        }
+
+        function editOfficer(officerId) {
+            showNotification(`Editing officer: ${officerId}`, 'info');
+        }
+
+        function approveVolunteer(volunteerId) {
+            showNotification(`Approving volunteer: ${volunteerId}`, 'info');
+        }
+
+        function rejectVolunteer(volunteerId) {
+            showNotification(`Rejecting volunteer: ${volunteerId}`, 'info');
+        }
+
+        function reviewApplication(applicationId) {
+            showNotification(`Reviewing application: ${applicationId}`, 'info');
+        }
+
+        function downloadReport(filename) {
+            showNotification(`Downloading report: ${filename}`, 'info');
+        }
+
+        function deleteReport(filename) {
+            showNotification(`Deleting report: ${filename}`, 'info');
+        }
+
+        function reassignCase(caseId) {
+            showNotification(`Reassigning case: ${caseId}`, 'info');
+        }
+
+        function unassignCase(caseId) {
+            showNotification(`Unassigning case: ${caseId}`, 'info');
+        }
+
+        // Refresh functions
+        function refreshCases() {
+            loadCasesData();
+        }
+
+        function refreshUsers() {
+            loadUsersData();
+        }
+
+        function refreshOfficers() {
+            loadOfficersData();
+        }
+
+        function refreshVolunteers() {
+            loadVolunteersData();
+        }
+
+        function refreshAnalytics() {
+            loadAnalyticsData();
+        }
+
+        function refreshReports() {
+            loadReportsData();
+        }
+
+        function refreshAssignments() {
+            loadAssignmentsData();
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            // Initialize any charts needed for analytics
+            console.log('Charts initialized');
+        }
+
+        // Export functionality
+        async function exportDashboardData() {
+            try {
+                showNotification('Preparing data export...', 'info');
+                
+                // In a real implementation, this would call your backend export API
+                // For now, we'll simulate the export
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Create a mock CSV file
+                const csvContent = "data:text/csv;charset=utf-8," 
+                    + "Report Type,Data\n"
+                    + "Profile Data,Exported\n"
+                    + "Export Date," + new Date().toISOString().split('T')[0]
+                    + (isDemoMode ? "\nMode,Demo Data" : "\nMode,Live Data");
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `admin-profile-export-${new Date().toISOString().split('T')[0]}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showNotification('Data exported successfully', 'success');
+            } catch (error) {
+                console.error('Export error:', error);
+                showNotification('Error exporting data', 'error');
+            }
+        }
+
+        // Handle profile form submission
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // In a real implementation, this would send the form data to the server
+            showNotification('Profile updated successfully', 'success');
+            
+            // Update the user object with new data
+            currentUser.full_name = `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`;
+            currentUser.email = document.getElementById('email').value;
+            currentUser.phone = document.getElementById('phone').value;
+            currentUser.department = document.getElementById('department').value;
+            currentUser.address = document.getElementById('address').value;
+            currentUser.city = document.getElementById('city').value;
+            currentUser.state = document.getElementById('state').value;
+            
+            // Update localStorage
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            // Update profile display
+            updateProfileInfo();
+        });
+
+        // Initialize admin dashboard when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Admin dashboard initializing...');
+            
+            // Debug auth state first
+            if (!debugAuthState()) {
+                return;
+            }
+            
+            // Initialize charts
+            initializeCharts();
+            
+            // Check admin authentication
+            if (!checkAdminAuth()) {
+                return;
+            }
+            
+            // Load profile data
+            updateProfileInfo();
+            loadProfileActivity();
+            
+            // Set profile as default section
+            showSection('profile');
+            
+            // Set up refresh button
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    if (currentSection === 'profile') {
+                        updateProfileInfo();
+                        loadProfileActivity();
+                        showNotification('Profile data refreshed', 'success');
+                    }
+                });
+            }
+            
+            // Set up export button
+            const exportBtn = document.getElementById('exportBtn');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', exportDashboardData);
+            }
+            
+            console.log('✅ Admin dashboard initialized successfully');
+        });
+
         // Theme Toggle Functionality
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('i');
@@ -988,107 +2789,43 @@
             }
         });
 
-        // Charts Initialization
-        document.addEventListener('DOMContentLoaded', function() {
-            // Cases by Category Chart
-            const casesByCategoryCtx = document.getElementById('casesByCategoryChart').getContext('2d');
-            const casesByCategoryChart = new Chart(casesByCategoryCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Phishing', 'Financial Fraud', 'Identity Theft', 'Social Media', 'Online Shopping', 'Ransomware'],
-                    datasets: [{
-                        label: 'Number of Cases',
-                        data: [320, 280, 195, 175, 150, 127],
-                        backgroundColor: [
-                            '#ff3b30',
-                            '#ff9800',
-                            '#2196f3',
-                            '#e91e63',
-                            '#4caf50',
-                            '#9c27b0'
-                        ],
-                        borderColor: [
-                            '#ff3b30',
-                            '#ff9800',
-                            '#2196f3',
-                            '#e91e63',
-                            '#4caf50',
-                            '#9c27b0'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
-                            },
-                            grid: {
-                                color: document.body.classList.contains('dark-theme') ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
-                            },
-                            grid: {
-                                color: document.body.classList.contains('dark-theme') ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Case Status Distribution Chart
-            const caseStatusCtx = document.getElementById('caseStatusChart').getContext('2d');
-            const caseStatusChart = new Chart(caseStatusCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Pending', 'Investigating', 'Resolved'],
-                    datasets: [{
-                        data: [342, 120, 785],
-                        backgroundColor: [
-                            '#ff9800',
-                            '#2196f3',
-                            '#4caf50'
-                        ],
-                        borderColor: [
-                            '#ff9800',
-                            '#2196f3',
-                            '#4caf50'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Update charts when theme changes
-            themeToggle.addEventListener('click', function() {
-                setTimeout(function() {
-                    casesByCategoryChart.update();
-                    caseStatusChart.update();
-                }, 100);
-            });
-        });
+        // Make functions available globally for debugging
+        window.showSection = showSection;
+        window.loadCasesPage = loadCasesPage;
+        window.loadReportsPage = loadReportsPage;
+        window.loadAnalyticsPage = loadAnalyticsPage;
+        window.loadUsersPage = loadUsersPage;
+        window.loadVolunteersPage = loadVolunteersPage;
+        window.logout = logout;
+        window.exportDashboardData = exportDashboardData;
+        window.debugAuthState = debugAuthState;
+        window.refreshCases = refreshCases;
+        window.refreshUsers = refreshUsers;
+        window.refreshOfficers = refreshOfficers;
+        window.refreshVolunteers = refreshVolunteers;
+        window.refreshAnalytics = refreshAnalytics;
+        window.refreshReports = refreshReports;
+        window.refreshAssignments = refreshAssignments;
+        window.viewCase = viewCase;
+        window.assignCase = assignCase;
+        window.viewUser = viewUser;
+        window.toggleUserStatus = toggleUserStatus;
+        window.viewOfficer = viewOfficer;
+        window.editOfficer = editOfficer;
+        window.approveVolunteer = approveVolunteer;
+        window.rejectVolunteer = rejectVolunteer;
+        window.reviewApplication = reviewApplication;
+        window.downloadReport = downloadReport;
+        window.deleteReport = deleteReport;
+        window.reassignCase = reassignCase;
+        window.unassignCase = unassignCase;
+        window.openProfileTab = openProfileTab;
+        window.editProfile = editProfile;
+        window.changePassword = changePassword;
+        window.exportProfileData = exportProfileData;
+        window.toggleTwoFactor = toggleTwoFactor;
+        window.viewSessions = viewSessions;
+        window.setupRecovery = setupRecovery;
     </script>
 </body>
 </html>

@@ -12,6 +12,7 @@ admin_bp = Blueprint('admin', __name__)
 @admin_bp.route('/dashboard', methods=['GET'])
 @admin_required
 def admin_dashboard(current_user):
+    """Enhanced admin dashboard with comprehensive data"""
     try:
         # Overall statistics
         total_cases = Complaint.query.count()
@@ -19,6 +20,12 @@ def admin_dashboard(current_user):
         assigned_cases = Complaint.query.filter_by(status='assigned').count()
         in_progress_cases = Complaint.query.filter_by(status='in_progress').count()
         resolved_cases = Complaint.query.filter_by(status='resolved').count()
+        
+        # User statistics
+        total_users = User.query.count()
+        police_users = User.query.filter_by(role='police').count()
+        volunteer_users = User.query.filter_by(role='volunteer').count()
+        citizen_users = User.query.filter_by(role='user').count()
         
         # Cases by priority
         priority_stats = db.session.query(
@@ -32,12 +39,13 @@ def admin_dashboard(current_user):
             func.count(Complaint.id)
         ).group_by(Complaint.crime_type).all()
         
-        # Recent cases
+        # Recent cases (last 10)
         recent_cases = Complaint.query.order_by(Complaint.created_at.desc()).limit(10).all()
         
         recent_cases_data = []
         for case in recent_cases:
             recent_cases_data.append({
+                "id": case.id,
                 "case_id": case.case_id,
                 "title": case.title,
                 "priority": case.priority,
@@ -46,21 +54,58 @@ def admin_dashboard(current_user):
                 "created_at": case.created_at.isoformat() if case.created_at else None
             })
         
+        # Officer performance data
+        officers = PoliceOfficer.query.filter_by(is_active=True).all()
+        officer_performance = []
+        
+        for officer in officers:
+            assigned_count = CaseAssignment.query.filter_by(
+                police_officer_id=officer.id,
+                status='active'
+            ).count()
+            
+            resolved_count = Complaint.query.filter(
+                Complaint.id.in_(
+                    db.session.query(CaseAssignment.complaint_id).filter_by(
+                        police_officer_id=officer.id
+                    )
+                ),
+                Complaint.status == 'resolved'
+            ).count()
+            
+            officer_performance.append({
+                "id": officer.id,
+                "name": officer.user.full_name if officer.user else "Unknown",
+                "badge_number": officer.badge_number,
+                "station": officer.station,
+                "assigned_cases": assigned_count,
+                "resolved_cases": resolved_count,
+                "performance_score": officer.performance_score or 0
+            })
+        
         return jsonify({
             "stats": {
                 "total_cases": total_cases,
                 "pending_cases": pending_cases,
                 "assigned_cases": assigned_cases,
                 "in_progress_cases": in_progress_cases,
-                "resolved_cases": resolved_cases
+                "resolved_cases": resolved_cases,
+                "total_users": total_users,
+                "police_users": police_users,
+                "volunteer_users": volunteer_users,
+                "citizen_users": citizen_users,
+                "active_users": total_users  # For the UI card
             },
             "priority_breakdown": {priority: count for priority, count in priority_stats if priority},
             "crime_breakdown": {crime_type: count for crime_type, count in crime_stats if crime_type},
-            "recent_cases": recent_cases_data
+            "recent_cases": recent_cases_data,
+            "officer_performance": officer_performance
         }), 200
         
     except Exception as e:
+        print(f"❌ Admin dashboard error: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
 
 @admin_bp.route('/cases', methods=['GET'])
 @admin_required
@@ -439,24 +484,47 @@ def get_all_users(current_user):
                 "created_at": user.created_at.isoformat() if user.created_at else None
             }
             
-            # Add role-specific data
-            if user.role == 'police' and user.police_profile:
-                user_data["badge_number"] = user.police_profile.badge_number
-                user_data["station"] = user.police_profile.station
-                user_data["rank"] = user.police_profile.rank
-            
-            elif user.role == 'volunteer' and user.volunteer_profile:
-                user_data["status"] = user.volunteer_profile.status
-                user_data["state"] = user.volunteer_profile.state
-                user_data["district"] = user.volunteer_profile.district
-                user_data["rating"] = user.volunteer_profile.rating
+            # Add role-specific data with error handling
+            try:
+                if user.role == 'police':
+                    # Use relationship properly - check if police_profile exists
+                    police_profile = PoliceOfficer.query.filter_by(user_id=user.id).first()
+                    if police_profile:
+                        user_data["badge_number"] = police_profile.badge_number
+                        user_data["station"] = police_profile.station
+                        user_data["rank"] = police_profile.rank
+                    else:
+                        user_data["badge_number"] = "Not assigned"
+                        user_data["station"] = "Not assigned"
+                        user_data["rank"] = "Not assigned"
+                
+                elif user.role == 'volunteer':
+                    # Use relationship properly - check if volunteer_profile exists
+                    volunteer_profile = Volunteer.query.filter_by(user_id=user.id).first()
+                    if volunteer_profile:
+                        user_data["status"] = volunteer_profile.status
+                        user_data["state"] = volunteer_profile.state
+                        user_data["district"] = volunteer_profile.district
+                        user_data["rating"] = volunteer_profile.rating
+                    else:
+                        user_data["status"] = "Not assigned"
+                        user_data["state"] = "Not assigned"
+                        user_data["district"] = "Not assigned"
+                        user_data["rating"] = 0
+                        
+            except Exception as profile_error:
+                print(f"❌ Profile error for user {user.id}: {profile_error}")
+                # Continue without profile data - don't break the entire request
             
             users_data.append(user_data)
         
         return jsonify({"users": users_data, "total": len(users_data)}), 200
         
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print(f"❌ Users API Error: {str(e)}")
+        import traceback
+        print(f"❌ Traceback: {traceback.format_exc()}")
+        return jsonify({"error": f"Failed to load users: {str(e)}"}), 500
 
 @admin_bp.route('/create-police', methods=['POST'])
 @admin_required

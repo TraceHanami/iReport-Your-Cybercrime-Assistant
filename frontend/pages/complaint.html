@@ -7,7 +7,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    /* All CSS remains exactly the same */
+    /* All your existing CSS remains the same */
     :root {
       --primary-color: #ffffff;
       --secondary-color: #f0f0f0;
@@ -841,47 +841,27 @@
   <div class="logo-group">
     <div class="logo">
       <svg width="50" height="50" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-        <!-- Shield Base with Indian Colors -->
+        <!-- Your logo SVG code -->
         <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="#FF9933" stroke="#000080" stroke-width="1.5"/>
-        
-        <!-- White Middle Section -->
         <path d="M30 8 C38 8 45 12 48 18 L30 52 L12 18 C15 12 22 8 30 8 Z" fill="#FFFFFF"/>
-        
-        <!-- Ashoka Chakra -->
         <circle cx="30" cy="30" r="8" fill="#000080" stroke="#FFFFFF" stroke-width="0.5"/>
-        
-        <!-- 24 Spokes (Simplified) -->
         <g stroke="#FFFFFF" stroke-width="0.8">
-          <!-- Main Cross -->
           <line x1="30" y1="22" x2="30" y2="38"/>
           <line x1="22" y1="30" x2="38" y2="30"/>
-          
-          <!-- Diagonal Spokes -->
           <line x1="25" y1="25" x2="35" y2="35"/>
           <line x1="35" y1="25" x2="25" y2="35"/>
-          
-          <!-- Additional Spokes -->
           <line x1="27" y1="23" x2="33" y2="37"/>
           <line x1="33" y1="23" x2="27" y2="37"/>
           <line x1="23" y1="27" x2="37" y2="33"/>
           <line x1="37" y1="27" x2="23" y2="33"/>
         </g>
-        
-        <!-- Cyber Security Elements -->
-        <!-- Digital Lock -->
         <rect x="26" y="42" width="8" height="6" fill="#000080" stroke="#FFFFFF" stroke-width="0.5" rx="1"/>
         <circle cx="30" cy="44" r="1" fill="#FFFFFF"/>
         <rect x="28" y="45" width="4" height="2" fill="#FFFFFF" rx="0.5"/>
-        
-        <!-- Binary Code Pattern -->
         <text x="18" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">101</text>
         <text x="40" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">010</text>
         <text x="15" y="48" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">110</text>
-        
-        <!-- Shield Border -->
         <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="none" stroke="#000080" stroke-width="1.5"/>
-        
-        <!-- Cyber Circuit Lines -->
         <path d="M15 12 L20 12 L20 15 L25 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
         <path d="M45 12 L40 12 L40 15 L35 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
       </svg>
@@ -1307,13 +1287,13 @@
         <div class="form-section">
           <h4><i class="fas fa-eye"></i> <span data-key="reviewComplaint">Review Your Complaint</span></h4>
           
-          <div id="preview"></div>
-          
           <div class="blue-box">
             <p><strong data-key="estimatedPriority">Estimated Priority:</strong> <span id="priority-estimate">Calculating...</span></p>
             <p><strong data-key="expectedResponse">Expected Response Time:</strong> <span id="response-time">Calculating...</span></p>
             <p><strong data-key="referenceNumber">Reference Number:</strong> <span id="reference-number">Will be generated after submission</span></p>
           </div>
+          
+          <div id="preview"></div>
         </div>
         
         <div class="form-section">
@@ -1354,6 +1334,7 @@ let isRecording = false;
 let recognition = null;
 let uploadedFiles = [];
 let uploadedEvidence = [];
+let anonymousUserId = null;
 
 // Backend API configuration
 const API_BASE_URL = 'http://localhost:5000/api';
@@ -1361,6 +1342,16 @@ let currentUserMode = null;
 let userToken = null;
 let currentUser = null;
 let backendConnected = false;
+
+// Generate unique anonymous user ID
+function generateAnonymousId() {
+    if (!anonymousUserId) {
+        const timestamp = Date.now().toString(36);
+        const random = Math.random().toString(36).substring(2, 8);
+        anonymousUserId = `ANON${timestamp}${random}`.toUpperCase();
+    }
+    return anonymousUserId;
+}
 
 // Test backend connection on page load
 async function testBackendConnection() {
@@ -1424,34 +1415,68 @@ function setupThemeToggle() {
     });
 }
 
-// Check if user is authenticated
-async function checkUserAuthentication() {
+// Verify token and set user data
+async function verifyTokenAndSetUser(token) {
     try {
-        const token = localStorage.getItem('token');
-        if (!token) {
-            showAuthenticationOptions();
-            return;
-        }
-
+        console.log("🔍 Verifying token with backend...");
         const response = await fetch(`${API_BASE_URL}/auth/me`, {
             method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
         });
         
         if (response.ok) {
             const userData = await response.json();
-            userToken = token;
-            currentUser = userData.user;
-            currentUserMode = 'authenticated';
-            showAuthenticatedView();
+            currentUser = userData;
+            document.getElementById('user-name').textContent = currentUser.name || currentUser.email;
+            console.log("✅ Token verified, user:", currentUser);
+            return true;
         } else {
-            // Token is invalid, clear it
+            console.log("❌ Token verification failed, status:", response.status);
+            // Clear invalid token
             localStorage.removeItem('token');
-            showAuthenticationOptions();
+            localStorage.removeItem('user');
+            return false;
         }
+    } catch (error) {
+        console.error('Token verification error:', error);
+        return false;
+    }
+}
+
+// Enhanced authentication check on page load
+async function checkUserAuthentication() {
+    try {
+        const token = localStorage.getItem('token');
+        console.log("🔄 Checking user authentication on page load...");
+        
+        if (!token) {
+            console.log("❌ No token found, showing auth options");
+            showAuthenticationOptions();
+            return;
+        }
+
+        // Verify token with backend
+        const isValid = await verifyTokenAndSetUser(token);
+        
+        if (isValid) {
+            // User is authenticated
+            userToken = token;
+            currentUserMode = 'authenticated';
+            document.getElementById('auth-buttons').style.display = 'none';
+            document.getElementById('anonymous-note').style.display = 'none';
+            document.getElementById('user-info').style.display = 'flex';
+            console.log("✅ User is authenticated on page load");
+        } else {
+            // Token invalid, clear and show auth options
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            showAuthenticationOptions();
+            console.log("❌ Token invalid, showing auth options");
+        }
+        
     } catch (error) {
         console.error('Error checking authentication:', error);
         showAuthenticationOptions();
@@ -1474,30 +1499,47 @@ function showAuthenticationOptions() {
     userToken = null;
     currentUser = null;
     removeAnonymousData();
+    console.log("🔓 Showing authentication options");
 }
 
-// Set user mode (authenticated or anonymous) - CORRECTED VERSION
+// Set user mode (authenticated or anonymous)
 function setUserMode(mode) {
-    currentUserMode = mode;
-    
     if (mode === 'authenticated') {
-        // Check if user is already logged in
+        // Check if user is already logged in by verifying the token
         const token = localStorage.getItem('token');
+        console.log("🔐 Checking authentication - Token exists:", !!token);
+        
         if (token) {
-            // User is already logged in, verify token and set authenticated mode
-            verifyTokenAndSetMode(token);
+            // Verify the token is still valid
+            verifyTokenAndSetUser(token)
+                .then(isValid => {
+                    if (isValid) {
+                        // Token is valid, proceed with authenticated mode
+                        currentUserMode = 'authenticated';
+                        userToken = token;
+                        document.getElementById('auth-buttons').style.display = 'none';
+                        document.getElementById('anonymous-note').style.display = 'none';
+                        document.getElementById('user-info').style.display = 'flex';
+                        console.log("✅ User authenticated successfully");
+                    } else {
+                        // Token invalid, show auth options
+                        showAuthenticationOptions();
+                        alert('Your session has expired. Please login again.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Token verification failed:', error);
+                    showAuthenticationOptions();
+                    alert('Authentication check failed. Please try again.');
+                });
         } else {
-            // If not logged in, show message and allow them to proceed as authenticated user
-            document.getElementById('auth-buttons').style.display = 'none';
-            document.getElementById('anonymous-note').style.display = 'none';
-            document.getElementById('user-info').style.display = 'none';
-            removeAnonymousData();
-            
-            // Show info message
-            alert('You are filing as a registered user. Please fill in your personal details. Your complaint will be recorded with your information for tracking purposes.');
+            // No token found, show auth options
+            showAuthenticationOptions();
+            alert('Please login first to file as a registered user.');
         }
     } else {
         // Show anonymous mode
+        currentUserMode = 'anonymous';
         document.getElementById('auth-buttons').style.display = 'none';
         document.getElementById('anonymous-note').style.display = 'block';
         document.getElementById('user-info').style.display = 'none';
@@ -1505,44 +1547,26 @@ function setUserMode(mode) {
     }
 }
 
-// Verify token and set authenticated mode
-async function verifyTokenAndSetMode(token) {
-    try {
-        const response = await fetch(`${API_BASE_URL}/auth/me`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            }
-        });
-        
-        if (response.ok) {
-            const userData = await response.json();
-            userToken = token;
-            currentUser = userData.user;
-            currentUserMode = 'authenticated';
-            showAuthenticatedView();
-        } else {
-            // Token is invalid, clear it and show auth options
-            localStorage.removeItem('token');
-            showAuthenticationOptions();
-        }
-    } catch (error) {
-        console.error('Error verifying token:', error);
-        showAuthenticationOptions();
-    }
-}
-
-// Apply anonymous data to form fields
+// Apply anonymous data to personal information fields only
 function applyAnonymousData() {
-    const fields = [
+    const personalFields = [
         'complainant-name', 'complainant-id', 'complainant-email', 
         'complainant-phone'
     ];
     
-    fields.forEach(fieldId => {
+    const anonymousId = generateAnonymousId();
+    
+    personalFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
-        field.value = 'Anonymous';
+        if (fieldId === 'complainant-name') {
+            field.value = 'Anonymous User';
+        } else if (fieldId === 'complainant-id') {
+            field.value = anonymousId;
+        } else if (fieldId === 'complainant-email') {
+            field.value = `${anonymousId.toLowerCase()}@anonymous.cybercrime.gov.in`;
+        } else if (fieldId === 'complainant-phone') {
+            field.value = '0000000000';
+        }
         field.classList.add('anonymous-field');
         field.readOnly = true;
     });
@@ -1552,26 +1576,28 @@ function applyAnonymousData() {
 
 // Remove anonymous data from form fields
 function removeAnonymousData() {
-    const fields = [
+    const personalFields = [
         'complainant-name', 'complainant-id', 'complainant-email', 
-        'complainant-phone', 
+        'complainant-phone'
     ];
     
-    fields.forEach(fieldId => {
+    personalFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
         field.classList.remove('anonymous-field');
         field.readOnly = false;
-        if (field.value === 'Anonymous') {
+        if (field.value.includes('Anonymous') || field.value.includes('anonymous.cybercrime.gov.in') || field.value === '0000000000') {
             field.value = '';
         }
     });
     
     document.getElementById('anonymous-hint').style.display = 'none';
+    anonymousUserId = null;
 }
 
 // Logout function
 function logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     showAuthenticationOptions();
     alert('You have been logged out successfully.');
 }
@@ -1649,7 +1675,7 @@ function validateAllFields() {
         if (!validateEmail()) errors.push("Valid email address is required");
         if (!validatePhone()) errors.push("Valid 10-digit phone number is required");
     }
-    // For anonymous users, personal info is optional - no validation needed
+    // For anonymous users, personal info is auto-filled - no validation needed
     
     // Location Information (required for both modes)
     if (!document.getElementById("state").value.trim()) errors.push("State is required");
@@ -1692,7 +1718,7 @@ function showValidationErrors(errors) {
 
 function validateName() {
     const name = document.getElementById('complainant-name');
-    if (name.value.trim().length < 3) {
+    if (currentUserMode === 'authenticated' && name.value.trim().length < 3) {
         name.style.borderColor = '#dc3545';
         return false;
     } else {
@@ -1703,7 +1729,7 @@ function validateName() {
 
 function validateID() {
     const id = document.getElementById('complainant-id');
-    if (id.value.trim().length < 10) {
+    if (currentUserMode === 'authenticated' && id.value.trim().length < 10) {
         id.style.borderColor = '#dc3545';
         return false;
     } else {
@@ -1714,26 +1740,32 @@ function validateID() {
 
 function validateEmail() {
     const email = document.getElementById('complainant-email');
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email.value)) {
-        email.style.borderColor = '#dc3545';
-        return false;
-    } else {
-        email.style.borderColor = '#28a745';
-        return true;
+    if (currentUserMode === 'authenticated') {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email.value)) {
+            email.style.borderColor = '#dc3545';
+            return false;
+        } else {
+            email.style.borderColor = '#28a745';
+            return true;
+        }
     }
+    return true; // For anonymous users, email is auto-generated
 }
 
 function validatePhone() {
     const phone = document.getElementById('complainant-phone');
-    const phoneRegex = /^[6-9]\d{9}$/;
-    if (!phoneRegex.test(phone.value)) {
-        phone.style.borderColor = '#dc3545';
-        return false;
-    } else {
-        phone.style.borderColor = '#28a745';
-        return true;
+    if (currentUserMode === 'authenticated') {
+        const phoneRegex = /^[6-9]\d{9}$/;
+        if (!phoneRegex.test(phone.value)) {
+            phone.style.borderColor = '#dc3545';
+            return false;
+        } else {
+            phone.style.borderColor = '#28a745';
+            return true;
+        }
     }
+    return true; // For anonymous users, phone is auto-filled
 }
 
 function validatePincode() {
@@ -2030,6 +2062,7 @@ function resetForm() {
         
         // Reset user mode
         currentUserMode = null;
+        anonymousUserId = null;
         document.getElementById('auth-buttons').style.display = 'flex';
         document.getElementById('anonymous-note').style.display = 'none';
         document.getElementById('user-info').style.display = 'none';
@@ -2133,6 +2166,26 @@ async function submitComplaint() {
         return;
     }
     
+    // Double-check authentication for registered users
+    if (currentUserMode === 'authenticated') {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            alert('Your session has expired. Please login again.');
+            showAuthenticationOptions();
+            return;
+        }
+        
+        // Verify token is still valid
+        const isValid = await verifyTokenAndSetUser(token);
+        if (!isValid) {
+            alert('Your session has expired. Please login again.');
+            showAuthenticationOptions();
+            return;
+        }
+        
+        userToken = token; // Ensure token is set
+    }
+    
     // Show loading state
     const submitBtn = document.getElementById('submit-btn');
     const originalText = submitBtn.innerHTML;
@@ -2141,62 +2194,97 @@ async function submitComplaint() {
     document.body.classList.add('loading');
     
     try {
-        // Prepare complaint data according to backend expectations
+        // Prepare complaint data for backend
         const complaintData = {
-            title: document.getElementById("details").value.substring(0, 100) + "...",
+            title: document.getElementById("category").value + " Complaint",
             description: document.getElementById("details").value,
             incident_date: document.getElementById("date").value + "T" + document.getElementById("time").value + ":00Z",
             state: document.getElementById("state").value,
             district: document.getElementById("district").value,
-            location: document.getElementById("landmark").value,
+            location: document.getElementById("landmark").value || document.getElementById("village").value,
             victim_name: document.getElementById("complainant-name").value,
             victim_contact: document.getElementById("complainant-phone").value,
-            estimated_loss: parseFloat(document.getElementById("money").value) || 0,
-            police_complaint_filed: document.getElementById("police-complaint").value === "yes",
-            police_station: document.getElementById("police-complaint").value === "yes" ? "Local Station" : null,
-            police_complaint_number: document.getElementById("fir-number").value || null,
             is_anonymous: currentUserMode === 'anonymous',
             anonymous_email: currentUserMode === 'anonymous' ? document.getElementById("complainant-email").value : null,
-            is_injury_involved: document.getElementById("injury").value !== "none",
-            injury_severity: document.getElementById("injury").value,
+            
+            // Additional fields from your form
+            sub_category: document.getElementById("category").value,
+            victim_age: null,
+            victim_gender: null,
             is_missing_person: document.getElementById("missing").value === "person",
+            is_injury_involved: document.getElementById("injury").value !== "none",
             is_property_damage: document.getElementById("missing").value === "property",
-            suspect_description: document.getElementById("suspect-name").value ? 
-                `Name: ${document.getElementById("suspect-name").value}, Alias: ${document.getElementById("suspect-alias").value}, Phone: ${document.getElementById("suspect-phone").value}, Email: ${document.getElementById("suspect-email").value}, Address: ${document.getElementById("suspect-address").value}, Relationship: ${document.getElementById("suspect-relationship").value}` : null,
-            witness_details: document.getElementById("suspect-website").value ? 
-                `Website: ${document.getElementById("suspect-website").value}, Social Media: ${document.getElementById("suspect-social").value}, Transaction ID: ${document.getElementById("transaction-id").value}` : null
+            estimated_loss: parseFloat(document.getElementById("money").value) || 0,
+            injury_severity: document.getElementById("injury").value,
+            police_complaint_filed: document.getElementById("police-complaint").value === "yes",
+            police_station: document.getElementById("police-complaint").value === "yes" ? "Unknown Station" : null,
+            police_complaint_number: document.getElementById("fir-number").value || null,
+            
+            // Suspect information
+            suspect_description: JSON.stringify({
+                name: document.getElementById("suspect-name").value,
+                alias: document.getElementById("suspect-alias").value,
+                email: document.getElementById("suspect-email").value,
+                phone: document.getElementById("suspect-phone").value,
+                address: document.getElementById("suspect-address").value,
+                relationship: document.getElementById("suspect-relationship").value,
+                website: document.getElementById("suspect-website").value,
+                social_media: document.getElementById("suspect-social").value,
+                transaction_id: document.getElementById("transaction-id").value
+            }),
+            
+            // Evidence files
+            evidence_files: JSON.stringify({
+                supporting_docs: uploadedFiles.map(f => f.name),
+                evidence_files: uploadedEvidence.map(f => f.name)
+            })
         };
+
+        console.log("📤 Submitting complaint data - User mode:", currentUserMode);
+        console.log("🔐 Token available:", !!userToken);
+
+        // Determine which endpoint to use based on user mode
+        let endpoint, options;
         
-        let endpoint;
         if (currentUserMode === 'authenticated') {
+            // For authenticated users
             endpoint = `${API_BASE_URL}/complaints/file`;
+            options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${userToken}`
+                },
+                body: JSON.stringify(complaintData)
+            };
+            console.log("🔐 Using AUTHENTICATED endpoint with token");
         } else {
+            // For anonymous users
             endpoint = `${API_BASE_URL}/complaints/file-anonymous`;
+            options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(complaintData)
+            };
+            console.log("🕵️ Using ANONYMOUS endpoint");
         }
-        
-        console.log(`Submitting to: ${endpoint}`);
-        console.log('Request data:', complaintData);
-        
-        const response = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(complaintData)
-        });
-        
-        if (response.ok) {
-            const result = await response.json();
-            console.log('Submission successful:', result);
-            showSuccessMessage(result);
-        } else {
-            const errorText = await response.text();
-            console.error('Submission failed:', errorText);
-            throw new Error(`Server responded with ${response.status}: ${errorText}`);
+
+        // Make API call
+        console.log("🌐 Making API call to:", endpoint);
+        const response = await fetch(endpoint, options);
+        const result = await response.json();
+
+        if (!response.ok) {
+            throw new Error(result.error || `HTTP ${response.status}: ${response.statusText}`);
         }
+
+        console.log('✅ Submission successful:', result);
+        showSuccessMessage(result);
         
     } catch (error) {
-        console.error("Submission error:", error);
+        console.error("❌ Submission error:", error);
         showErrorMessage(error);
     } finally {
         submitBtn.innerHTML = originalText;
@@ -2206,27 +2294,40 @@ async function submitComplaint() {
 }
 
 function showSuccessMessage(result) {
-    const messageDiv = document.getElementById("submission-message");
-    messageDiv.style.display = "block";
-    messageDiv.className = "success-message";
+    const step3 = document.getElementById('step3');
     
-    messageDiv.innerHTML = `
-        <h3>✅ Complaint Submitted Successfully!</h3>
-        <p><strong>Case ID:</strong> ${result.case_id || document.getElementById("reference-number").textContent}</p>
-        <p><strong>Priority:</strong> ${result.priority || document.getElementById("priority-estimate").textContent}</p>
-        <p><strong>Crime Type:</strong> ${result.crime_type || 'Under Review'}</p>
-        <p>Your complaint has been registered with the National Cyber Crime Reporting Portal.</p>
-        ${currentUserMode === 'authenticated' ? 
-            '<p>You can track your complaint status using your Case ID.</p>' : 
-            '<p><strong>Note:</strong> Since you filed anonymously, you will not be able to track the status of your complaint.</p>'
-        }
+    const isAnonymous = currentUserMode === 'anonymous';
+    const backendDetection = isAnonymous ? 
+        'Anonymous complaint registered with protected personal information' : 
+        'Registered user complaint with full details';
+    
+    const trackingNote = isAnonymous ? 
+        '<p><strong>Note:</strong> Since you filed anonymously, you will not be able to track the status of your complaint.</p>' :
+        '<p>You can track your complaint status using your Case ID in your dashboard.</p>';
+
+    step3.innerHTML = `
+        <div class="success-message" style="margin: 20px 0; text-align: center;">
+            <h3>✅ Complaint Submitted Successfully!</h3>
+            <p><strong>Case ID:</strong> ${result.case_id}</p>
+            <p><strong>Priority:</strong> ${result.priority}</p>
+            <p><strong>Crime Type:</strong> ${result.crime_type}</p>
+            <p><strong>Assignment:</strong> ${result.assigned_to || 'Pending assignment'}</p>
+            <p>Your complaint has been registered with the National Cyber Crime Reporting Portal.</p>
+            ${trackingNote}
+            <p><strong>Backend Detection:</strong> ${backendDetection}</p>
+        </div>
+        
+        <div class="button-group">
+            <button class="btn-success" onclick="resetForm()">
+                <i class="fas fa-plus"></i> File Another Complaint
+            </button>
+            <button class="btn-secondary" onclick="generatePDF()">
+                <i class="fas fa-file-pdf"></i> Download Report
+            </button>
+        </div>
     `;
     
-    // Hide submit button
-    document.getElementById('submit-btn').style.display = "none";
-    
-    // Scroll to message
-    messageDiv.scrollIntoView({ behavior: 'smooth' });
+    step3.scrollIntoView({ behavior: 'smooth' });
 }
 
 function showErrorMessage(error) {
@@ -2249,7 +2350,10 @@ window.onload = async function() {
     
     // Then initialize the rest of the application
     updateProgressBar();
-    checkUserAuthentication();
+    
+    // Check if user is already logged in
+    await checkUserAuthentication();
+    
     setupCharacterCounter();
     
     // Add event listeners
@@ -2263,3 +2367,5 @@ window.onload = async function() {
     setupThemeToggle();
 };
 </script>
+</body>
+</html>

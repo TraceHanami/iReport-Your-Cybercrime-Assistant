@@ -694,150 +694,316 @@
     </footer>
 
     <script>
-        // Theme Toggle Functionality
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
+    // Theme Toggle Functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // Check for saved theme preference or default to light
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    // Apply the saved theme on page load
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+    }
+    
+    // Toggle theme when button is clicked
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
         
-        // Check for saved theme preference or default to light
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        
-        // Apply the saved theme on page load
-        if (currentTheme === 'dark') {
-            document.body.classList.add('dark-theme');
+        if (document.body.classList.contains('dark-theme')) {
+            localStorage.setItem('theme', 'dark');
             themeIcon.classList.remove('fa-moon');
             themeIcon.classList.add('fa-sun');
+        } else {
+            localStorage.setItem('theme', 'light');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+    });
+
+    // Logout functionality
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        if (confirm('Are you sure you want to logout?')) {
+            // Clear any stored tokens
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userData');
+            sessionStorage.removeItem('authToken');
+            
+            alert('You have been logged out successfully.');
+            window.location.href = 'login.html';
+        }
+    });
+
+    // API Base URL - adjust if needed
+    const API_BASE_URL = 'http://localhost:5000/api';
+
+    // Check authentication status
+    function checkAuth() {
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+        if (!token) {
+            alert('Please login to track your cases.');
+            window.location.href = 'login.html';
+            return false;
+        }
+        return true;
+    }
+
+    // Get authentication headers
+    function getAuthHeaders() {
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+    }
+
+    // Track Complaint Function - Connected to Backend
+    async function trackComplaint() {
+        const caseIdInput = document.getElementById('case-id-input');
+        const caseId = caseIdInput.value.trim();
+        
+        if (!caseId) {
+            alert('Please enter a Case ID to track your complaint.');
+            return;
+        }
+
+        // Show loading state
+        const trackButton = document.querySelector('.btn-primary');
+        const originalText = trackButton.textContent;
+        trackButton.textContent = 'Tracking...';
+        trackButton.disabled = true;
+
+        try {
+            // First try public endpoint (no auth required)
+            const response = await fetch(`${API_BASE_URL}/track/status/${caseId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.success && result.data) {
+                displayCaseDetails(result.data);
+            } else {
+                throw new Error(result.error || 'Case not found');
+            }
+            
+        } catch (error) {
+            console.error('Error tracking case:', error);
+            
+            // If public endpoint fails and user is authenticated, try detailed endpoint
+            if (checkAuth()) {
+                try {
+                    const detailsResponse = await fetch(`${API_BASE_URL}/track/details/${caseId}`, {
+                        method: 'GET',
+                        headers: getAuthHeaders()
+                    });
+                    
+                    if (detailsResponse.ok) {
+                        const detailsResult = await detailsResponse.json();
+                        if (detailsResult.success && detailsResult.data) {
+                            displayCaseDetails(detailsResult.data);
+                            return;
+                        }
+                    }
+                } catch (fallbackError) {
+                    console.error('Detailed endpoint also failed:', fallbackError);
+                }
+            }
+            
+            alert(`Error: ${error.message || 'Case ID not found. Please check your Case ID and try again.'}`);
+        } finally {
+            // Restore button state
+            trackButton.textContent = originalText;
+            trackButton.disabled = false;
+        }
+    }
+
+    // Format date for display
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-IN', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (error) {
+            return dateString;
+        }
+    }
+
+    // Get status badge class based on status
+    function getStatusClass(status) {
+        const statusMap = {
+            'open': 'status-open',
+            'pending': 'status-open',
+            'investigating': 'status-investigating',
+            'in_progress': 'status-investigating',
+            'resolved': 'status-resolved',
+            'closed': 'status-closed',
+            'completed': 'status-resolved'
+        };
+        return statusMap[status?.toLowerCase()] || 'status-open';
+    }
+
+    // Get status display text
+    function getStatusText(status) {
+        const statusMap = {
+            'open': 'Open',
+            'pending': 'Pending',
+            'investigating': 'Investigating',
+            'in_progress': 'In Progress',
+            'resolved': 'Resolved',
+            'closed': 'Closed',
+            'completed': 'Completed'
+        };
+        return statusMap[status?.toLowerCase()] || 'Open';
+    }
+
+    // Get priority display text
+    function getPriorityText(priority) {
+        const priorityMap = {
+            'low': 'Low',
+            'medium': 'Medium',
+            'high': 'High',
+            'urgent': 'Urgent'
+        };
+        return priorityMap[priority?.toLowerCase()] || 'Medium';
+    }
+
+    // Generate timeline from backend data
+    function generateTimeline(caseData) {
+        const timeline = [];
+        
+        // Add complaint creation
+        if (caseData.created_at) {
+            timeline.push({
+                date: formatDate(caseData.created_at),
+                description: 'Complaint registered successfully',
+                status: 'completed'
+            });
         }
         
-        // Toggle theme when button is clicked
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
-            
-            if (document.body.classList.contains('dark-theme')) {
-                localStorage.setItem('theme', 'dark');
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            } else {
-                localStorage.setItem('theme', 'light');
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            }
-        });
-
-        // Logout functionality
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            if (confirm('Are you sure you want to logout?')) {
-                // In a real application, you would make an API call to invalidate the session
-                // For this demo, we'll just redirect to the login page
-                alert('You have been logged out successfully.');
-                window.location.href = 'login.html';
-            }
-        });
-
-        // Track Complaint Function
-        function trackComplaint() {
-            const caseIdInput = document.getElementById('case-id-input');
-            const caseId = caseIdInput.value.trim();
-            
-            if (!caseId) {
-                alert('Please enter a Case ID to track your complaint.');
-                return;
-            }
-            
-            // In a real application, you would make an API call here
-            // For this demo, we'll simulate a response with sample data
-            const sampleData = getSampleCaseData(caseId);
-            
-            if (sampleData) {
-                displayCaseDetails(sampleData);
-            } else {
-                alert('Case ID not found. Please check your Case ID and try again.');
-            }
+        // Add status updates from backend
+        if (caseData.updates && Array.isArray(caseData.updates)) {
+            caseData.updates.forEach(update => {
+                timeline.push({
+                    date: formatDate(update.created_at),
+                    description: update.description || update.title,
+                    status: 'completed'
+                });
+            });
         }
-
-        // Sample case data for demonstration
-        function getSampleCaseData(caseId) {
-            // In a real application, this would be an API call
-            // For demo purposes, we'll return sample data for specific case IDs
-            
-            const sampleCases = {
-                'IR202511022293BEDD': {
-                    id: 'IR202511022293BEDD',
-                    status: 'Investigating',
-                    crimeType: 'Online Financial Fraud',
-                    priority: 'High',
-                    officer: 'Inspector Sharma',
-                    dateFiled: 'November 2, 2023',
-                    timeline: [
-                        { date: 'Nov 2, 2023', description: 'Complaint registered successfully', status: 'completed' },
-                        { date: 'Nov 3, 2023', description: 'Initial review completed', status: 'completed' },
-                        { date: 'Nov 5, 2023', description: 'Assigned to investigation team', status: 'completed' },
-                        { date: 'Nov 10, 2023', description: 'Evidence collection in progress', status: 'current' },
-                        { date: 'Estimated: Nov 20, 2023', description: 'Forensic analysis', status: 'pending' },
-                        { date: 'Estimated: Nov 30, 2023', description: 'Case resolution', status: 'pending' }
-                    ]
-                },
-                'IR202510154672ACFF': {
-                    id: 'IR202510154672ACFF',
-                    status: 'Resolved',
-                    crimeType: 'Phishing Attack',
-                    priority: 'Medium',
-                    officer: 'Sub-Inspector Patel',
-                    dateFiled: 'October 15, 2023',
-                    timeline: [
-                        { date: 'Oct 15, 2023', description: 'Complaint registered successfully', status: 'completed' },
-                        { date: 'Oct 16, 2023', description: 'Initial review completed', status: 'completed' },
-                        { date: 'Oct 18, 2023', description: 'Assigned to investigation team', status: 'completed' },
-                        { date: 'Oct 25, 2023', description: 'Evidence collection completed', status: 'completed' },
-                        { date: 'Nov 1, 2023', description: 'Forensic analysis completed', status: 'completed' },
-                        { date: 'Nov 5, 2023', description: 'Case resolved successfully', status: 'completed' }
-                    ]
-                },
-                'IR202509287531DEGH': {
-                    id: 'IR202509287531DEGH',
-                    status: 'Open',
-                    crimeType: 'Identity Theft',
-                    priority: 'High',
-                    officer: 'Inspector Kumar',
-                    dateFiled: 'September 28, 2023',
-                    timeline: [
-                        { date: 'Sep 28, 2023', description: 'Complaint registered successfully', status: 'completed' },
-                        { date: 'Sep 30, 2023', description: 'Initial review completed', status: 'completed' },
-                        { date: 'Oct 5, 2023', description: 'Awaiting assignment to investigation team', status: 'current' },
-                        { date: 'Estimated: Oct 15, 2023', description: 'Evidence collection', status: 'pending' },
-                        { date: 'Estimated: Oct 30, 2023', description: 'Forensic analysis', status: 'pending' },
-                        { date: 'Estimated: Nov 15, 2023', description: 'Case resolution', status: 'pending' }
-                    ]
+        
+        // Add assignment info
+        if (caseData.assignments && Array.isArray(caseData.assignments)) {
+            caseData.assignments.forEach(assignment => {
+                if (assignment.assignee && assignment.assignee.name) {
+                    const assigneeType = assignment.assignee.type === 'police' ? 'Police Officer' : 'Volunteer';
+                    timeline.push({
+                        date: formatDate(assignment.assigned_date),
+                        description: `Case assigned to ${assigneeType}: ${assignment.assignee.name}`,
+                        status: 'completed'
+                    });
                 }
+            });
+        }
+        
+        // Add current status as current step
+        if (caseData.status) {
+            const statusActions = {
+                'open': 'Case is open and under initial review',
+                'pending': 'Case is pending assignment to an officer',
+                'investigating': 'Case is under active investigation',
+                'in_progress': 'Investigation is in progress',
+                'resolved': 'Case has been resolved successfully',
+                'closed': 'Case has been closed',
+                'completed': 'Case investigation completed'
             };
             
-            return sampleCases[caseId] || null;
+            timeline.push({
+                date: 'Current Status',
+                description: statusActions[caseData.status.toLowerCase()] || 'Case is being processed',
+                status: 'current'
+            });
         }
+        
+        return timeline;
+    }
 
-        // Display case details
-        function displayCaseDetails(caseData) {
-            // Show the tracking results section
-            document.getElementById('tracking-results').style.display = 'block';
+    // Get assigned officer name
+    function getAssignedOfficer(caseData) {
+        if (caseData.assignments && Array.isArray(caseData.assignments)) {
+            const policeAssignment = caseData.assignments.find(assignment => 
+                assignment.assignee && assignment.assignee.type === 'police'
+            );
+            if (policeAssignment) {
+                return policeAssignment.assignee.name;
+            }
             
-            // Update case header
-            document.getElementById('case-id-display').textContent = `Case ID: ${caseData.id}`;
-            
-            // Update status badge
-            const statusBadge = document.getElementById('case-status');
-            statusBadge.textContent = caseData.status;
-            statusBadge.className = 'status-badge'; // Reset classes
-            statusBadge.classList.add(`status-${caseData.status.toLowerCase()}`);
-            
-            // Update case details
-            document.getElementById('detail-crime-type').textContent = caseData.crimeType;
-            document.getElementById('detail-priority').textContent = caseData.priority;
-            document.getElementById('detail-officer').textContent = caseData.officer;
-            document.getElementById('detail-date').textContent = caseData.dateFiled;
-            
-            // Update timeline
-            const timelineElement = document.getElementById('case-timeline');
-            timelineElement.innerHTML = '';
-            
-            caseData.timeline.forEach(step => {
+            const volunteerAssignment = caseData.assignments.find(assignment => 
+                assignment.assignee && assignment.assignee.type === 'volunteer'
+            );
+            if (volunteerAssignment) {
+                return volunteerAssignment.assignee.name + ' (Volunteer)';
+            }
+        }
+        return 'Not assigned yet';
+    }
+
+    // Display case details from backend response
+    function displayCaseDetails(caseData) {
+        // Show the tracking results section
+        const resultsElement = document.getElementById('tracking-results');
+        resultsElement.style.display = 'block';
+        
+        // Update case header
+        document.getElementById('case-id-display').textContent = `Case ID: ${caseData.case_id || 'N/A'}`;
+        
+        // Update status badge
+        const statusBadge = document.getElementById('case-status');
+        const status = caseData.status || 'open';
+        statusBadge.textContent = getStatusText(status);
+        statusBadge.className = 'status-badge';
+        statusBadge.classList.add(getStatusClass(status));
+        
+        // Update case details
+        document.getElementById('detail-crime-type').textContent = caseData.crime_type || caseData.title || 'N/A';
+        document.getElementById('detail-priority').textContent = getPriorityText(caseData.priority);
+        document.getElementById('detail-officer').textContent = getAssignedOfficer(caseData);
+        document.getElementById('detail-date').textContent = formatDate(caseData.created_at);
+        
+        // Generate and update timeline
+        const timelineData = generateTimeline(caseData);
+        const timelineElement = document.getElementById('case-timeline');
+        timelineElement.innerHTML = '';
+        
+        if (timelineData.length === 0) {
+            timelineElement.innerHTML = `
+                <div class="timeline-step completed">
+                    <div class="timeline-date">${formatDate(caseData.created_at)}</div>
+                    <div class="timeline-content">Case created and is awaiting processing</div>
+                </div>
+                <div class="timeline-step current">
+                    <div class="timeline-date">Current</div>
+                    <div class="timeline-content">Case is in ${getStatusText(caseData.status)} status</div>
+                </div>
+            `;
+        } else {
+            timelineData.forEach(step => {
                 const stepElement = document.createElement('div');
                 stepElement.className = `timeline-step ${step.status}`;
                 
@@ -848,17 +1014,107 @@
                 
                 timelineElement.appendChild(stepElement);
             });
-            
-            // Scroll to results
-            document.getElementById('tracking-results').scrollIntoView({ behavior: 'smooth' });
         }
-
-        // Allow Enter key to trigger tracking
-        document.getElementById('case-id-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                trackComplaint();
+        
+        // Add location information if available
+        if (caseData.location || caseData.district) {
+            const locationInfo = [caseData.location, caseData.district, caseData.state]
+                .filter(Boolean)
+                .join(', ');
+            
+            if (locationInfo) {
+                const detailsContainer = document.querySelector('.case-details');
+                const locationItem = document.createElement('div');
+                locationItem.className = 'detail-item';
+                locationItem.innerHTML = `
+                    <strong>Location:</strong>
+                    <span>${locationInfo}</span>
+                `;
+                detailsContainer.appendChild(locationItem);
             }
-        });
-    </script>
+        }
+        
+        // Scroll to results
+        resultsElement.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Load user's cases on page load (for authenticated users)
+    async function loadUserCases() {
+        if (!checkAuth()) return;
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/complaints/my-complaints`, {
+                method: 'GET',
+                headers: getAuthHeaders()
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                if (result.success && result.complaints && result.complaints.length > 0) {
+                    console.log('User has cases:', result.complaints);
+                    // You could display recent cases or add suggestions here
+                    // For example, show last 3 cases in a dropdown
+                    populateRecentCases(result.complaints);
+                }
+            }
+        } catch (error) {
+            console.error('Error loading user cases:', error);
+        }
+    }
+
+    // Populate recent cases dropdown (optional feature)
+    function populateRecentCases(cases) {
+        // This is an optional enhancement - you can implement a dropdown
+        // that shows the user's recent cases for quick access
+        console.log('Recent cases available:', cases.map(c => c.case_id));
+    }
+
+    // Allow Enter key to trigger tracking
+    document.getElementById('case-id-input').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            trackComplaint();
+        }
+    });
+
+    // Check authentication and load user data on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if user is authenticated (for detailed tracking)
+        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+        if (token) {
+            console.log('User is authenticated');
+            // Load user's recent cases
+            loadUserCases();
+            
+            // Try to get user info
+            const userData = localStorage.getItem('userData');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    console.log('User logged in:', user.email);
+                } catch (error) {
+                    console.error('Error parsing user data:', error);
+                }
+            }
+        } else {
+            console.log('User is not authenticated - public tracking only');
+        }
+        
+        // Check if there's a case ID in URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const caseIdFromUrl = urlParams.get('caseId');
+        if (caseIdFromUrl) {
+            document.getElementById('case-id-input').value = caseIdFromUrl;
+            // Auto-track after a short delay
+            setTimeout(() => trackComplaint(), 1000);
+        }
+    });
+
+    // Add this function to handle case ID format validation
+    function validateCaseId(caseId) {
+        // Basic validation - adjust based on your case ID format
+        const caseIdRegex = /^[A-Z0-9]{8,20}$/;
+        return caseIdRegex.test(caseId);
+    }
+</script>
 </body>
 </html>

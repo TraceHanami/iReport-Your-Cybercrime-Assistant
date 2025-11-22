@@ -178,6 +178,49 @@
             transform: rotate(15deg);
         }
 
+        /* Logout Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--light-color);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .modal-message {
+            margin-bottom: 1.5rem;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
         /* Dashboard Hero Section */
         .dashboard-hero {
             padding: 3rem 0;
@@ -660,6 +703,10 @@
             .actions-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
         }
 
         @media (max-width: 480px) {
@@ -674,6 +721,18 @@
     </style>
 </head>
 <body>
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Confirm Logout</h3>
+            <p class="modal-message">Are you sure you want to logout from your iReport account?</p>
+            <div class="modal-actions">
+                <button class="btn btn-logout" id="confirmLogout">Yes, Logout</button>
+                <button class="btn" id="cancelLogout">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Header -->
     <header class="header">
         <div class="container">
@@ -984,80 +1043,147 @@
     </footer>
 
     <script>
-        // Theme Toggle Functionality
-        const themeToggle = document.getElementById('themeToggle');
-        const themeIcon = themeToggle.querySelector('i');
+    // Theme Toggle Functionality
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = themeToggle.querySelector('i');
+    
+    // Check for saved theme preference or default to light
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    
+    // Apply the saved theme on page load
+    if (currentTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        themeIcon.classList.remove('fa-moon');
+        themeIcon.classList.add('fa-sun');
+    }
+    
+    // Toggle theme when button is clicked
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-theme');
         
-        // Check for saved theme preference or default to light
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        
-        // Apply the saved theme on page load
-        if (currentTheme === 'dark') {
-            document.body.classList.add('dark-theme');
+        if (document.body.classList.contains('dark-theme')) {
+            localStorage.setItem('theme', 'dark');
             themeIcon.classList.remove('fa-moon');
             themeIcon.classList.add('fa-sun');
+        } else {
+            localStorage.setItem('theme', 'light');
+            themeIcon.classList.remove('fa-sun');
+            themeIcon.classList.add('fa-moon');
+        }
+    });
+
+    // ✅ CORRECTED Logout functionality with modal
+    const logoutBtn = document.getElementById('logoutBtn');
+    const logoutModal = document.getElementById('logoutModal');
+    const confirmLogout = document.getElementById('confirmLogout');
+    const cancelLogout = document.getElementById('cancelLogout');
+
+    // Show logout confirmation modal
+    logoutBtn.addEventListener('click', () => {
+        logoutModal.style.display = 'flex';
+    });
+
+    // Confirm logout
+    confirmLogout.addEventListener('click', () => {
+        logout();
+    });
+
+    // Cancel logout
+    cancelLogout.addEventListener('click', () => {
+        logoutModal.style.display = 'none';
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (event) => {
+        if (event.target === logoutModal) {
+            logoutModal.style.display = 'none';
+        }
+    });
+
+    // Logout function
+    function logout() {
+        // Clear all authentication data
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('isDemoUser');
+        localStorage.removeItem('demoMode');
+        
+        // Clear session storage
+        sessionStorage.clear();
+        
+        console.log('🔐 User logged out, all tokens cleared');
+        
+        // Show logout confirmation
+        alert('You have been logged out successfully.');
+        
+        // Redirect to login page
+        window.location.href = 'login.html';
+    }
+
+    // ✅ Check authentication status on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('token') || localStorage.getItem('authToken');
+        const user = localStorage.getItem('user') || localStorage.getItem('currentUser');
+        
+        console.log('🔍 Checking authentication status...');
+        console.log('Token exists:', !!token);
+        console.log('User data exists:', !!user);
+        
+        if (!token || !user) {
+            console.log('❌ User not authenticated, redirecting to login...');
+            alert('Please login to access the dashboard.');
+            window.location.href = 'login.html';
+            return;
         }
         
-        // Toggle theme when button is clicked
-        themeToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-theme');
+        try {
+            const userData = JSON.parse(user);
+            console.log('✅ User authenticated:', userData.email || userData.name);
             
-            if (document.body.classList.contains('dark-theme')) {
-                localStorage.setItem('theme', 'dark');
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            } else {
-                localStorage.setItem('theme', 'light');
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            }
-        });
+            // You can display user info in the dashboard if needed
+            // document.getElementById('userWelcome').textContent = `Welcome, ${userData.name || userData.full_name || userData.email}`;
+            
+        } catch (error) {
+            console.error('❌ Error parsing user data:', error);
+            alert('Session expired. Please login again.');
+            window.location.href = 'login.html';
+        }
 
-        // Logout functionality
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            if (confirm('Are you sure you want to logout?')) {
-                // In a real application, you would make an API call to invalidate the session
-                // For this demo, we'll just redirect to the login page
-                alert('You have been logged out successfully.');
-                window.location.href = 'login.html';
-            }
-        });
-
-        // Card click handlers
-        document.querySelectorAll('.dashboard-card').forEach(card => {
-            card.addEventListener('click', function() {
-                // Add a visual feedback
-                this.style.transform = 'scale(0.98)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 150);
+        // Animate stats on scroll
+        const observerOptions = {
+            threshold: 0.5
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
             });
+        }, observerOptions);
+        
+        // Observe stat cards for animation
+        document.querySelectorAll('.stat-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(card);
         });
+    });
 
-        // Add some interactive elements
-        document.addEventListener('DOMContentLoaded', function() {
-            // Animate stats on scroll
-            const observerOptions = {
-                threshold: 0.5
-            };
-            
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, observerOptions);
-            
-            // Observe stat cards for animation
-            document.querySelectorAll('.stat-card').forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                observer.observe(card);
-            });
+    // Card click handlers
+    document.querySelectorAll('.dashboard-card').forEach(card => {
+        card.addEventListener('click', function() {
+            // Add a visual feedback
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
         });
-    </script>
+    });
+</script>
 </body>
 </html>

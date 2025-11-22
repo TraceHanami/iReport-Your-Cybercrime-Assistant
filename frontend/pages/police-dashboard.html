@@ -24,6 +24,9 @@
             --women-crime-color: #e91e63;
             --financial-fraud-color: #ff9800;
             --other-crime-color: #2196f3;
+            --success-color: #4CAF50;
+            --error-color: #f44336;
+            --demo-color: #9C27B0;
             --police-blue: #1a237e;
             --police-light-blue: #283593;
         }
@@ -56,6 +59,27 @@
             color: var(--text-color);
             line-height: 1.6;
             transition: var(--transition);
+        }
+
+        .demo-indicator {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--demo-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            z-index: 999;
+            box-shadow: var(--shadow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         /* Header Top Styles */
@@ -266,37 +290,231 @@
             color: var(--text-color);
         }
 
-        .officer-info {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            background: var(--card-bg);
-            padding: 0.8rem 1.2rem;
-            border-radius: 8px;
-            border: 1px solid var(--secondary-color);
+        .demo-badge {
+            background: var(--demo-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+            vertical-align: middle;
         }
 
-        .officer-avatar {
-            width: 40px;
-            height: 40px;
+        /* Profile Section Styles */
+        .profile-section {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
+            margin: 0 auto 1.5rem;
             background: var(--police-blue);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            font-size: 3rem;
             font-weight: bold;
+            position: relative;
+            overflow: hidden;
         }
 
-        .officer-details h4 {
-            margin-bottom: 0.2rem;
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .officer-details p {
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-role {
+            color: var(--text-color);
+            opacity: 0.7;
+            margin-bottom: 1.5rem;
+            padding: 0.3rem 1rem;
+            background: var(--secondary-color);
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 1.5rem 0;
+            padding: 1rem 0;
+            border-top: 1px solid var(--secondary-color);
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .profile-details {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--secondary-color);
+        }
+
+        .profile-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-tab {
+            padding: 1rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .profile-tab.active {
+            border-bottom-color: var(--police-blue);
+            color: var(--police-blue);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--police-blue);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .security-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border: 1px solid var(--secondary-color);
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+
+        .security-info h4 {
+            margin-bottom: 0.3rem;
+        }
+
+        .security-info p {
             font-size: 0.9rem;
-            opacity: 0.8;
+            opacity: 0.7;
         }
 
+        .activity-log {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            display: flex;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            color: white;
+            background: var(--police-blue);
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-title {
+            font-weight: 500;
+            margin-bottom: 0.3rem;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        /* Dashboard Stats */
         .dashboard-stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -359,6 +577,7 @@
             color: #f44336;
         }
 
+        /* Charts Section */
         .dashboard-charts {
             display: grid;
             grid-template-columns: 2fr 1fr;
@@ -380,66 +599,14 @@
             color: var(--text-color);
         }
 
-        .recent-activity {
-            background: var(--card-bg);
-            border-radius: 8px;
-            padding: 1.5rem;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--secondary-color);
-            margin-bottom: 2rem;
-        }
-
-        .activity-list {
-            list-style: none;
-        }
-
-        .activity-item {
-            display: flex;
-            padding: 1rem 0;
-            border-bottom: 1px solid var(--secondary-color);
-        }
-
-        .activity-item:last-child {
-            border-bottom: none;
-        }
-
-        .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            color: white;
-        }
-
-        .activity-content {
-            flex: 1;
-        }
-
-        .activity-title {
-            font-weight: 500;
-            margin-bottom: 0.3rem;
-        }
-
-        .activity-time {
-            font-size: 0.8rem;
-            opacity: 0.7;
-        }
-
-        .dashboard-tables {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 1.5rem;
-        }
-
+        /* Tables */
         .table-container {
             background: var(--card-bg);
             border-radius: 8px;
             padding: 1.5rem;
             box-shadow: var(--shadow);
             border: 1px solid var(--secondary-color);
+            margin-bottom: 2rem;
         }
 
         .table-header {
@@ -482,14 +649,14 @@
             color: #1565c0;
         }
 
-        .status-investigating {
+        .status-assigned {
             background: #fff3e0;
             color: #ef6c00;
         }
 
-        .status-pending {
-            background: #fff3cd;
-            color: #856404;
+        .status-investigating {
+            background: #d1ecf1;
+            color: #0c5460;
         }
 
         .status-resolved {
@@ -512,32 +679,79 @@
             font-weight: 600;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
+        /* Filters */
+        .filters-section {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--card-bg);
+            border-radius: 8px;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .filter-group select {
+            padding: 0.5rem;
+            border: 1px solid var(--secondary-color);
             border-radius: 4px;
-            font-size: 0.75rem;
-            font-weight: 600;
+            background: var(--bg-color);
+            color: var(--text-color);
         }
 
-        .badge-primary {
-            background: var(--police-blue);
-            color: white;
+        /* Tabs */
+        .tabs {
+            display: flex;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--secondary-color);
         }
 
-        .badge-success {
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-color);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .tab-btn.active {
+            border-bottom-color: var(--police-blue);
+            color: var(--police-blue);
+        }
+
+        .btn-small {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .btn-success {
             background: #4caf50;
             color: white;
         }
 
-        .badge-warning {
-            background: #ff9800;
+        .btn-success:hover {
+            background: #45a049;
+        }
+
+        .btn-danger {
+            background: #f44336;
             color: white;
         }
 
-        .badge-danger {
-            background: #f44336;
-            color: white;
+        .btn-danger:hover {
+            background: #da190b;
         }
 
         /* Footer */
@@ -587,8 +801,135 @@
             border-top: 1px solid var(--secondary-color);
         }
 
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: var(--shadow);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background-color: var(--success-color);
+        }
+
+        .notification.error {
+            background-color: var(--error-color);
+        }
+
+        .notification.info {
+            background-color: var(--other-crime-color);
+        }
+
+        .notification.demo {
+            background-color: var(--demo-color);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--secondary-color);
+            padding-bottom: 1rem;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        .case-details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--secondary-color);
+        }
+
+        .detail-item label {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .detail-item span {
+            color: var(--text-color);
+        }
+
+        .case-description {
+            margin-bottom: 1.5rem;
+        }
+
+        .case-description h4 {
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--secondary-color);
+        }
+
         /* Responsive Design */
         @media (max-width: 1024px) {
+            .profile-section {
+                grid-template-columns: 1fr;
+            }
+            
             .dashboard-charts {
                 grid-template-columns: 1fr;
             }
@@ -628,66 +969,55 @@
                 grid-template-columns: 1fr;
             }
             
-            .dashboard-tables {
+            .form-row {
                 grid-template-columns: 1fr;
             }
             
-            .dashboard-header {
+            .demo-indicator {
+                top: 120px;
+                right: 10px;
+                left: 10px;
+                text-align: center;
+            }
+
+            .modal-footer {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header Top -->
+    <div class="notification" id="notification"></div>
+
+    <div class="demo-indicator" id="demoIndicator" style="display: none;">
+        🚀 DEMO MODE - Test Data
+    </div>
+
     <div class="header-top">
         <div class="container">
             <div class="logo-group">
                 <div class="logo">
                     <svg width="50" height="50" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Shield Base with Indian Colors -->
                         <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="#FF9933" stroke="#000080" stroke-width="1.5"/>
-                        
-                        <!-- White Middle Section -->
                         <path d="M30 8 C38 8 45 12 48 18 L30 52 L12 18 C15 12 22 8 30 8 Z" fill="#FFFFFF"/>
-                        
-                        <!-- Ashoka Chakra -->
                         <circle cx="30" cy="30" r="8" fill="#000080" stroke="#FFFFFF" stroke-width="0.5"/>
-                        
-                        <!-- 24 Spokes (Simplified) -->
                         <g stroke="#FFFFFF" stroke-width="0.8">
-                            <!-- Main Cross -->
                             <line x1="30" y1="22" x2="30" y2="38"/>
                             <line x1="22" y1="30" x2="38" y2="30"/>
-                            
-                            <!-- Diagonal Spokes -->
                             <line x1="25" y1="25" x2="35" y2="35"/>
                             <line x1="35" y1="25" x2="25" y2="35"/>
-                            
-                            <!-- Additional Spokes -->
                             <line x1="27" y1="23" x2="33" y2="37"/>
                             <line x1="33" y1="23" x2="27" y2="37"/>
                             <line x1="23" y1="27" x2="37" y2="33"/>
                             <line x1="37" y1="27" x2="23" y2="33"/>
                         </g>
-                        
-                        <!-- Cyber Security Elements -->
-                        <!-- Digital Lock -->
                         <rect x="26" y="42" width="8" height="6" fill="#000080" stroke="#FFFFFF" stroke-width="0.5" rx="1"/>
                         <circle cx="30" cy="44" r="1" fill="#FFFFFF"/>
                         <rect x="28" y="45" width="4" height="2" fill="#FFFFFF" rx="0.5"/>
-                        
-                        <!-- Binary Code Pattern -->
                         <text x="18" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">101</text>
                         <text x="40" y="18" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">010</text>
                         <text x="15" y="48" font-size="2.5" fill="#000080" font-family="monospace" opacity="0.7">110</text>
-                        
-                        <!-- Shield Border -->
                         <path d="M30 5 C40 5 48 10 52 18 L30 55 L8 18 C12 10 20 5 30 5 Z" fill="none" stroke="#000080" stroke-width="1.5"/>
-                        
-                        <!-- Cyber Circuit Lines -->
                         <path d="M15 12 L20 12 L20 15 L25 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
                         <path d="M45 12 L40 12 L40 15 L35 15" stroke="#000080" stroke-width="0.8" fill="none" opacity="0.6"/>
                     </svg>
@@ -702,6 +1032,7 @@
                 <div class="links">
                     <a href="index.html">Back to Portal</a>
                     <a href="#" id="profile-link">My Profile</a>
+                    <a href="#" onclick="logout()" style="color: #ff3b30;">Logout</a>
                 </div>
                 <button class="btn btn-police" onclick="window.open('complaint.html')">🚨 New Case</button>
                 <button class="theme-toggle" id="themeToggle">
@@ -711,277 +1042,670 @@
         </div>
     </div>
 
-    <!-- Main Navigation -->
     <div class="main-nav">
         <div class="container">
             <ul>
                 <li><a href="#" class="active">Dashboard</a></li>
-                <li><a href="#">My Cases</a></li>
-                <li><a href="#">Investigations</a></li>
-                <li><a href="#">Evidence</a></li>
-                <li><a href="#">Reports</a></li>
-                <li><a href="#">Team</a></li>
+                <li><a href="#" onclick="loadCasesPage()">My Cases</a></li>
+                <li><a href="#" onclick="loadInvestigationsPage()">Investigations</a></li>
+                <li><a href="#" onclick="loadAnalyticsPage()">Analytics</a></li>
+                <li><a href="#" onclick="loadReportsPage()">Reports</a></li>
+                <li><a href="#" onclick="loadTeamPage()">Team</a></li>
             </ul>
         </div>
     </div>
 
-    <!-- Dashboard Layout -->
     <div class="dashboard-container">
-        <!-- Sidebar -->
         <div class="sidebar">
             <ul class="sidebar-menu">
-                <li><a href="#" class="active"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                <li><a href="#"><i class="fas fa-exclamation-circle"></i> New Cases</a></li>
-                <li><a href="#"><i class="fas fa-search"></i> My Investigations</a></li>
-                <li><a href="#"><i class="fas fa-tasks"></i> Assigned Cases</a></li>
-                <li><a href="#"><i class="fas fa-check-circle"></i> Closed Cases</a></li>
-                <li><a href="#"><i class="fas fa-file-alt"></i> Case Reports</a></li>
-                <li><a href="#"><i class="fas fa-user-shield"></i> Suspect Database</a></li>
-                <li><a href="#"><i class="fas fa-print"></i> Generate FIR</a></li>
-                <li><a href="#"><i class="fas fa-calendar-alt"></i> Court Dates</a></li>
-                <li><a href="#"><i class="fas fa-chart-line"></i> Performance</a></li>
+                <li><a href="#" class="active" onclick="showSection('profile')"><i class="fas fa-user"></i> Profile</a></li>
+                <li><a href="#" onclick="showSection('cases')"><i class="fas fa-exclamation-circle"></i> My Cases</a></li>
+                <li><a href="#" onclick="showSection('investigations')"><i class="fas fa-search"></i> Investigations</a></li>
+                <li><a href="#" onclick="showSection('evidence')"><i class="fas fa-folder-open"></i> Evidence</a></li>
+                <li><a href="#" onclick="showSection('reports')"><i class="fas fa-file-alt"></i> Case Reports</a></li>
+                <li><a href="#" onclick="showSection('performance')"><i class="fas fa-chart-line"></i> Performance</a></li>
+                <li><a href="#" onclick="showSection('analytics')"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+                <li><a href="#" onclick="showSection('tasks')"><i class="fas fa-tasks"></i> Tasks</a></li>
             </ul>
         </div>
 
         <!-- Dashboard Content -->
-        <div class="dashboard-content">
-            <div class="dashboard-header">
-                <h1 class="dashboard-title">Police Dashboard</h1>
-                <div class="officer-info">
-                    <div class="officer-avatar">RS</div>
-                    <div class="officer-details">
-                        <h4>Inspector Rajesh Sharma</h4>
-                        <p>Cyber Crime Unit | ID: PC-7824</p>
+        <div class="dashboard-content" id="dashboardContent">
+            <!-- Profile Section -->
+            <div id="section-profile" class="section-content">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title" id="dashboardTitle">
+                        Police Officer Profile
+                        <span class="demo-badge" id="demoBadge" style="display: none;">DEMO</span>
+                    </h1>
+                    <div class="dashboard-actions">
+                        <button class="btn" id="exportBtn"><i class="fas fa-download"></i> Export Data</button>
+                        <button class="btn" id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    </div>
+                </div>
+
+                <div class="profile-section">
+                    <!-- Profile Card -->
+                    <div class="profile-card">
+                        <div class="profile-avatar" id="profileAvatar">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <div class="profile-name" id="profileName">Loading...</div>
+                        <div class="profile-role" id="profileRole">Police Officer</div>
+                        
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-value" id="profileActiveCases">0</span>
+                                <span class="stat-label">Active Cases</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="profileSolvedCases">0</span>
+                                <span class="stat-label">Solved Cases</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="profilePerformance">0%</span>
+                                <span class="stat-label">Performance</span>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-actions">
+                            <button class="btn btn-police" onclick="editProfile()"><i class="fas fa-edit"></i> Edit Profile</button>
+                            <button class="btn btn-police" onclick="changePassword()"><i class="fas fa-key"></i> Change Password</button>
+                            <button class="btn btn-police" onclick="updateAvailability()"><i class="fas fa-user-clock"></i> Update Availability</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Profile Details -->
+                    <div class="profile-details">
+                        <div class="profile-tabs">
+                            <button class="profile-tab active" onclick="openProfileTab('personal')">Personal Info</button>
+                            <button class="profile-tab" onclick="openProfileTab('professional')">Professional Info</button>
+                            <button class="profile-tab" onclick="openProfileTab('security')">Security</button>
+                            <button class="profile-tab" onclick="openProfileTab('activity')">Activity Log</button>
+                        </div>
+                        
+                        <!-- Personal Info Tab -->
+                        <div id="profile-tab-personal" class="tab-content active">
+                            <form id="profileForm">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="firstName">First Name</label>
+                                        <input type="text" id="firstName" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="lastName">Last Name</label>
+                                        <input type="text" id="lastName" class="form-control" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email">Email Address</label>
+                                    <input type="email" id="email" class="form-control" required>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="phone">Phone Number</label>
+                                        <input type="tel" id="phone" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="badgeNumber">Badge Number</label>
+                                        <input type="text" id="badgeNumber" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="address">Address</label>
+                                    <textarea id="address" class="form-control" rows="3"></textarea>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="city">City</label>
+                                        <input type="text" id="city" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="state">State</label>
+                                        <input type="text" id="state" class="form-control">
+                                    </div>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-police" style="width: 100%;">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </form>
+                        </div>
+                        
+                        <!-- Professional Info Tab -->
+                        <div id="profile-tab-professional" class="tab-content">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="rank">Rank</label>
+                                    <input type="text" id="rank" class="form-control" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="station">Police Station</label>
+                                    <input type="text" id="station" class="form-control" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="department">Department</label>
+                                    <input type="text" id="department" class="form-control" value="Cyber Crime Unit" readonly>
+                                </div>
+                                <div class="form-group">
+                                    <label for="joiningDate">Joining Date</label>
+                                    <input type="text" id="joiningDate" class="form-control" readonly>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="specialization">Specialization</label>
+                                <input type="text" id="specialization" class="form-control" value="Cyber Crime Investigation">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="currentCaseLoad">Current Case Load</label>
+                                <input type="text" id="currentCaseLoad" class="form-control" readonly>
+                            </div>
+                            
+                            <div class="security-item">
+                                <div class="security-info">
+                                    <h4>Availability Status</h4>
+                                    <p>Current status: <span id="availabilityStatus">Active</span></p>
+                                </div>
+                                <button class="btn btn-police" onclick="toggleAvailability()">Toggle</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Security Tab -->
+                        <div id="profile-tab-security" class="tab-content">
+                            <div class="security-item">
+                                <div class="security-info">
+                                    <h4>Password</h4>
+                                    <p>Last changed: <span id="lastPasswordChange">Never</span></p>
+                                </div>
+                                <button class="btn btn-police" onclick="changePassword()">Change</button>
+                            </div>
+                            
+                            <div class="security-item">
+                                <div class="security-info">
+                                    <h4>Two-Factor Authentication</h4>
+                                    <p>Add an extra layer of security to your account</p>
+                                </div>
+                                <button class="btn btn-police" id="twoFactorToggle" onclick="toggleTwoFactor()">Enable</button>
+                            </div>
+                            
+                            <div class="security-item">
+                                <div class="security-info">
+                                    <h4>Login Sessions</h4>
+                                    <p>Manage your active login sessions</p>
+                                </div>
+                                <button class="btn btn-police" onclick="viewSessions()">View</button>
+                            </div>
+                        </div>
+                        
+                        <!-- Activity Log Tab -->
+                        <div id="profile-tab-activity" class="tab-content">
+                            <div class="activity-log" id="profileActivityLog">
+                                <div class="activity-item">
+                                    <div class="activity-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Profile loaded</div>
+                                        <div class="activity-time">Just now</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Stats Cards -->
-            <div class="dashboard-stats">
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">My Active Cases</div>
-                        <div class="stat-card-icon" style="background: #2196f3;">
-                            <i class="fas fa-folder-open"></i>
+            <!-- My Cases Section -->
+            <div id="section-cases" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">My Cases</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn btn-police" onclick="refreshCases()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    </div>
+                </div>
+                
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Active Cases</div>
+                            <div class="stat-card-icon" style="background: #2196f3;">
+                                <i class="fas fa-folder-open"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="activeCasesCount">0</div>
+                        <div class="stat-card-change positive">
+                            <i class="fas fa-arrow-up"></i> <span id="newCasesCount">0</span> new this week
                         </div>
                     </div>
-                    <div class="stat-card-value">18</div>
-                    <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 3 new this week
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Cases Solved</div>
+                            <div class="stat-card-icon" style="background: #4caf50;">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="solvedCasesCount">0</div>
+                        <div class="stat-card-change positive">
+                            <i class="fas fa-arrow-up"></i> <span id="monthlySolved">0</span> this month
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Pending Actions</div>
+                            <div class="stat-card-icon" style="background: #ff9800;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="pendingActionsCount">0</div>
+                        <div class="stat-card-change negative">
+                            <i class="fas fa-arrow-up"></i> <span id="urgentActions">0</span> urgent
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Success Rate</div>
+                            <div class="stat-card-icon" style="background: #9c27b0;">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="successRateValue">0%</div>
+                        <div class="stat-card-change positive">
+                            <i class="fas fa-arrow-up"></i> <span id="successChange">0%</span> from last quarter
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filters-section">
+                    <div class="filter-group">
+                        <label>Status:</label>
+                        <select id="statusFilter" onchange="filterCases()">
+                            <option value="all">All Status</option>
+                            <option value="assigned">Assigned</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="pending">Pending</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Priority:</label>
+                        <select id="priorityFilter" onchange="filterCases()">
+                            <option value="all">All Priorities</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Crime Type:</label>
+                        <select id="crimeTypeFilter" onchange="filterCases()">
+                            <option value="all">All Types</option>
+                            <option value="phishing">Phishing</option>
+                            <option value="financial_fraud">Financial Fraud</option>
+                            <option value="identity_theft">Identity Theft</option>
+                            <option value="social_media">Social Media</option>
+                        </select>
                     </div>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Cases Solved</div>
-                        <div class="stat-card-icon" style="background: #4caf50;">
-                            <i class="fas fa-check-circle"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card-value">42</div>
-                    <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 5 this month
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Case ID</th>
+                                <th>Title</th>
+                                <th>Type</th>
+                                <th>Priority</th>
+                                <th>Status</th>
+                                <th>Assigned Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="casesTable">
+                            <tr>
+                                <td colspan="7" style="text-align: center;">Loading cases...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Investigations Section -->
+            <div id="section-investigations" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Active Investigations</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn btn-police" onclick="refreshInvestigations()"><i class="fas fa-sync-alt"></i> Refresh</button>
                     </div>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Pending Actions</div>
-                        <div class="stat-card-icon" style="background: #ff9800;">
-                            <i class="fas fa-clock"></i>
-                        </div>
-                    </div>
-                    <div class="stat-card-value">7</div>
-                    <div class="stat-card-change negative">
-                        <i class="fas fa-arrow-up"></i> 2 urgent
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="openInvestigationTab('active')">Active Investigations</button>
+                    <button class="tab-btn" onclick="openInvestigationTab('evidence')">Evidence Collection</button>
+                    <button class="tab-btn" onclick="openInvestigationTab('updates')">Case Updates</button>
+                </div>
+
+                <!-- Active Investigations Tab -->
+                <div id="investigation-tab-active" class="tab-content active">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Case ID</th>
+                                    <th>Title</th>
+                                    <th>Priority</th>
+                                    <th>Last Update</th>
+                                    <th>Next Action</th>
+                                    <th>Progress</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="investigationsTable">
+                                <tr>
+                                    <td colspan="7" style="text-align: center;">Loading investigations...</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-                <div class="stat-card">
-                    <div class="stat-card-header">
-                        <div class="stat-card-title">Success Rate</div>
-                        <div class="stat-card-icon" style="background: #9c27b0;">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
+                <!-- Evidence Collection Tab -->
+                <div id="investigation-tab-evidence" class="tab-content">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Case ID</th>
+                                    <th>Evidence Type</th>
+                                    <th>Collected Date</th>
+                                    <th>Status</th>
+                                    <th>Location</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="evidenceTable">
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">Loading evidence...</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="stat-card-value">87%</div>
-                    <div class="stat-card-change positive">
-                        <i class="fas fa-arrow-up"></i> 5% from last quarter
+                </div>
+
+                <!-- Case Updates Tab -->
+                <div id="investigation-tab-updates" class="tab-content">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Case ID</th>
+                                    <th>Update Type</th>
+                                    <th>Description</th>
+                                    <th>Updated By</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="caseUpdatesTable">
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">Loading case updates...</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <!-- Charts Section -->
-            <div class="dashboard-charts">
-                <div class="chart-container">
-                    <h3 class="chart-title">My Case Types Distribution</h3>
-                    <canvas id="caseTypesChart"></canvas>
+            <!-- Performance Section -->
+            <div id="section-performance" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Performance Metrics</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn btn-police" onclick="refreshPerformance()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    </div>
                 </div>
 
-                <div class="chart-container">
-                    <h3 class="chart-title">Monthly Performance</h3>
-                    <canvas id="performanceChart"></canvas>
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Performance Score</div>
+                            <div class="stat-card-icon" style="background: #9c27b0;">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="performanceScore">0%</div>
+                        <div class="stat-card-change positive">
+                            <i class="fas fa-arrow-up"></i> <span id="performanceChange">0%</span> from last month
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Resolution Rate</div>
+                            <div class="stat-card-icon" style="background: #4caf50;">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="resolutionRate">0%</div>
+                        <div class="stat-card-change positive">
+                            <i class="fas fa-arrow-up"></i> Above station average
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Avg Resolution Time</div>
+                            <div class="stat-card-icon" style="background: #2196f3;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="avgResolutionTime">0 days</div>
+                        <div class="stat-card-change positive">
+                            <i class="fas fa-arrow-down"></i> Faster than average
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Team Rank</div>
+                            <div class="stat-card-icon" style="background: #ff9800;">
+                                <i class="fas fa-trophy"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="teamRank">#0</div>
+                        <div class="stat-card-change positive">
+                            <i class="fas fa-arrow-up"></i> Top performer
+                        </div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Recent Activity -->
-            <div class="recent-activity">
-                <h3 class="chart-title">Recent Activity & Alerts</h3>
-                <ul class="activity-list">
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #2196f3;">
-                            <i class="fas fa-plus"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">New case assigned - Financial Fraud (CR-2023-0891)</div>
-                            <div class="activity-time">2 hours ago | <span class="priority-high">High Priority</span></div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #4caf50;">
-                            <i class="fas fa-check"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Case #CR-2023-0782 resolved successfully</div>
-                            <div class="activity-time">1 day ago | <span class="badge badge-success">Closed</span></div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #ff9800;">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Evidence review required for case #CR-2023-0854</div>
-                            <div class="activity-time">1 day ago | <span class="badge badge-warning">Pending</span></div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #9c27b0;">
-                            <i class="fas fa-gavel"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Court hearing scheduled for case #CR-2023-0721</div>
-                            <div class="activity-time">2 days ago | <span class="badge badge-primary">Nov 25, 2023</span></div>
-                        </div>
-                    </li>
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: #f44336;">
-                            <i class="fas fa-user-clock"></i>
-                        </div>
-                        <div class="activity-content">
-                            <div class="activity-title">Suspect interrogation scheduled for tomorrow</div>
-                            <div class="activity-time">3 days ago | <span class="badge badge-danger">Urgent</span></div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+                <div class="dashboard-charts">
+                    <div class="chart-container">
+                        <h3 class="chart-title">Monthly Performance Trend</h3>
+                        <canvas id="performanceChart"></canvas>
+                    </div>
 
-            <!-- Tables Section -->
-            <div class="dashboard-tables">
+                    <div class="chart-container">
+                        <h3 class="chart-title">Case Type Distribution</h3>
+                        <canvas id="caseTypesChart"></canvas>
+                    </div>
+                </div>
+
                 <div class="table-container">
                     <div class="table-header">
-                        <h3 class="table-title">My Active Cases</h3>
-                        <a href="#" class="btn btn-police">View All</a>
+                        <h3 class="table-title">Recent Case Resolutions</h3>
+                        <button class="btn btn-police" onclick="viewAllResolutions()">View All</button>
                     </div>
                     <table>
                         <thead>
                             <tr>
                                 <th>Case ID</th>
                                 <th>Type</th>
-                                <th>Priority</th>
-                                <th>Status</th>
-                                <th>Assigned Date</th>
+                                <th>Resolution Time</th>
+                                <th>Complexity</th>
+                                <th>Rating</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="resolutionsTable">
                             <tr>
-                                <td>CR-2023-0891</td>
-                                <td>Financial Fraud</td>
-                                <td class="priority-high">High</td>
-                                <td><span class="status status-new">New</span></td>
-                                <td>2023-11-15</td>
-                            </tr>
-                            <tr>
-                                <td>CR-2023-0885</td>
-                                <td>Identity Theft</td>
-                                <td class="priority-high">High</td>
-                                <td><span class="status status-investigating">Investigating</span></td>
-                                <td>2023-11-12</td>
-                            </tr>
-                            <tr>
-                                <td>CR-2023-0879</td>
-                                <td>Phishing</td>
-                                <td class="priority-medium">Medium</td>
-                                <td><span class="status status-investigating">Investigating</span></td>
-                                <td>2023-11-10</td>
-                            </tr>
-                            <tr>
-                                <td>CR-2023-0872</td>
-                                <td>Social Media Harassment</td>
-                                <td class="priority-medium">Medium</td>
-                                <td><span class="status status-pending">Evidence Review</span></td>
-                                <td>2023-11-08</td>
-                            </tr>
-                            <tr>
-                                <td>CR-2023-0865</td>
-                                <td>Online Shopping Fraud</td>
-                                <td class="priority-low">Low</td>
-                                <td><span class="status status-pending">Awaiting Info</span></td>
-                                <td>2023-11-05</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="table-container">
-                    <div class="table-header">
-                        <h3 class="table-title">Upcoming Tasks</h3>
-                        <a href="#" class="btn btn-police">View Calendar</a>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Task</th>
-                                <th>Case ID</th>
-                                <th>Due Date</th>
-                                <th>Priority</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Suspect Interrogation</td>
-                                <td>CR-2023-0885</td>
-                                <td>2023-11-17</td>
-                                <td class="priority-high">High</td>
-                            </tr>
-                            <tr>
-                                <td>Evidence Analysis Report</td>
-                                <td>CR-2023-0879</td>
-                                <td>2023-11-18</td>
-                                <td class="priority-medium">Medium</td>
-                            </tr>
-                            <tr>
-                                <td>Witness Statement Recording</td>
-                                <td>CR-2023-0872</td>
-                                <td>2023-11-19</td>
-                                <td class="priority-medium">Medium</td>
-                            </tr>
-                            <tr>
-                                <td>FIR Submission</td>
-                                <td>CR-2023-0891</td>
-                                <td>2023-11-20</td>
-                                <td class="priority-high">High</td>
-                            </tr>
-                            <tr>
-                                <td>Court Preparation</td>
-                                <td>CR-2023-0721</td>
-                                <td>2023-11-24</td>
-                                <td class="priority-high">High</td>
+                                <td colspan="5" style="text-align: center;">Loading resolutions...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            <!-- Analytics Section -->
+            <div id="section-analytics" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Crime Analytics</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn btn-police" onclick="refreshAnalytics()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-charts">
+                    <div class="chart-container">
+                        <h3 class="chart-title">Crime Heatmap - My Area</h3>
+                        <canvas id="heatmapChart"></canvas>
+                    </div>
+
+                    <div class="chart-container">
+                        <h3 class="chart-title">High Risk Areas</h3>
+                        <div id="highRiskAreas">
+                            <p>Loading risk assessment...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container full-width">
+                    <h3 class="chart-title">Crime Trends - Last 90 Days</h3>
+                    <canvas id="trendsChart"></canvas>
+                </div>
+
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3 class="table-title">Predictive Insights</h3>
+                        <button class="btn btn-police" onclick="generatePredictiveReport()">Generate Report</button>
+                    </div>
+                    <div id="predictiveInsights">
+                        <p>Loading predictive insights...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div id="section-reports" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Case Reports</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn btn-police" onclick="refreshReports()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Report Name</th>
+                                <th>Case ID</th>
+                                <th>Type</th>
+                                <th>Generated Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="reportsTable">
+                            <tr>
+                                <td colspan="6" style="text-align: center;">Loading reports...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tasks Section -->
+            <div id="section-tasks" class="section-content" style="display: none;">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">My Tasks</h1>
+                    <div class="dashboard-actions">
+                        <button class="btn btn-police" onclick="refreshTasks()"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    </div>
+                </div>
+
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Pending Tasks</div>
+                            <div class="stat-card-icon" style="background: #ff9800;">
+                                <i class="fas fa-tasks"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="pendingTasks">0</div>
+                        <div class="stat-card-change negative">
+                            <i class="fas fa-arrow-up"></i> <span id="overdueTasks">0</span> overdue
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Completed Today</div>
+                            <div class="stat-card-icon" style="background: #4caf50;">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="completedTasks">0</div>
+                        <div class="stat-card-change positive">
+                            <i class="fas fa-arrow-up"></i> Good progress
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <div class="stat-card-title">Upcoming Deadlines</div>
+                            <div class="stat-card-icon" style="background: #f44336;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card-value" id="upcomingDeadlines">0</div>
+                        <div class="stat-card-change negative">
+                            <i class="fas fa-bell"></i> Needs attention
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Task</th>
+                                <th>Case ID</th>
+                                <th>Priority</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tasksTable">
+                            <tr>
+                                <td colspan="6" style="text-align: center;">Loading tasks...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -993,9 +1717,9 @@
                     <h3>Quick Links</h3>
                     <ul>
                         <li><a href="index.html">Main Portal</a></li>
-                        <li><a href="#">Police Dashboard</a></li>
-                        <li><a href="#">Case Management</a></li>
-                        <li><a href="#">Resources</a></li>
+                        <li><a href="#" onclick="showSection('profile')">My Profile</a></li>
+                        <li><a href="#" onclick="showSection('cases')">My Cases</a></li>
+                        <li><a href="#" onclick="showSection('reports')">Reports</a></li>
                     </ul>
                 </div>
                 
@@ -1023,7 +1747,7 @@
                     <h3>System Info</h3>
                     <ul>
                         <li>Version: 2.4.1</li>
-                        <li>Last Login: 2023-11-15 14:30</li>
+                        <li>Last Login: <span id="lastLogin">2023-11-15 14:30</span></li>
                         <li>Session: Active</li>
                         <li>Department: Cyber Crime Unit</li>
                     </ul>
@@ -1032,12 +1756,1266 @@
             
             <div class="copyright">
                 <p>&copy; 2023 iReport - Your Cyber Crime Assistant Portal Coordination Centre. All rights reserved.</p>
-                <p>Police Dashboard - Restricted Access | Logged in as: Inspector Rajesh Sharma</p>
+                <p>Police Dashboard - Restricted Access</p>
             </div>
         </div>
     </footer>
 
     <script>
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:5000/api';
+        let authToken = localStorage.getItem('authToken') || localStorage.getItem('token');
+        let currentUser = JSON.parse(localStorage.getItem('currentUser') || localStorage.getItem('user') || '{}');
+        let isDemoMode = localStorage.getItem('isDemoUser') === 'true' || localStorage.getItem('demoMode') === 'true';
+        let charts = {};
+        let currentSection = 'profile';
+
+        // Police Dashboard API Service
+        const PoliceAPI = {
+            // Dashboard Data
+            async getDashboardData() {
+                return await apiRequest('/police/dashboard');
+            },
+
+            // Cases Management
+            async getCases(status = 'all') {
+                return await apiRequest(`/police/cases?status=${status}`);
+            },
+
+            async getCaseDetails(caseId) {
+                return await apiRequest(`/police/case-details/${caseId}`);
+            },
+
+            async updateCase(caseId, updateData) {
+                return await apiRequest(`/police/update-case/${caseId}`, {
+                    method: 'POST',
+                    body: JSON.stringify(updateData)
+                });
+            },
+
+            // Availability
+            async updateAvailability(availabilityData) {
+                return await apiRequest('/police/availability', {
+                    method: 'PUT',
+                    body: JSON.stringify(availabilityData)
+                });
+            },
+
+            // Performance
+            async getPerformance() {
+                return await apiRequest('/police/performance');
+            },
+
+            async getTeamPerformance() {
+                return await apiRequest('/police/team-performance');
+            },
+
+            // Analytics
+            async getHeatmapData() {
+                return await apiRequest('/analytics/heatmap');
+            },
+
+            async getHighRiskAreas() {
+                return await apiRequest('/analytics/high-risk-areas');
+            },
+
+            async getPatrolRecommendations() {
+                return await apiRequest('/analytics/patrol-recommendations');
+            },
+
+            async getAnalyticsPerformance() {
+                return await apiRequest('/analytics/performance');
+            },
+
+            async getPredictiveInsights() {
+                return await apiRequest('/analytics/predictive-insights');
+            },
+
+            async getTrends() {
+                return await apiRequest('/analytics/trends');
+            },
+
+            // Reports
+            async generateCaseReport(caseId, reportData) {
+                return await apiRequest(`/reports/case/${caseId}`, {
+                    method: 'POST',
+                    body: JSON.stringify(reportData)
+                });
+            },
+
+            async listReports() {
+                return await apiRequest('/reports/list');
+            },
+
+            // Test endpoint
+            async testPublic() {
+                return await apiRequest('/police/test-public');
+            }
+        };
+
+        // Enhanced API Request Helper
+        async function apiRequest(endpoint, options = {}) {
+            // If in demo mode, use demo data
+            if (isDemoMode) {
+                console.log('🎭 Using demo data for:', endpoint);
+                return await getDemoData(endpoint);
+            }
+
+            const url = `${API_BASE_URL}${endpoint}`;
+            
+            // ALWAYS get fresh token from localStorage for each request
+            const freshToken = localStorage.getItem('authToken') || localStorage.getItem('token');
+            
+            console.log('🔐 Token check:', {
+                hasToken: !!freshToken,
+                tokenLength: freshToken ? freshToken.length : 0,
+                endpoint: endpoint
+            });
+
+            if (!freshToken) {
+                console.error('❌ No auth token found in localStorage');
+                showNotification('Authentication required. Please login again.', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return null;
+            }
+
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${freshToken}`,
+                    ...options.headers
+                },
+                ...options
+            };
+
+            // Add body for POST/PUT requests
+            if (options.body && (options.method === 'POST' || options.method === 'PUT')) {
+                config.body = options.body;
+            }
+
+            try {
+                console.log(`🌐 Making API request to: ${url}`, {
+                    method: config.method || 'GET',
+                    headers: config.headers,
+                    body: config.body ? JSON.parse(config.body) : undefined
+                });
+                
+                const response = await fetch(url, config);
+                
+                console.log(`📥 Response for ${endpoint}:`, {
+                    status: response.status,
+                    statusText: response.statusText,
+                    ok: response.ok
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('currentUser');
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('user');
+                    showNotification('Session expired. Please login again.', 'error');
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                    return null;
+                }
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`❌ HTTP error! status: ${response.status}`, errorText);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log(`✅ API Success from ${endpoint}:`, data);
+                return data;
+            } catch (error) {
+                console.error(`❌ API Request to ${endpoint} failed:`, error);
+                showNotification('API request failed. Using demo data.', 'error');
+                // Fallback to demo data
+                return await getDemoData(endpoint);
+            }
+        }
+
+        // Enhanced Demo Data Generator for Police
+        async function getDemoData(endpoint) {
+            // Simulate API delay
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
+            const demoData = {
+                '/police/dashboard': {
+                    officer: {
+                        name: "Inspector Rajesh Sharma",
+                        badge_number: "PC-7824",
+                        rank: "Inspector",
+                        station: "Cyber Crime Unit",
+                        district: "Mumbai Central",
+                        state: "Maharashtra",
+                        performance_score: 87.5,
+                        current_case_load: 8,
+                        is_active: true
+                    },
+                    stats: {
+                        total_cases: 18,
+                        resolved_cases: 12,
+                        pending_cases: 6,
+                        high_priority_cases: 3,
+                        resolution_rate: 66.67,
+                        new_cases_week: 2,
+                        monthly_solved: 4,
+                        urgent_actions: 1,
+                        success_change: 5
+                    },
+                    assigned_cases: [
+                        {
+                            case_id: "CR-2023-0891",
+                            title: "Online Investment Fraud",
+                            priority: "high",
+                            crime_type: "Financial Fraud",
+                            status: "assigned",
+                            incident_date: "2023-11-15T10:30:00Z",
+                            assigned_date: "2023-11-15T14:20:00Z",
+                            district: "Mumbai Central",
+                            state: "Maharashtra"
+                        },
+                        {
+                            case_id: "CR-2023-0885",
+                            title: "Identity Theft Case",
+                            priority: "high",
+                            crime_type: "Identity Theft",
+                            status: "in_progress",
+                            incident_date: "2023-11-12T09:15:00Z",
+                            assigned_date: "2023-11-12T11:30:00Z",
+                            district: "Pune IT Park",
+                            state: "Maharashtra"
+                        }
+                    ]
+                },
+                '/police/cases?status=all': {
+                    cases: [
+                        { 
+                            case_id: 'CR-2023-0891', 
+                            crime_type: 'Financial Fraud', 
+                            priority: 'high', 
+                            status: 'assigned', 
+                            assigned_date: '2023-11-15',
+                            description: 'Online investment scam involving multiple victims',
+                            victim_name: 'Rahul Kumar',
+                            victim_age: 35,
+                            location: 'Mumbai Central, Maharashtra'
+                        },
+                        { 
+                            case_id: 'CR-2023-0885', 
+                            crime_type: 'Identity Theft', 
+                            priority: 'high', 
+                            status: 'in_progress', 
+                            assigned_date: '2023-11-12',
+                            description: 'Personal information stolen and misused for loan applications',
+                            victim_name: 'Priya Sharma',
+                            victim_age: 28,
+                            location: 'Pune IT Park, Maharashtra'
+                        }
+                    ],
+                    total: 2,
+                    filters: {
+                        status: 'all',
+                        priority: null,
+                        crime_type: null
+                    }
+                },
+                '/police/performance': {
+                    officer_id: 1,
+                    name: "Inspector Rajesh Sharma",
+                    badge_number: "PC-7824",
+                    total_cases: 18,
+                    resolved_cases: 12,
+                    resolution_rate: 66.67,
+                    performance_score: 87.5,
+                    current_case_load: 8,
+                    station: "Cyber Crime Unit",
+                    rank: "Inspector",
+                    avg_resolution_time: "15 days",
+                    team_rank: 3
+                },
+                '/analytics/heatmap': [
+                    { state: 'Maharashtra', district: 'Mumbai', case_count: 245, intensity: 0.8 },
+                    { state: 'Delhi', district: 'New Delhi', case_count: 189, intensity: 0.6 },
+                    { state: 'Karnataka', district: 'Bangalore', case_count: 167, intensity: 0.5 }
+                ],
+                '/analytics/predictive-insights': {
+                    emerging_trends: [
+                        { crime_type: 'Phishing', frequency: 45, trend: 'increasing' },
+                        { crime_type: 'Online Fraud', frequency: 32, trend: 'stable' }
+                    ]
+                }
+            };
+            
+            // Return demo data for specific endpoint or empty object
+            return demoData[endpoint] || { message: 'Demo data not available for this endpoint' };
+        }
+
+        // Debug authentication state
+        function debugAuthState() {
+            const token = authToken;
+            const user = currentUser;
+            
+            console.log('🔐 POLICE AUTH DEBUG:');
+            console.log('  Token exists:', !!token);
+            console.log('  Token length:', token ? token.length : 0);
+            console.log('  User data:', user);
+            console.log('  Demo mode:', isDemoMode);
+            
+            if (!token) {
+                console.error('❌ CRITICAL: No auth token found');
+                showNotification('No authentication token found. Redirecting to login...', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return false;
+            }
+            
+            return true;
+        }
+
+        // Check if user is authenticated and is police
+        function checkPoliceAuth() {
+            // Get fresh data from localStorage
+            const freshToken = localStorage.getItem('authToken') || localStorage.getItem('token');
+            const freshUser = localStorage.getItem('currentUser') || localStorage.getItem('user');
+            
+            if (!freshToken) {
+                console.log('❌ No auth token found, redirecting to login');
+                showNotification('Please login to access police dashboard', 'error');
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 2000);
+                return false;
+            }
+            
+            // Update global variables with fresh data
+            authToken = freshToken;
+            if (freshUser) {
+                try {
+                    currentUser = JSON.parse(freshUser);
+                    isDemoMode = currentUser.isDemo || localStorage.getItem('isDemoUser') === 'true' || localStorage.getItem('demoMode') === 'true';
+                    console.log('🔄 Updated police user data:', currentUser);
+                    console.log('🔄 Demo mode:', isDemoMode);
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+            
+            // Check if user is police
+            const userRole = currentUser.role ? currentUser.role.toLowerCase() : '';
+            if (!userRole.includes('police') && !isDemoMode) {
+                console.log('❌ User is not police, redirecting to appropriate dashboard');
+                showNotification('Access denied. Police privileges required.', 'error');
+                setTimeout(() => {
+                    if (userRole === 'admin') {
+                        window.location.href = 'admin-dashboard.html';
+                    } else {
+                        window.location.href = 'dashboard.html';
+                    }
+                }, 2000);
+                return false;
+            }
+            
+            console.log('✅ Police user authenticated:', currentUser);
+            updateUserInfo();
+            return true;
+        }
+
+        // Update user information in the header
+        function updateUserInfo() {
+            const profileLink = document.getElementById('profile-link');
+            const dashboardTitle = document.getElementById('dashboardTitle');
+            const demoBadge = document.getElementById('demoBadge');
+            const demoIndicator = document.getElementById('demoIndicator');
+            
+            if (currentUser.full_name || currentUser.name) {
+                const userName = currentUser.full_name || currentUser.name;
+                if (profileLink) profileLink.textContent = userName;
+                
+                if (dashboardTitle) {
+                    if (isDemoMode) {
+                        dashboardTitle.innerHTML = `Police Officer Profile - Welcome, ${userName} <span class="demo-badge">DEMO</span>`;
+                        demoBadge.style.display = 'inline';
+                        demoIndicator.style.display = 'block';
+                    } else {
+                        dashboardTitle.textContent = `Police Officer Profile - Welcome, ${userName}`;
+                        demoBadge.style.display = 'none';
+                        demoIndicator.style.display = 'none';
+                    }
+                }
+            }
+        }
+
+        // Profile-specific functionality
+        function openProfileTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('#section-profile .tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('#section-profile .profile-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show the selected tab
+            document.getElementById(`profile-tab-${tabName}`).classList.add('active');
+            
+            // Activate the clicked tab
+            event.target.classList.add('active');
+        }
+
+        function editProfile() {
+            showNotification('Edit profile functionality would open here', 'info');
+            // In a real implementation, this would enable form editing
+        }
+
+        function changePassword() {
+            showNotification('Change password functionality would open here', 'info');
+            // In a real implementation, this would open a password change modal
+        }
+
+        function updateAvailability() {
+            showNotification('Update availability functionality would open here', 'info');
+        }
+
+        function toggleAvailability() {
+            const statusElement = document.getElementById('availabilityStatus');
+            if (statusElement.textContent === 'Active') {
+                statusElement.textContent = 'Inactive';
+                showNotification('Status changed to Inactive', 'info');
+            } else {
+                statusElement.textContent = 'Active';
+                showNotification('Status changed to Active', 'success');
+            }
+        }
+
+        function toggleTwoFactor() {
+            const button = document.getElementById('twoFactorToggle');
+            if (button.textContent === 'Enable') {
+                button.textContent = 'Disable';
+                showNotification('Two-factor authentication enabled', 'success');
+            } else {
+                button.textContent = 'Enable';
+                showNotification('Two-factor authentication disabled', 'info');
+            }
+        }
+
+        function viewSessions() {
+            showNotification('Login sessions view would open here', 'info');
+        }
+
+        // Update profile information
+        function updateProfileInfo() {
+            // Load dashboard data to get officer information
+            loadDashboardData().then(dashboardData => {
+                if (dashboardData && dashboardData.officer) {
+                    const officer = dashboardData.officer;
+                    const user = currentUser;
+                    
+                    // Update profile card
+                    document.getElementById('profileName').textContent = officer.name || user.full_name || user.name || 'Police Officer';
+                    document.getElementById('profileRole').textContent = officer.rank || 'Police Officer';
+                    
+                    // Update avatar with initials
+                    const avatar = document.getElementById('profileAvatar');
+                    const name = officer.name || user.full_name || user.name || 'Officer';
+                    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                    avatar.innerHTML = `<span>${initials}</span>`;
+                    
+                    // Update form fields
+                    if (user.full_name) {
+                        const names = user.full_name.split(' ');
+                        document.getElementById('firstName').value = names[0] || '';
+                        document.getElementById('lastName').value = names.slice(1).join(' ') || '';
+                    }
+                    
+                    document.getElementById('email').value = user.email || '';
+                    document.getElementById('phone').value = user.phone || '';
+                    document.getElementById('badgeNumber').value = officer.badge_number || '';
+                    document.getElementById('address').value = user.address || '';
+                    document.getElementById('city').value = user.city || '';
+                    document.getElementById('state').value = user.state || '';
+                    
+                    // Professional info
+                    document.getElementById('rank').value = officer.rank || '';
+                    document.getElementById('station').value = officer.station || '';
+                    document.getElementById('department').value = 'Cyber Crime Unit';
+                    document.getElementById('joiningDate').value = user.created_at ? formatDate(user.created_at) : 'N/A';
+                    document.getElementById('specialization').value = 'Cyber Crime Investigation';
+                    document.getElementById('currentCaseLoad').value = officer.current_case_load || 0;
+                    document.getElementById('availabilityStatus').textContent = officer.is_active ? 'Active' : 'Inactive';
+                    
+                    // Update stats
+                    document.getElementById('profileActiveCases').textContent = dashboardData.stats?.pending_cases || 0;
+                    document.getElementById('profileSolvedCases').textContent = dashboardData.stats?.resolved_cases || 0;
+                    document.getElementById('profilePerformance').textContent = (officer.performance_score || 0) + '%';
+                    
+                    // Update last password change
+                    document.getElementById('lastPasswordChange').textContent = 
+                        user.last_password_change ? formatDate(user.last_password_change) : 'Never';
+                }
+            });
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            try {
+                const dashboardData = await PoliceAPI.getDashboardData();
+                return dashboardData;
+            } catch (error) {
+                console.error('Failed to load dashboard data:', error);
+                return null;
+            }
+        }
+
+        // Load profile activity log
+        function loadProfileActivity() {
+            const activityLog = document.getElementById('profileActivityLog');
+            
+            // Sample activity data - in real implementation, this would come from API
+            const activities = [
+                {
+                    icon: 'fa-user-shield',
+                    title: 'Profile information updated',
+                    time: '2 hours ago'
+                },
+                {
+                    icon: 'fa-shield-alt',
+                    title: 'Password changed successfully',
+                    time: '3 days ago'
+                },
+                {
+                    icon: 'fa-folder-open',
+                    title: 'New case assigned: CR-2023-0891',
+                    time: '1 week ago'
+                },
+                {
+                    icon: 'fa-check-circle',
+                    title: 'Case CR-2023-0785 resolved successfully',
+                    time: '2 weeks ago'
+                },
+                {
+                    icon: 'fa-chart-line',
+                    title: 'Performance review completed',
+                    time: '3 weeks ago'
+                }
+            ];
+            
+            // Clear existing content (except the first loading item)
+            activityLog.innerHTML = '';
+            
+            // Add activities to the log
+            activities.forEach(activity => {
+                const item = document.createElement('div');
+                item.className = 'activity-item';
+                item.innerHTML = `
+                    <div class="activity-icon">
+                        <i class="fas ${activity.icon}"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">${activity.title}</div>
+                        <div class="activity-time">${activity.time}</div>
+                    </div>
+                `;
+                activityLog.appendChild(item);
+            });
+        }
+
+        // Section Navigation
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section-content').forEach(section => {
+                section.style.display = 'none';
+            });
+            
+            // Show selected section
+            const targetSection = document.getElementById(`section-${sectionName}`);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                currentSection = sectionName;
+                
+                // Load section-specific data
+                switch(sectionName) {
+                    case 'profile':
+                        updateProfileInfo();
+                        loadProfileActivity();
+                        break;
+                    case 'cases':
+                        loadCasesData();
+                        break;
+                    case 'investigations':
+                        loadInvestigationsData();
+                        break;
+                    case 'performance':
+                        loadPerformanceData();
+                        break;
+                    case 'analytics':
+                        loadAnalyticsData();
+                        break;
+                    case 'reports':
+                        loadReportsData();
+                        break;
+                    case 'tasks':
+                        loadTasksData();
+                        break;
+                }
+            }
+        }
+
+        // Navigation functions for main menu
+        function loadCasesPage() {
+            showSection('cases');
+            updateNavigationActiveState('cases');
+        }
+
+        function loadInvestigationsPage() {
+            showSection('investigations');
+            updateNavigationActiveState('investigations');
+        }
+
+        function loadAnalyticsPage() {
+            showSection('analytics');
+            updateNavigationActiveState('analytics');
+        }
+
+        function loadReportsPage() {
+            showSection('reports');
+            updateNavigationActiveState('reports');
+        }
+
+        function loadTeamPage() {
+            showSection('performance'); // Using performance section for team info
+            updateNavigationActiveState('performance');
+        }
+
+        function updateNavigationActiveState(activeSection) {
+            // Update main nav
+            document.querySelectorAll('.main-nav a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // Update sidebar
+            document.querySelectorAll('.sidebar-menu a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            // You can add specific logic to highlight the active section
+        }
+
+        // Load cases data
+        async function loadCasesData() {
+            try {
+                showNotification('Loading cases...', 'info');
+                const casesData = await PoliceAPI.getCases();
+                if (casesData && casesData.cases) {
+                    updateCasesTable(casesData.cases);
+                    updateCasesStats(casesData.cases);
+                    showNotification('Cases loaded successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Failed to load cases:', error);
+                showNotification('Failed to load cases data.', 'error');
+            }
+        }
+
+        // Update cases table
+        function updateCasesTable(cases) {
+            const tbody = document.getElementById('casesTable');
+            if (!tbody) {
+                console.log('Cases table not found');
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            if (cases.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center;">No cases found</td></tr>';
+                return;
+            }
+            
+            cases.forEach(caseItem => {
+                const row = document.createElement('tr');
+                
+                const statusClass = getStatusClass(caseItem.status);
+                const priorityClass = getPriorityClass(caseItem.priority);
+                
+                row.innerHTML = `
+                    <td>${caseItem.case_id || 'N/A'}</td>
+                    <td>${caseItem.title || 'No title'}</td>
+                    <td>${caseItem.crime_type || 'Unknown'}</td>
+                    <td class="${priorityClass}">${caseItem.priority || 'Medium'}</td>
+                    <td><span class="status ${statusClass}">${formatStatus(caseItem.status)}</span></td>
+                    <td>${formatDate(caseItem.assigned_date)}</td>
+                    <td>
+                        <button class="btn btn-police btn-small" onclick="viewCaseDetails('${caseItem.case_id}')">View</button>
+                        <button class="btn btn-police btn-small" onclick="updateCaseStatus('${caseItem.case_id}', 'in_progress')">Start</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update cases statistics
+        function updateCasesStats(cases) {
+            const activeCases = cases.filter(c => c.status === 'assigned' || c.status === 'in_progress').length;
+            const solvedCases = cases.filter(c => c.status === 'resolved').length;
+            const pendingActions = cases.filter(c => c.priority === 'high' && (c.status === 'assigned' || c.status === 'in_progress')).length;
+            
+            document.getElementById('activeCasesCount').textContent = activeCases;
+            document.getElementById('solvedCasesCount').textContent = solvedCases;
+            document.getElementById('pendingActionsCount').textContent = pendingActions;
+            document.getElementById('successRateValue').textContent = cases.length > 0 ? Math.round((solvedCases / cases.length) * 100) + '%' : '0%';
+        }
+
+        // Load investigations data
+        async function loadInvestigationsData() {
+            try {
+                showNotification('Loading investigations...', 'info');
+                // This would call specific investigation endpoints
+                showNotification('Investigations loaded successfully', 'success');
+            } catch (error) {
+                console.error('Failed to load investigations:', error);
+                showNotification('Failed to load investigations data.', 'error');
+            }
+        }
+
+        // Load performance data
+        async function loadPerformanceData() {
+            try {
+                showNotification('Loading performance data...', 'info');
+                const performanceData = await PoliceAPI.getPerformance();
+                if (performanceData) {
+                    updatePerformanceDisplay(performanceData);
+                    showNotification('Performance data loaded successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Failed to load performance data:', error);
+                showNotification('Failed to load performance data.', 'error');
+            }
+        }
+
+        // Update performance display
+        function updatePerformanceDisplay(performanceData) {
+            document.getElementById('performanceScore').textContent = (performanceData.performance_score || 0) + '%';
+            document.getElementById('resolutionRate').textContent = (performanceData.resolution_rate || 0) + '%';
+            document.getElementById('avgResolutionTime').textContent = performanceData.avg_resolution_time || '0 days';
+            document.getElementById('teamRank').textContent = '#' + (performanceData.team_rank || 0);
+        }
+
+        // Load analytics data
+        async function loadAnalyticsData() {
+            try {
+                showNotification('Loading analytics...', 'info');
+                
+                // Load different analytics endpoints
+                const heatmapData = await PoliceAPI.getHeatmapData();
+                const predictiveData = await PoliceAPI.getPredictiveInsights();
+                
+                // Update analytics sections with the data
+                updateAnalyticsDisplay(heatmapData, predictiveData);
+                
+                showNotification('Analytics loaded successfully', 'success');
+            } catch (error) {
+                console.error('Failed to load analytics:', error);
+                showNotification('Failed to load analytics data.', 'error');
+            }
+        }
+
+        // Update analytics display
+        function updateAnalyticsDisplay(heatmap, predictive) {
+            // You can add specific updates for each analytics section here
+            console.log('Analytics data loaded:', {
+                heatmap,
+                predictive
+            });
+        }
+
+        // Load reports data
+        async function loadReportsData() {
+            try {
+                showNotification('Loading reports...', 'info');
+                const reportsData = await PoliceAPI.listReports();
+                if (reportsData && reportsData.reports) {
+                    updateReportsTable(reportsData.reports);
+                    showNotification('Reports loaded successfully', 'success');
+                }
+            } catch (error) {
+                console.error('Failed to load reports:', error);
+                showNotification('Failed to load reports data.', 'error');
+            }
+        }
+
+        // Update reports table
+        function updateReportsTable(reports) {
+            const tbody = document.getElementById('reportsTable');
+            if (!tbody) {
+                console.log('Reports table not found');
+                return;
+            }
+            
+            tbody.innerHTML = '';
+            
+            if (reports.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">No reports found</td></tr>';
+                return;
+            }
+            
+            reports.forEach(report => {
+                const row = document.createElement('tr');
+                
+                row.innerHTML = `
+                    <td>${report.filename || 'N/A'}</td>
+                    <td>${report.case_id || 'N/A'}</td>
+                    <td>${report.type || 'Unknown'}</td>
+                    <td>${formatDate(report.created)}</td>
+                    <td><span class="status status-resolved">Generated</span></td>
+                    <td>
+                        <button class="btn btn-police btn-small" onclick="downloadReport('${report.filename}')">Download</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Load tasks data
+        async function loadTasksData() {
+            try {
+                showNotification('Loading tasks...', 'info');
+                // This would call specific tasks endpoints
+                showNotification('Tasks loaded successfully', 'success');
+            } catch (error) {
+                console.error('Failed to load tasks:', error);
+                showNotification('Failed to load tasks data.', 'error');
+            }
+        }
+
+        // Case Management Functions
+        async function viewCaseDetails(caseId) {
+            try {
+                const caseData = await PoliceAPI.getCaseDetails(caseId);
+                if (caseData) {
+                    showNotification(`Case ${caseId} details loaded`, 'success');
+                    openCaseModal(caseData);
+                }
+            } catch (error) {
+                console.error('Failed to load case details:', error);
+                showNotification('Failed to load case details', 'error');
+            }
+        }
+
+        async function updateCaseStatus(caseId, newStatus) {
+            try {
+                const updateData = {
+                    status: newStatus,
+                    description: `Status updated to ${newStatus}`,
+                    update_type: 'status_update',
+                    title: `Case Status Updated to ${newStatus}`
+                };
+                
+                const result = await PoliceAPI.updateCase(caseId, updateData);
+                if (result) {
+                    showNotification(`Case ${caseId} status updated to ${newStatus}`, 'success');
+                    // Refresh the cases data
+                    loadCasesData();
+                }
+            } catch (error) {
+                console.error('Failed to update case:', error);
+                showNotification('Failed to update case status', 'error');
+            }
+        }
+
+        // Case Modal (for viewing case details)
+        function openCaseModal(caseData) {
+            // Create and show a modal with case details
+            const modalHTML = `
+                <div class="modal-overlay" id="caseModal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Case Details: ${caseData.case_id}</h3>
+                            <button class="close-modal" onclick="closeCaseModal()">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="case-details-grid">
+                                <div class="detail-item">
+                                    <label>Case ID:</label>
+                                    <span>${caseData.case_id}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Title:</label>
+                                    <span>${caseData.title || 'N/A'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Status:</label>
+                                    <span class="status ${getStatusClass(caseData.status)}">${formatStatus(caseData.status)}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Priority:</label>
+                                    <span class="${getPriorityClass(caseData.priority)}">${formatPriority(caseData.priority)}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Crime Type:</label>
+                                    <span>${caseData.crime_type || 'N/A'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <label>Incident Date:</label>
+                                    <span>${formatDate(caseData.incident_date)}</span>
+                                </div>
+                                ${caseData.victim_name ? `
+                                <div class="detail-item">
+                                    <label>Victim:</label>
+                                    <span>${caseData.victim_name}</span>
+                                </div>
+                                ` : ''}
+                                ${caseData.victim_age ? `
+                                <div class="detail-item">
+                                    <label>Victim Age:</label>
+                                    <span>${caseData.victim_age}</span>
+                                </div>
+                                ` : ''}
+                                <div class="detail-item">
+                                    <label>Location:</label>
+                                    <span>${caseData.location || `${caseData.district}, ${caseData.state}`}</span>
+                                </div>
+                            </div>
+                            ${caseData.description ? `
+                            <div class="case-description">
+                                <h4>Description</h4>
+                                <p>${caseData.description}</p>
+                            </div>
+                            ` : ''}
+                            ${caseData.updates && caseData.updates.length > 0 ? `
+                            <div class="case-updates">
+                                <h4>Case Updates</h4>
+                                <div class="updates-list">
+                                    ${caseData.updates.slice(0, 3).map(update => `
+                                        <div class="update-item">
+                                            <strong>${formatDate(update.created_at)}</strong> - ${update.description}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                            ` : ''}
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-police" onclick="updateCaseStatus('${caseData.case_id}', 'in_progress')">
+                                Start Investigation
+                            </button>
+                            <button class="btn btn-police" onclick="generateCaseReport('${caseData.case_id}')">
+                                Generate Report
+                            </button>
+                            <button class="btn" onclick="closeCaseModal()">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add modal to document
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+        }
+
+        function closeCaseModal() {
+            const modal = document.getElementById('caseModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Utility functions
+        function getStatusClass(status) {
+            const statusMap = {
+                'new': 'status-new',
+                'assigned': 'status-assigned',
+                'in_progress': 'status-investigating',
+                'pending': 'status-pending',
+                'resolved': 'status-resolved'
+            };
+            return statusMap[status] || 'status-pending';
+        }
+
+        function getPriorityClass(priority) {
+            const priorityMap = {
+                'high': 'priority-high',
+                'medium': 'priority-medium',
+                'low': 'priority-low'
+            };
+            return priorityMap[priority] || 'priority-medium';
+        }
+
+        function formatStatus(status) {
+            const statusMap = {
+                'new': 'New',
+                'assigned': 'Assigned',
+                'in_progress': 'In Progress',
+                'pending': 'Pending',
+                'resolved': 'Resolved'
+            };
+            return statusMap[status] || status;
+        }
+
+        function formatPriority(priority) {
+            const priorityMap = {
+                'high': 'High',
+                'medium': 'Medium',
+                'low': 'Low'
+            };
+            return priorityMap[priority] || priority;
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return 'N/A';
+            try {
+                return new Date(dateString).toLocaleDateString();
+            } catch (e) {
+                return 'Invalid Date';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+
+        // Logout function
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('isDemoUser');
+            localStorage.removeItem('demoMode');
+            showNotification('Logged out successfully', 'info');
+            setTimeout(() => {
+                window.location.href = 'login.html';
+            }, 1500);
+        }
+
+        // Action functions
+        function downloadReport(filename) {
+            showNotification(`Downloading report: ${filename}`, 'info');
+        }
+
+        function generateCaseReport(caseId) {
+            showNotification(`Generating report for case: ${caseId}`, 'info');
+        }
+
+        function generatePredictiveReport() {
+            showNotification('Generating predictive report...', 'info');
+        }
+
+        function viewAllResolutions() {
+            showNotification('Viewing all case resolutions...', 'info');
+        }
+
+        // Refresh functions
+        function refreshCases() {
+            loadCasesData();
+        }
+
+        function refreshInvestigations() {
+            loadInvestigationsData();
+        }
+
+        function refreshPerformance() {
+            loadPerformanceData();
+        }
+
+        function refreshAnalytics() {
+            loadAnalyticsData();
+        }
+
+        function refreshReports() {
+            loadReportsData();
+        }
+
+        function refreshTasks() {
+            loadTasksData();
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            // Performance Chart
+            const performanceCtx = document.getElementById('performanceChart');
+            if (performanceCtx) {
+                charts.performance = new Chart(performanceCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
+                        datasets: [{
+                            label: 'Cases Solved',
+                            data: [3, 5, 2, 4, 6, 5, 7, 8, 6, 5, 4],
+                            borderColor: '#4caf50',
+                            backgroundColor: 'rgba(76, 175, 80, 0.1)',
+                            borderWidth: 2,
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Case Types Chart
+            const caseTypesCtx = document.getElementById('caseTypesChart');
+            if (caseTypesCtx) {
+                charts.caseTypes = new Chart(caseTypesCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Financial Fraud', 'Phishing', 'Identity Theft', 'Social Media', 'Others'],
+                        datasets: [{
+                            data: [35, 25, 15, 12, 13],
+                            backgroundColor: [
+                                '#ff3b30',
+                                '#ff9800',
+                                '#2196f3',
+                                '#e91e63',
+                                '#4caf50'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                position: 'right'
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Export functionality
+        async function exportDashboardData() {
+            try {
+                showNotification('Preparing data export...', 'info');
+                
+                // In a real implementation, this would call your backend export API
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // Create a mock CSV file
+                const csvContent = "data:text/csv;charset=utf-8," 
+                    + "Report Type,Data\n"
+                    + "Police Data,Exported\n"
+                    + "Export Date," + new Date().toISOString().split('T')[0]
+                    + (isDemoMode ? "\nMode,Demo Data" : "\nMode,Live Data");
+                
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", `police-dashboard-export-${new Date().toISOString().split('T')[0]}.csv`);
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showNotification('Data exported successfully', 'success');
+            } catch (error) {
+                console.error('Export error:', error);
+                showNotification('Error exporting data', 'error');
+            }
+        }
+
+        // Handle profile form submission
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // In a real implementation, this would send the form data to the server
+            showNotification('Profile updated successfully', 'success');
+            
+            // Update the user object with new data
+            currentUser.full_name = `${document.getElementById('firstName').value} ${document.getElementById('lastName').value}`;
+            currentUser.email = document.getElementById('email').value;
+            currentUser.phone = document.getElementById('phone').value;
+            currentUser.address = document.getElementById('address').value;
+            currentUser.city = document.getElementById('city').value;
+            currentUser.state = document.getElementById('state').value;
+            
+            // Update localStorage
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            
+            // Update profile display
+            updateProfileInfo();
+        });
+
+        // Initialize police dashboard when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Police dashboard initializing...');
+            
+            // Debug auth state first
+            if (!debugAuthState()) {
+                return;
+            }
+            
+            // Initialize charts
+            initializeCharts();
+            
+            // Check police authentication
+            if (!checkPoliceAuth()) {
+                return;
+            }
+            
+            // Load profile data
+            updateProfileInfo();
+            loadProfileActivity();
+            
+            // Set profile as default section
+            showSection('profile');
+            
+            // Set up refresh button
+            const refreshBtn = document.getElementById('refreshBtn');
+            if (refreshBtn) {
+                refreshBtn.addEventListener('click', function() {
+                    if (currentSection === 'profile') {
+                        updateProfileInfo();
+                        loadProfileActivity();
+                        showNotification('Profile data refreshed', 'success');
+                    }
+                });
+            }
+            
+            // Set up export button
+            const exportBtn = document.getElementById('exportBtn');
+            if (exportBtn) {
+                exportBtn.addEventListener('click', exportDashboardData);
+            }
+            
+            // Update last login time
+            document.getElementById('lastLogin').textContent = new Date().toLocaleString();
+            
+            console.log('✅ Police dashboard initialized successfully');
+        });
+
         // Theme Toggle Functionality
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = themeToggle.querySelector('i');
@@ -1065,114 +3043,43 @@
                 themeIcon.classList.remove('fa-sun');
                 themeIcon.classList.add('fa-moon');
             }
-        });
-
-        // Charts Initialization
-        document.addEventListener('DOMContentLoaded', function() {
-            // Case Types Distribution Chart
-            const caseTypesCtx = document.getElementById('caseTypesChart').getContext('2d');
-            const caseTypesChart = new Chart(caseTypesCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Financial Fraud', 'Phishing', 'Identity Theft', 'Social Media', 'Online Shopping', 'Others'],
-                    datasets: [{
-                        data: [35, 25, 15, 12, 8, 5],
-                        backgroundColor: [
-                            '#ff3b30',
-                            '#ff9800',
-                            '#2196f3',
-                            '#e91e63',
-                            '#4caf50',
-                            '#9c27b0'
-                        ],
-                        borderColor: [
-                            '#ff3b30',
-                            '#ff9800',
-                            '#2196f3',
-                            '#e91e63',
-                            '#4caf50',
-                            '#9c27b0'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'right',
-                            labels: {
-                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Monthly Performance Chart
-            const performanceCtx = document.getElementById('performanceChart').getContext('2d');
-            const performanceChart = new Chart(performanceCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov'],
-                    datasets: [{
-                        label: 'Cases Solved',
-                        data: [3, 5, 2, 4, 6, 5, 7, 8, 6, 5, 4],
-                        borderColor: '#4caf50',
-                        backgroundColor: 'rgba(76, 175, 80, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4
-                    }, {
-                        label: 'New Cases',
-                        data: [5, 7, 6, 8, 5, 6, 9, 7, 8, 6, 5],
-                        borderColor: '#2196f3',
-                        backgroundColor: 'rgba(33, 150, 243, 0.1)',
-                        borderWidth: 2,
-                        fill: true,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            labels: {
-                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
-                            },
-                            grid: {
-                                color: document.body.classList.contains('dark-theme') ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-                            }
-                        },
-                        x: {
-                            ticks: {
-                                color: document.body.classList.contains('dark-theme') ? '#ffffff' : '#000000'
-                            },
-                            grid: {
-                                color: document.body.classList.contains('dark-theme') ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
-                            }
-                        }
-                    }
-                }
-            });
-
-            // Update charts when theme changes
-            themeToggle.addEventListener('click', function() {
-                setTimeout(function() {
-                    caseTypesChart.update();
-                    performanceChart.update();
-                }, 100);
+            
+            // Update charts for theme change
+            Object.values(charts).forEach(chart => {
+                if (chart) chart.update();
             });
         });
+
+        // Make functions available globally
+        window.showSection = showSection;
+        window.loadCasesPage = loadCasesPage;
+        window.loadInvestigationsPage = loadInvestigationsPage;
+        window.loadAnalyticsPage = loadAnalyticsPage;
+        window.loadReportsPage = loadReportsPage;
+        window.loadTeamPage = loadTeamPage;
+        window.logout = logout;
+        window.exportDashboardData = exportDashboardData;
+        window.debugAuthState = debugAuthState;
+        window.refreshCases = refreshCases;
+        window.refreshInvestigations = refreshInvestigations;
+        window.refreshPerformance = refreshPerformance;
+        window.refreshAnalytics = refreshAnalytics;
+        window.refreshReports = refreshReports;
+        window.refreshTasks = refreshTasks;
+        window.viewCaseDetails = viewCaseDetails;
+        window.updateCaseStatus = updateCaseStatus;
+        window.downloadReport = downloadReport;
+        window.generateCaseReport = generateCaseReport;
+        window.generatePredictiveReport = generatePredictiveReport;
+        window.viewAllResolutions = viewAllResolutions;
+        window.openProfileTab = openProfileTab;
+        window.editProfile = editProfile;
+        window.changePassword = changePassword;
+        window.updateAvailability = updateAvailability;
+        window.toggleAvailability = toggleAvailability;
+        window.toggleTwoFactor = toggleTwoFactor;
+        window.viewSessions = viewSessions;
+        window.closeCaseModal = closeCaseModal;
     </script>
 </body>
 </html>
