@@ -117,9 +117,10 @@ python seed_data.py
 
 # 4. Start the server
 python app.py
-```
+
 
 Open your browser at → **[http://localhost:5000](http://localhost:5000)**
+```
 
 ### One-Line Start (after first setup)
 
