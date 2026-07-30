@@ -28,10 +28,12 @@ def start_chat_session():
         # Create new chat session
         session_id = str(uuid.uuid4())
         
+        user_lang = getattr(user, 'language', None) or 'en'
+        
         session = ChatbotSession(
             user_id=user.id,
             session_id=session_id,
-            language=user.language or 'en'
+            language=user_lang
         )
         
         db.session.add(session)
@@ -41,7 +43,7 @@ def start_chat_session():
         welcome_message = ChatbotMessage(
             session_id=session.id,
             message_type='bot',
-            content=get_welcome_message(user.language or 'en')
+            content=get_welcome_message(user_lang)
         )
         
         db.session.add(welcome_message)
