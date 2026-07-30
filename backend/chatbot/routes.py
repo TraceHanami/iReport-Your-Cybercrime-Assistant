@@ -99,7 +99,7 @@ def send_message():
         # Generate bot response with context
         bot_response = generate_bot_response(
             data['message'], 
-            user.language or 'en',
+            getattr(user, 'language', None) or 'en',
             user,
             session.id
         )
