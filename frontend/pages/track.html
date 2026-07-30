@@ -650,7 +650,7 @@
                         <li><a href="index.html">Home</a></li>
                         <li><a href="dashboard.html">Dashboard</a></li>
                         <li><a href="complaint.html">Report Crime</a></li>
-                        <li><a href="Learning.html">Learning Space</a></li>
+                        <li><a href="learning.html">Learning Space</a></li>
                         <li><a href="track.html">Track Case</a></li>
                     </ul>
                 </div>
@@ -739,23 +739,17 @@
     // API Base URL - adjust if needed
     const API_BASE_URL = 'http://localhost:5000/api';
 
-    // Check authentication status
-    function checkAuth() {
-        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-        if (!token) {
-            alert('Please login to track your cases.');
-            window.location.href = 'login.html';
-            return false;
-        }
-        return true;
+    // Get stored auth token
+    function getToken() {
+        return localStorage.getItem('token') || localStorage.getItem('authToken') || sessionStorage.getItem('token') || sessionStorage.getItem('authToken');
     }
 
     // Get authentication headers
     function getAuthHeaders() {
-        const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+        const token = getToken();
         return {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': token ? `Bearer ${token}` : ''
         };
     }
 
@@ -800,7 +794,8 @@
             console.error('Error tracking case:', error);
             
             // If public endpoint fails and user is authenticated, try detailed endpoint
-            if (checkAuth()) {
+            const token = getToken();
+            if (token) {
                 try {
                     const detailsResponse = await fetch(`${API_BASE_URL}/track/details/${caseId}`, {
                         method: 'GET',
@@ -1101,11 +1096,11 @@
         
         // Check if there's a case ID in URL parameters
         const urlParams = new URLSearchParams(window.location.search);
-        const caseIdFromUrl = urlParams.get('caseId');
+        const caseIdFromUrl = urlParams.get('case_id') || urlParams.get('caseId');
         if (caseIdFromUrl) {
             document.getElementById('case-id-input').value = caseIdFromUrl;
             // Auto-track after a short delay
-            setTimeout(() => trackComplaint(), 1000);
+            setTimeout(() => trackComplaint(), 500);
         }
     });
 

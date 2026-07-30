@@ -1,19 +1,36 @@
 # Python virtual environment
 venv/
+env/
+ENV/
 
-# Node modules
+# Node modules & frontend builds
+frontend/node_modules/
 node_modules/
+dist/
 
-# Python cache files
+# Databases & SQLite
+backend/database/*.db
+backend/*.db
+*.sqlite
+*.db
+
+# Python cache & logs
 __pycache__/
 *.pyc
+*.pyo
+*.log
+logs/
 
-# Environment variables
+# Environment variables & secrets
 .env
+*.env
+!.env.example
 
 # IDE and editor folders
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # OS-generated files
 .DS_Store

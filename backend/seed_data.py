@@ -1,15 +1,9 @@
-from flask import Flask
+from app import create_app
 from database.connection import db
-from database.models import User, PoliceOfficer, Volunteer, Complaint, VolunteerApplication, OTP, generate_case_id
+from database.models import User, PoliceOfficer, Volunteer, Complaint, VolunteerApplication, OTP
 from datetime import datetime, timedelta
 
-# Create Flask app and configure it
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ireport.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# Initialize the database with the app
-db.init_app(app)
+app = create_app()
 
 def seed_sample_data():
     with app.app_context():
@@ -21,6 +15,7 @@ def seed_sample_data():
                 email='admin@ireport.com',
                 full_name='System Admin',
                 role='admin',
+                phone='+911234567890',
                 is_verified=True,
                 is_active=True
             )
@@ -35,6 +30,7 @@ def seed_sample_data():
                 email='officer@ireport.com',
                 full_name='Inspector Raj Sharma',
                 role='police',
+                phone='+919876543210',
                 is_verified=True,
                 is_active=True
             )
@@ -64,6 +60,7 @@ def seed_sample_data():
                 email='volunteer@ireport.com',
                 full_name='Priya Singh',
                 role='volunteer',
+                phone='+919876543211',
                 is_verified=True,
                 is_active=True
             )
@@ -122,7 +119,7 @@ def seed_sample_data():
             
             # Complaint 1: Theft
             complaint1 = Complaint(
-                case_id=generate_case_id(),
+                case_id=Complaint.generate_case_id(),
                 user_id=public_user.id,
                 title='Stolen Mobile Phone',
                 description='My mobile phone was stolen from my pocket in the market area yesterday evening. The phone is a Samsung Galaxy S21 worth ₹25,000.',
@@ -156,7 +153,7 @@ def seed_sample_data():
             
             # Complaint 2: Missing Person
             complaint2 = Complaint(
-                case_id=generate_case_id(),
+                case_id=Complaint.generate_case_id(),
                 user_id=public_user.id,
                 title='Missing Elderly Person',
                 description='My 65-year-old father went for a morning walk and hasn\'t returned. He was last seen near the park wearing blue shirt and black pants.',
@@ -198,6 +195,7 @@ def seed_sample_data():
                     email='applicant@ireport.com',
                     full_name='Rahul Verma',
                     role='public',
+                    phone='+919876543213',
                     is_verified=True,
                     is_active=True
                 )

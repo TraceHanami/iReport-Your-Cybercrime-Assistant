@@ -32,8 +32,8 @@ class User(db.Model):
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # ✅ FIXED: Simplified relationships to avoid circular dependencies
-    police_officer = db.relationship('PoliceOfficer', backref='user_ref', uselist=False, foreign_keys='PoliceOfficer.user_id')
-    volunteer_profile = db.relationship('Volunteer', backref='user_ref', uselist=False, foreign_keys='Volunteer.user_id')
+    police_officer = db.relationship('PoliceOfficer', backref='user', uselist=False, foreign_keys='PoliceOfficer.user_id')
+    volunteer_profile = db.relationship('Volunteer', backref='user', uselist=False, foreign_keys='Volunteer.user_id')
     
     # Other relationships (using string references to avoid circular imports)
     complaints = db.relationship('Complaint', backref='complaint_user', foreign_keys='Complaint.user_id')
@@ -257,6 +257,8 @@ class CaseAssignment(db.Model):
     status = db.Column(String(20), default='active')
     
     assigned_by_user = relationship('User', foreign_keys=[assigned_by])
+    police_officer = relationship('PoliceOfficer', foreign_keys=[police_officer_id])
+    volunteer = relationship('Volunteer', foreign_keys=[volunteer_id])
 
 class CaseUpdate(db.Model):
     __tablename__ = 'case_updates'

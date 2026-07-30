@@ -57,7 +57,8 @@ def seed_initial_data():
         ]
 
         for user_data in test_users:
-            if not User.query.filter_by(email=user_data['email']).first():
+            existing_user = User.query.filter_by(email=user_data['email']).first()
+            if not existing_user:
                 user = User(
                     email=user_data['email'],
                     password_hash=Auth.hash_password(user_data['password']),
@@ -71,7 +72,47 @@ def seed_initial_data():
                 )
                 db.session.add(user)
                 db.session.commit()
+                existing_user = user
                 print(f"✅ {user_data['role'].title()} user created: {user_data['name']}")
+            
+            # Ensure police officer profile exists
+            if user_data['role'] == 'police':
+                if not PoliceOfficer.query.filter_by(user_id=existing_user.id).first():
+                    officer = PoliceOfficer(
+                        user_id=existing_user.id,
+                        badge_number=f"DEL{existing_user.id:04d}",
+                        rank='Inspector',
+                        station='Central Police Station',
+                        state=user_data['state'],
+                        district=user_data['district'],
+                        department='Crime Branch',
+                        police_station='Central Police Station',
+                        contact_number=user_data['phone'],
+                        specialization='Cyber Crime'
+                    )
+                    db.session.add(officer)
+                    db.session.commit()
+                    print(f"✅ Police officer profile created for {existing_user.full_name}")
+
+            # Ensure volunteer profile exists
+            if user_data['role'] == 'volunteer':
+                if not Volunteer.query.filter_by(user_id=existing_user.id).first():
+                    volunteer = Volunteer(
+                        user_id=existing_user.id,
+                        skills='Digital Literacy, Community Outreach',
+                        qualifications='Graduate',
+                        experience='1 year',
+                        availability='Weekends',
+                        state=user_data['state'],
+                        district=user_data['district'],
+                        pincode='110001',
+                        address='Delhi',
+                        status='approved',
+                        approved_by=1
+                    )
+                    db.session.add(volunteer)
+                    db.session.commit()
+                    print(f"✅ Volunteer profile created for {existing_user.full_name}")
 
         print("\n🎉 Data seeding completed successfully!")
         print("\n📋 LOGIN CREDENTIALS:")

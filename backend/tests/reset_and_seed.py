@@ -65,10 +65,8 @@ def reset_and_seed():
         print("✓ Public user created")
         
         # Create sample complaint
-        from database.models import generate_case_id
-        
         complaint = Complaint(
-            case_id=generate_case_id(),
+            case_id=Complaint.generate_case_id(),
             user_id=public_user.id,
             title='Sample Theft Case',
             description='Mobile phone stolen from restaurant table.',

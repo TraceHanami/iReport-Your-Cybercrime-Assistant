@@ -28,7 +28,7 @@ def test_public():
 def test_auth():
     """Test endpoint with authentication"""
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
         
         return jsonify({
@@ -45,7 +45,7 @@ def test_auth():
 @jwt_required()
 def police_dashboard():
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
         
         if not current_user:
@@ -125,7 +125,7 @@ def police_dashboard():
 @jwt_required()
 def get_police_cases():
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
         
         if not current_user:
@@ -201,7 +201,7 @@ def get_police_cases():
 @jwt_required()
 def update_case(case_id):
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
         
         if not current_user:
@@ -270,7 +270,7 @@ def update_case(case_id):
 @jwt_required()
 def get_case_details(case_id):
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
         
         if not current_user:
@@ -359,7 +359,7 @@ def get_case_details(case_id):
 @jwt_required()
 def get_officer_performance():
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
         
         if not current_user:
@@ -404,7 +404,7 @@ def get_officer_performance():
 @jwt_required()
 def get_team_performance():
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
         
         if not current_user:
@@ -458,7 +458,7 @@ def get_team_performance():
 @jwt_required()
 def update_availability():
     try:
-        current_user_id = get_jwt_identity()
+        current_user_id = int(get_jwt_identity())
         current_user = User.query.get(current_user_id)
         
         if not current_user:

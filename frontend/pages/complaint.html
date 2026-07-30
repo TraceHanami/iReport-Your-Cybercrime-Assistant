@@ -2317,7 +2317,10 @@ function showSuccessMessage(result) {
             <p><strong>Backend Detection:</strong> ${backendDetection}</p>
         </div>
         
-        <div class="button-group">
+        <div class="button-group" style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 15px;">
+            <button class="btn-primary" onclick="window.location.href='track.html?case_id=${result.case_id}'">
+                <i class="fas fa-search"></i> Track Status
+            </button>
             <button class="btn-success" onclick="resetForm()">
                 <i class="fas fa-plus"></i> File Another Complaint
             </button>

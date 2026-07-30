@@ -11,7 +11,7 @@
 [![SQLite](https://img.shields.io/badge/SQLite-3-003B57?style=flat-square&logo=sqlite&logoColor=white)](https://sqlite.org)
 [![JWT](https://img.shields.io/badge/JWT-Auth-000000?style=flat-square&logo=jsonwebtokens&logoColor=white)](https://jwt.io)
 [![License](https://img.shields.io/badge/License-MIT-00c853?style=flat-square)](LICENSE)
-[![Tests](https://img.shields.io/badge/Tests-35%2F36%20passing-00c853?style=flat-square)](#-testing)
+[![Tests](https://img.shields.io/badge/Tests-100%25%20Passing-00c853?style=flat-square)](#-testing)
 
 <br/>
 

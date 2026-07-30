@@ -145,8 +145,14 @@ def file_complaint(current_user):
         case_id = Complaint.generate_case_id()
         print(f"🔍 Generated case ID: {case_id}")
         
-        # AI Classification
-        crime_type, priority = classify_complaint(data['description'])
+        # AI Classification with full contextual parameters
+        crime_type, priority = classify_complaint(
+            description=data['description'],
+            title=data.get('title', ''),
+            is_missing=data.get('is_missing_person', False),
+            is_injury=data.get('is_injury_involved', False),
+            estimated_loss=float(data.get('estimated_loss') or 0)
+        )
         print(f"🤖 AI Classification - Crime: {crime_type}, Priority: {priority}")
         
         # Create complaint
@@ -227,8 +233,14 @@ def file_anonymous_complaint():
         case_id = Complaint.generate_case_id()
         print(f"🔍 Generated case ID: {case_id}")
         
-        # AI Classification
-        crime_type, priority = classify_complaint(data['description'])
+        # AI Classification with full contextual parameters
+        crime_type, priority = classify_complaint(
+            description=data['description'],
+            title=data.get('title', ''),
+            is_missing=data.get('is_missing_person', False),
+            is_injury=data.get('is_injury_involved', False),
+            estimated_loss=float(data.get('estimated_loss') or 0)
+        )
         print(f"🤖 AI Classification - Crime: {crime_type}, Priority: {priority}")
         
         # Create anonymous complaint

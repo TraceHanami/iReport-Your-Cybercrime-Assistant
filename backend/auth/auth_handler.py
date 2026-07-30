@@ -10,7 +10,7 @@ class Auth:
         payload = {
             'exp': datetime.utcnow() + timedelta(days=1),
             'iat': datetime.utcnow(),
-            'sub': user_id,
+            'sub': str(user_id),
             'role': role
         }
         return jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
@@ -21,7 +21,7 @@ class Auth:
         try:
             payload = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
             return {
-                'user_id': payload['sub'],
+                'user_id': int(payload['sub']),
                 'role': payload['role'],
                 'exp': payload['exp']
             }

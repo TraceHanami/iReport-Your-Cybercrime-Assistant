@@ -129,6 +129,8 @@ def create_app():
 
     # Configuration
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-secret-key')
+    app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', app.config['SECRET_KEY'])
+    app.config['JWT_TOKEN_LOCATION'] = ['headers']
     app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///ireport.db')
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
@@ -147,6 +149,8 @@ def create_app():
     init_db(app)
     
     # THEN initialize extensions
+    from flask_jwt_extended import JWTManager
+    jwt_manager = JWTManager(app)
     migrate = Migrate(app, db)
     mail = Mail(app)
 

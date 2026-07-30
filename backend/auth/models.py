@@ -9,7 +9,7 @@ class Auth:
         payload = {
             'exp': datetime.utcnow() + timedelta(days=1),
             'iat': datetime.utcnow(),
-            'sub': user_id,
+            'sub': str(user_id),
             'role': role
         }
         return jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
@@ -18,7 +18,7 @@ class Auth:
     def decode_token(token):
         try:
             payload = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
-            return payload['sub'], payload['role']
+            return int(payload['sub']), payload['role']
         except jwt.ExpiredSignatureError:
             return None, None
         except jwt.InvalidTokenError:

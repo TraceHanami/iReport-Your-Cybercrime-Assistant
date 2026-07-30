@@ -72,8 +72,8 @@ class iReportComprehensiveTester:
         # Test login with different roles
         test_users = [
             {"email": "admin@ireport.com", "password": "admin123", "role": "admin"},
-            {"email": "police_delhi_1@ireport.com", "password": "police123", "role": "police"},
-            {"email": "volunteer_delhi_1@ireport.com", "password": "volunteer123", "role": "volunteer"},
+            {"email": "police.delhi.1@ireport.com", "password": "police123", "role": "police"},
+            {"email": "volunteer.delhi.1@ireport.com", "password": "volunteer123", "role": "volunteer"},
             {"email": "user@ireport.com", "password": "user123", "role": "public"}
         ]
         
