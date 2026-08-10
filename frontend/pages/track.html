@@ -736,8 +736,10 @@
         }
     });
 
-    // API Base URL - adjust if needed
-    const API_BASE_URL = 'http://localhost:5000/api';
+    // API Base URL
+    const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '3000'
+        ? 'http://localhost:5000/api'
+        : `${window.location.origin}/api`;
 
     // Get stored auth token
     function getToken() {

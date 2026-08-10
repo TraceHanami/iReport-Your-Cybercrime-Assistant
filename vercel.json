@@ -1,0 +1,139 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    },
+    {
+      "src": "frontend/**/*",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.py"
+    },
+    {
+      "src": "/assets/(.*)",
+      "dest": "/frontend/assets/$1"
+    },
+    {
+      "src": "/chatbot/(.*)",
+      "dest": "/frontend/chatbot/$1"
+    },
+    {
+      "src": "/pages/(.*)",
+      "dest": "/frontend/pages/$1"
+    },
+    {
+      "src": "/",
+      "dest": "/frontend/pages/index.html"
+    },
+    {
+      "src": "/login",
+      "dest": "/frontend/pages/login.html"
+    },
+    {
+      "src": "/register",
+      "dest": "/frontend/pages/register.html"
+    },
+    {
+      "src": "/forgot-password",
+      "dest": "/frontend/pages/forgot-password.html"
+    },
+    {
+      "src": "/reset-password",
+      "dest": "/frontend/pages/reset-password.html"
+    },
+    {
+      "src": "/verify-otp",
+      "dest": "/frontend/pages/verify_otp.html"
+    },
+    {
+      "src": "/dashboard",
+      "dest": "/frontend/pages/dashboard.html"
+    },
+    {
+      "src": "/file-complaint",
+      "dest": "/frontend/pages/complaint.html"
+    },
+    {
+      "src": "/complaint",
+      "dest": "/frontend/pages/complaint.html"
+    },
+    {
+      "src": "/my-complaints",
+      "dest": "/frontend/pages/my-complaints.html"
+    },
+    {
+      "src": "/track",
+      "dest": "/frontend/pages/track.html"
+    },
+    {
+      "src": "/view",
+      "dest": "/frontend/pages/view.html"
+    },
+    {
+      "src": "/police",
+      "dest": "/frontend/pages/police-dashboard.html"
+    },
+    {
+      "src": "/police-login",
+      "dest": "/frontend/pages/police-login.html"
+    },
+    {
+      "src": "/admin-dashboard",
+      "dest": "/frontend/pages/admin-dashboard.html"
+    },
+    {
+      "src": "/volunteer-dashboard",
+      "dest": "/frontend/pages/volunteer-dashboard.html"
+    },
+    {
+      "src": "/volunteer",
+      "dest": "/frontend/pages/volunteer.html"
+    },
+    {
+      "src": "/learning",
+      "dest": "/frontend/pages/learning.html"
+    },
+    {
+      "src": "/contactus",
+      "dest": "/frontend/pages/contactus.html"
+    },
+    {
+      "src": "/CheckScams",
+      "dest": "/frontend/pages/CheckScams.html"
+    },
+    {
+      "src": "/Checksuspect",
+      "dest": "/frontend/pages/Checksuspect.html"
+    },
+    {
+      "src": "/malware-check",
+      "dest": "/frontend/pages/malware-check.html"
+    },
+    {
+      "src": "/phishing-check",
+      "dest": "/frontend/pages/phishing-check.html"
+    },
+    {
+      "src": "/Quiz",
+      "dest": "/frontend/pages/Quiz.html"
+    },
+    {
+      "src": "/puzzle",
+      "dest": "/frontend/pages/puzzle.html"
+    },
+    {
+      "src": "/([^/]+)\\.html",
+      "dest": "/frontend/pages/$1.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/pages/index.html"
+    }
+  ]
+}

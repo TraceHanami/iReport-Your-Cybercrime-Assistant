@@ -32,6 +32,9 @@ logs/
 *.swp
 *.swo
 
+# Vercel deployment folder
+.vercel/
+
 # OS-generated files
 .DS_Store
 Thumbs.db

@@ -110,18 +110,14 @@ def register_blueprints(app):
 def create_app():
     """Application factory pattern"""
     app = Flask(__name__)
-    # Enhanced CORS configuration
-    CORS(app, origins=[
-        "http://localhost:3000", 
-        "http://127.0.0.1:3000",
-        "http://localhost:5000",
-        "http://127.0.0.1:5000"
-    ], supports_credentials=True)
+    # Enhanced CORS configuration for local and serverless/Vercel environments
+    CORS(app, origins="*", supports_credentials=True)
 
-    # Add specific CORS for API routes
+    # Add specific CORS headers for API routes dynamically
     @app.after_request
     def after_request(response):
-        response.headers.add('Access-Control-Allow-Origin', 'http://localhost:3000')
+        origin = request.headers.get('Origin', '*')
+        response.headers.add('Access-Control-Allow-Origin', origin)
         response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
         response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         response.headers.add('Access-Control-Allow-Credentials', 'true')
@@ -131,17 +127,32 @@ def create_app():
     app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'fallback-secret-key')
     app.config['JWT_SECRET_KEY'] = os.getenv('JWT_SECRET_KEY', app.config['SECRET_KEY'])
     app.config['JWT_TOKEN_LOCATION'] = ['headers']
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL', 'sqlite:///ireport.db')
+    
+    # Handle Database URL (PostgreSQL / SQLite serverless fallback)
+    db_url = os.getenv('DATABASE_URL')
+    if db_url:
+        if db_url.startswith('postgres://'):
+            db_url = db_url.replace('postgres://', 'postgresql://', 1)
+        app.config['SQLALCHEMY_DATABASE_URI'] = db_url
+    else:
+        # Fallback to /tmp/ireport.db on Vercel or read-only filesystems
+        if os.getenv('VERCEL') or not os.access('.', os.W_OK):
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/ireport.db'
+        else:
+            app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ireport.db'
+
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER', 'smtp.gmail.com')
     app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT', 587))
     app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS', 'True').lower() == 'true'
     app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
     app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
-    app.config['UPLOAD_FOLDER'] = 'uploads'
+    
+    upload_folder = '/tmp/uploads' if (os.getenv('VERCEL') or not os.access('.', os.W_OK)) else 'uploads'
+    app.config['UPLOAD_FOLDER'] = upload_folder
     app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
     
-    # DEBUG MODE FOR TESTING
+    # DEBUG MODE
     app.config['DEBUG_MODE'] = True
 
     # Initialize database FIRST
@@ -154,20 +165,39 @@ def create_app():
     migrate = Migrate(app, db)
     mail = Mail(app)
 
-    # Create upload directories
-    os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'evidence'), exist_ok=True)
-    os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'profiles'), exist_ok=True)
-    os.makedirs('reports', exist_ok=True)
-    os.makedirs('models', exist_ok=True)
+    # Auto-create database tables if needed
+    with app.app_context():
+        try:
+            db.create_all()
+        except Exception as db_err:
+            logger.warning(f"Database auto-creation error: {db_err}")
 
-    # Download NLTK punkt tokenizer if not already installed
+    # Create upload directories safely
     try:
-        nltk.data.find('tokenizers/punkt')
-        print("✓ NLTK 'punkt' tokenizer already installed")
-    except LookupError:
-        print("Downloading NLTK 'punkt' tokenizer...")
-        nltk.download('punkt')
-        print("✓ NLTK 'punkt' tokenizer downloaded successfully")
+        os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'evidence'), exist_ok=True)
+        os.makedirs(os.path.join(app.config['UPLOAD_FOLDER'], 'profiles'), exist_ok=True)
+        reports_dir = '/tmp/reports' if (os.getenv('VERCEL') or not os.access('.', os.W_OK)) else 'reports'
+        models_dir = '/tmp/models' if (os.getenv('VERCEL') or not os.access('.', os.W_OK)) else 'models'
+        os.makedirs(reports_dir, exist_ok=True)
+        os.makedirs(models_dir, exist_ok=True)
+    except Exception as dir_err:
+        logger.warning(f"Could not create storage directories: {dir_err}")
+
+    # Safe NLTK initialization for serverless
+    try:
+        nltk_data_dir = '/tmp/nltk_data' if (os.getenv('VERCEL') or not os.access('.', os.W_OK)) else None
+        if nltk_data_dir:
+            os.makedirs(nltk_data_dir, exist_ok=True)
+            nltk.data.path.append(nltk_data_dir)
+        try:
+            nltk.data.find('tokenizers/punkt')
+            print("✓ NLTK 'punkt' tokenizer ready")
+        except LookupError:
+            print("Downloading NLTK 'punkt' tokenizer...")
+            nltk.download('punkt', download_dir=nltk_data_dir)
+            print("✓ NLTK 'punkt' tokenizer downloaded successfully")
+    except Exception as nltk_err:
+        logger.warning(f"NLTK initialization warning: {nltk_err}")
 
     # Frontend paths (relative to backend folder)
     FRONTEND_PAGES = os.path.join(os.path.dirname(__file__), '../frontend/pages')

@@ -1,0 +1,25 @@
+{
+  "name": "ireport-cybercrime-assistant",
+  "version": "2.0.0",
+  "description": "iReport - Cyber Crime Assistant Portal & Complaint Management System",
+  "main": "frontend/server.js",
+  "scripts": {
+    "start": "node frontend/server.js",
+    "dev": "node frontend/server.js",
+    "build": "echo 'Vercel build complete'"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "socket.io-client": "^4.7.2"
+  },
+  "keywords": [
+    "ireport",
+    "cybercrime",
+    "portal",
+    "flask",
+    "vercel"
+  ],
+  "author": "iReport Team",
+  "license": "MIT"
+}
